@@ -1,0 +1,20 @@
+/* Frozen Phoenix Style */
+/*
+phpBB style name: Frozen Phoenix
+Based on style:   prosilver
+Original author:  Tom Beddard ( http://www.subBlue.com/ )
+Modified by:      Mighty Gorgon ( http://www.icyphoenix.com )
+*/
+
+@import url("wrappers.css");
+@import url("blocks.css");
+
+@import url("common.css");
+@import url("links.css");
+@import url("content.css");
+@import url("buttons.css");
+@import url("cp.css");
+@import url("forms.css");
+@import url("tweaks.css");
+@import url("colours.css");
+@import url("colours_static.css");

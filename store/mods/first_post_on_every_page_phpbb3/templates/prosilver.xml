@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="../modx.prosilver.en.xsl"?>
+<!--NOTICE: Please open this file in your web browser. If presented with a security warning, you may safely tell it to allow the blocked content.-->
+<!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD.\nAlthough MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD.\nNo support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.5.xsd">
+	<header>
+		<meta name="generator" content="MODX file generated with PP MODX Creator by tumba25 (online version)"/>
+		<meta name="generator" content="Phpbb.ModTeam.Tools (c#)"/>
+		<license><![CDATA[http://opensource.org/licenses/gpl-license.php GNU General Public License v2]]></license>
+		<title lang="en"><![CDATA[First post on every page]]></title>
+		<description lang="en"><![CDATA[This mod allows to show first post of topic on top of it's every page in phpBB3.]]></description>
+		<author-group>
+			<author>
+				<username><![CDATA[rxu]]></username>
+				<homepage><![CDATA[http://phpbbguru.net]]></homepage>
+				<email><![CDATA[rxu@mail.ru]]></email>
+			</author>
+		</author-group>
+		<mod-version>1.2.2</mod-version>
+		<installation>
+			<level>easy</level>
+			<time>180</time>
+			<target-version>3.0.8</target-version>
+		</installation>
+		<history>
+			<entry>
+				<date>2007-06-06T00:00:00+08:00</date>
+				<rev-version>1.0.0.</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[Initial release]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2007-06-09T00:00:00+08:00</date>
+				<rev-version>1.0.1.</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[Show first post only in second half of a topic bug fixed]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2007-06-13T00:00:00+08:00</date>
+				<rev-version>1.0.2.</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[Show first post setting switching off after reply bug fixed]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2007-09-21T00:00:00+08:00</date>
+				<rev-version>1.1.0.</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[Show first post setting when posting new topic feature added. General code changes.]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2007-10-13T00:00:00+08:00</date>
+				<rev-version>1.1.1.</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[License information added]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2007-10-28T00:00:00+08:00</date>
+				<rev-version>1.2.0.</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[Repacked for MODX policy compliance]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2007-12-24T00:00:00+07:00</date>
+				<rev-version>1.2.1.</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[Minor bugs fixes]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2007-12-27T00:00:00+07:00</date>
+				<rev-version>1.2.2.</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[Unmark checkbox error fixed]]></change>
+				</changelog>
+			</entry>
+		</history>
+		<link-group>
+			<link type="parent" href="../install_mod.xml" lang="en">Main instruction</link>
+		</link-group>
+	</header>
+	<action-group>
+		<open src="styles/prosilver/template/posting_editor.html">
+			<edit>
+				<find><![CDATA[			<!-- IF S_LOCK_POST_ALLOWED -->
+				<div><label for="lock_post"><input type="checkbox" name="lock_post" id="lock_post"{S_LOCK_POST_CHECKED} /> {L_LOCK_POST} [{L_LOCK_POST_EXPLAIN}]</label></div>
+			<!-- ENDIF -->]]></find>
+				<action type="after-add"><![CDATA[			<!-- IF S_FIRST_POST_SHOW_ALLOWED -->
+				<div><label for="topic_first_post_show"><input type="checkbox" name="topic_first_post_show" id="topic_first_post_show"{S_FIRST_POST_SHOW_CHECKED} /> {L_FIRST_POST_SHOW} </label></div>
+			<!-- ENDIF -->
+]]></action>
+			</edit>
+		</open>
+	</action-group>
+</mod>

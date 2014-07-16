@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html dir="ltr" lang="{S_USER_LANG}">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="imagetoolbar" content="no" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width" />
+<title>{SITENAME}</title>
+<link href="{U_STYLESHEET}" rel="stylesheet" type="text/css" />
+</head>
+<body marginheight="0" marginwidth="0" topmargin="0" leftmargin="0" rightmargin="0" bottommargin="0">
+<div id="content">
+<table id="header_table">
+	<tr>
+		<td id="header_left">
+			<h1>{L_TITLE}</h1>
+		</td>
+		<td id="header_right"><span id="header_nav_links">
+		<a href="{U_FORUM}">{L_FORUM}</a> <!-- IF not S_AUTHORIZED --><a href="{U_LOG_IN}">{L_LOG_IN}</a><!-- ENDIF --></span>
+		<!-- IF L_USER_FULLNAME -->
+			Добро пожаловать, {L_USER_FULLNAME}! HEADER
+		<!-- ENDIF -->
+		
+		</td>
+	</tr>
+</table>
+</div>

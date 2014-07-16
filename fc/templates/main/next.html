@@ -1,0 +1,76 @@
+﻿<!-- INCLUDE overall_header.html -->
+<link href="{U_STYLESHEET}" rel="stylesheet" type="text/css" />
+<div id="middlepart">
+  <div style="font-style:italic;font-size:x-small;width:100%;text-align:right;"><a href="?mode=reset">Сбросить текущий тест</a></div>    
+  <!-- IF D_QUESTION_INDEX --><div style="font-size:small;width:100%;text-align:right;">{L_QUESTION_INDEX} {D_QUESTION_INDEX} {L_NUMBER_OF} {D_NUMBER_OF_QUESTIONS}</div><!-- ENDIF -->
+  <table cellpadding="0" cellspacing="0" width="100%" height="1">
+    <tr>
+      <td width="100%" align="center" valign="top" style="padding-left: 29px;"> &nbsp;
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div id="contentpart">
+  <div id="content">
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td class="content-box" valign="top" align="left" style="padding-right: 0;">
+        <div class="content-text">
+        	
+				<table cellpadding="0" cellspacing="10" dir="ltr" style="width: 100%">
+					<tr>
+						<td class="next_left">&nbsp;
+						</td>
+						<td class="next_center">&nbsp;</td>
+						<td class="next_right">&nbsp;</td>
+					</tr>
+					<tr>
+						<td class="next_left">
+						<div class="{L_STATUS_TYPE}">{L_STATUS_FIELD}</div>
+							<!-- IF S_SHOW_ANSWERS == 1 -->
+						        <!-- BEGIN answer -->
+						        <div class="{answer.TYPE}">{answer.VALUE}</div>
+						        <!-- END answer -->
+						    <!-- ENDIF -->
+						</td>
+						<td class="next_center">
+							<!-- IF mistakes -->
+								<table class="mistakes">
+								<!-- IF L_RECOMMENDATION_TO_LEARN --><tr><td colspan="2" style="padding-left:35px; padding-top:25px;">{L_RECOMMENDATION_TO_LEARN}</td></tr><!-- ENDIF -->
+								<!-- BEGIN mistakes -->
+									<tr>
+										<td class="mistakes_question">{mistakes.QUESTION}</td>
+										<td class="mistakes_answer">{mistakes.ANSWER}</td>
+									</tr>
+								<!-- END mistakes -->
+								<!-- IF L_RECOMMENDATION_TO_LEARN --><tr><td colspan="2" style="padding-left:35px; padding-bottom:25px;">&nbsp;</td></tr><!-- ENDIF -->
+								</table>
+							<!-- ENDIF -->
+							<div class="question_div">{L_QUESTION}</div>
+				        	<div class="answer_form_div">
+								<form action="{U_LAUNCHER_FORM_POST}" method="post" autocomplete="off">
+						        <!-- BEGIN input -->
+						        <div>
+						        <input <!-- BEGIN element --> {input.element.NAME}="{input.element.PARAM}"<!-- END element -->> {input.DESCRIPTION}
+						        </div>
+						        <!-- END input -->
+						        </form>
+				        	</div>	
+						</td>
+						<td class="next_right"></td>
+					</tr>
+				</table>
+        </div>
+        </td>
+      </tr>
+    </table>
+    <!-- IF L_DB_QUERIES -->
+    <div style="font-style:italic;font-size:x-small;text-align:left;">DB queries: {L_DB_QUERIES} <br> DB query time: {L_DB_QUERY_TIME}</div>
+    <!-- ENDIF -->
+  </div>
+</div>
+
+<script type="text/javascript" language="JavaScript">
+	document.getElementById("answer").focus();
+</script>

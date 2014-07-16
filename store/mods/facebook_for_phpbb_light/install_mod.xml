@@ -1,0 +1,1241 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml-stylesheet type="text/xsl" href="1.2.6/modx.prosilver.en.xsl"?>
+<!--For security purposes, please check: https
+://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at https://www.phpbb.com/mods/-->
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://www.phpbb.com/mods/xml/modx-1.2.6.xsd">
+	<header>
+		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
+		<title lang="en"><![CDATA[Facebook For PhpBB Light]]></title>
+		<description lang="en"><![CDATA[A login connect and profile picture sync from Facebook modification.]]></description>
+		<author-notes lang="en"><![CDATA[http://www.damienkeitel.com for support]]></author-notes>
+		<author-group>
+			<author>
+				<realname><![CDATA[Damien Keitel]]></realname>
+				<username><![CDATA[keitzy]]></username>
+				<homepage><![CDATA[http://www.damienkeitel.com]]></homepage>
+				<email><![CDATA[keitzy@damienkeitel.com]]></email>
+			</author>
+		</author-group>
+		<mod-version>1.0.2</mod-version>
+		<installation>
+			<level>intermediate</level>
+			<time>1200</time>
+			<target-version>3.0.11</target-version>
+		</installation>		
+	</header>
+	<action-group>
+		<copy>
+			<file from="root/install_fb4phpbb_light.php" to="install_fb4phpbb_light.php"/>
+			<file from="root/adm/images/fb4phpbb_light_logo.png" to="adm/images/fb4phpbb_light_logo.png"/>
+			<file from="root/adm/style/acp_fb4phpbb_light.html" to="adm/style/acp_fb4phpbb_light.html"/>
+			<file from="root/fb4phpbb_light/FacebookLocales.xml" to="fb4phpbb_light/FacebookLocales.xml"/>
+			<file from="root/fb4phpbb_light/fb4phpbb_light_connect.php" to="fb4phpbb_light/fb4phpbb_light_connect.php"/>
+			<file from="root/fb4phpbb_light/facebook_app/base_facebook.php" to="fb4phpbb_light/facebook_app/base_facebook.php"/>
+			<file from="root/fb4phpbb_light/facebook_app/facebook.php" to="fb4phpbb_light/facebook_app/facebook.php"/>
+			<file from="root/fb4phpbb_light/facebook_app/fb_ca_chain_bundle.crt" to="fb4phpbb_light/facebook_app/fb_ca_chain_bundle.crt"/>
+			<file from="root/images/loading.gif" to="images/loading.gif"/>
+			<file from="root/includes/functions_fb4phpbb_light.php" to="includes/functions_fb4phpbb_light.php"/>
+			<file from="root/includes/acp/acp_fb4phpbb_light.php" to="includes/acp/acp_fb4phpbb_light.php"/>
+			<file from="root/includes/acp/info/acp_fb4phpbb_light.php" to="includes/acp/info/acp_fb4phpbb_light.php"/>
+			<file from="root/includes/hooks/hook_fb4phpbb_light.php" to="includes/hooks/hook_fb4phpbb_light.php"/>
+			<file from="root/includes/ucp/ucp_fb4phpbb_light.php" to="includes/ucp/ucp_fb4phpbb_light.php"/>
+			<file from="root/includes/ucp/ucp_fblight_register.php" to="includes/ucp/ucp_fblight_register.php"/>
+			<file from="root/includes/ucp/info/ucp_fb4phpbb_light.php" to="includes/ucp/info/ucp_fb4phpbb_light.php"/>
+			<file from="root/language/en/channel.html" to="language/en/channel.html"/>
+			<file from="root/language/en/acp/fb4phpbb_light.php" to="language/en/acp/fb4phpbb_light.php"/>
+			<file from="root/language/en/email/admin_welcome_inactive_fb4phpbb_light.txt" to="language/en/email/admin_welcome_inactive_fb4phpbb_light.txt"/>
+			<file from="root/language/en/email/coppa_welcome_inactive_fb4phpbb_light.txt" to="language/en/email/coppa_welcome_inactive_fb4phpbb_light.txt"/>
+			<file from="root/language/en/email/user_welcome_fb4phpbb_light.txt" to="language/en/email/user_welcome_fb4phpbb_light.txt"/>
+			<file from="root/language/en/email/user_welcome_inactive_fb4phpbb_light.txt" to="language/en/email/user_welcome_inactive_fb4phpbb_light.txt"/>
+			<file from="root/language/en/mods/fb4phpbb_light.php" to="language/en/mods/fb4phpbb_light.php"/>
+			<file from="root/language/en/mods/info_acp_fb4phpbb_light.php" to="language/en/mods/info_acp_fb4phpbb_light.php"/>
+			<file from="root/language/en/mods/info_ucp_fb4phpbb_light.php" to="language/en/mods/info_ucp_fb4phpbb_light.php"/>
+			<file from="root/styles/prosilver/template/fb4phpbbjfuncs.html" to="styles/prosilver/template/fb4phpbbjfuncs.html"/>
+			<file from="root/styles/prosilver/template/jquery-ui.min.js" to="styles/prosilver/template/jquery-ui.min.js"/>
+			<file from="root/styles/prosilver/template/jquery.min.js" to="styles/prosilver/template/jquery.min.js"/>
+			<file from="root/styles/prosilver/template/ucp_fb4phpbb_light.html" to="styles/prosilver/template/ucp_fb4phpbb_light.html"/>
+			<file from="root/styles/prosilver/template/ucp_fblight_agreement.html" to="styles/prosilver/template/ucp_fblight_agreement.html"/>
+			<file from="root/styles/prosilver/template/ucp_fblight_register.html" to="styles/prosilver/template/ucp_fblight_register.html"/>
+			<file from="root/styles/prosilver/theme/jquery-ui.css" to="styles/prosilver/theme/jquery-ui.css"/>
+			<file from="root/styles/prosilver/theme/images/ui-bg_flat_0_aaaaaa_40x100.png" to="styles/prosilver/theme/images/ui-bg_flat_0_aaaaaa_40x100.png"/>
+			<file from="root/styles/prosilver/theme/images/ui-bg_flat_100_aaaaaa_40x100.png" to="styles/prosilver/theme/images/ui-bg_flat_100_aaaaaa_40x100.png"/>
+			<file from="root/styles/prosilver/theme/images/ui-bg_flat_55_f6f4d0_40x100.png" to="styles/prosilver/theme/images/ui-bg_flat_55_f6f4d0_40x100.png"/>
+			<file from="root/styles/prosilver/theme/images/ui-bg_flat_75_ddedfb_40x100.png" to="styles/prosilver/theme/images/ui-bg_flat_75_ddedfb_40x100.png"/>
+			<file from="root/styles/prosilver/theme/images/ui-bg_flat_85_baccd9_40x100.png" to="styles/prosilver/theme/images/ui-bg_flat_85_baccd9_40x100.png"/>
+			<file from="root/styles/prosilver/theme/images/ui-bg_flat_95_fef1ec_40x100.png" to="styles/prosilver/theme/images/ui-bg_flat_95_fef1ec_40x100.png"/>
+			<file from="root/styles/prosilver/theme/images/ui-bg_highlight-hard_100_cadceb_1x100.png" to="styles/prosilver/theme/images/ui-bg_highlight-hard_100_cadceb_1x100.png"/>
+			<file from="root/styles/prosilver/theme/images/ui-bg_highlight-hard_20_098dcd_1x100.png" to="styles/prosilver/theme/images/ui-bg_highlight-hard_20_098dcd_1x100.png"/>
+			<file from="root/styles/prosilver/theme/images/ui-bg_inset-hard_100_fcfdfd_1x100.png" to="styles/prosilver/theme/images/ui-bg_inset-hard_100_fcfdfd_1x100.png"/>
+			<file from="root/styles/prosilver/theme/images/ui-icons_333333_256x240.png" to="styles/prosilver/theme/images/ui-icons_333333_256x240.png"/>
+			<file from="root/styles/prosilver/theme/images/ui-icons_469bdd_256x240.png" to="styles/prosilver/theme/images/ui-icons_469bdd_256x240.png"/>
+			<file from="root/styles/prosilver/theme/images/ui-icons_536482_256x240.png" to="styles/prosilver/theme/images/ui-icons_536482_256x240.png"/>
+			<file from="root/styles/prosilver/theme/images/ui-icons_d31141_256x240.png" to="styles/prosilver/theme/images/ui-icons_d31141_256x240.png"/>
+			<file from="root/styles/prosilver/theme/images/ui-icons_ffffff_256x240.png" to="styles/prosilver/theme/images/ui-icons_ffffff_256x240.png"/>
+		</copy>
+		<open src="ucp.php">
+			<edit>
+				<find><![CDATA[		$module->load('ucp', 'register');]]></find>
+				<action type="after-add"><![CDATA[		$module->display($user->lang['REGISTER']);
+	break;
+	case 'fblight_register':
+		if ($user->data['is_registered'] || isset($_REQUEST['not_agreed']))
+		{
+			redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
+		}
+
+		$module->load('ucp', 'fblight_register');]]></action>
+			</edit>
+		</open>
+		<open src="adm/style/admin.css">
+			<edit>
+				<find><![CDATA[.phpinfo td, .phpinfo th, .phpinfo h2, .phpinfo h1 {
+	text-align: left;]]></find>
+				<action type="after-add"><![CDATA[}.clearfix {    display: block;    clear: both;}#profile_pics a, .login a, .membersheader a, .story a, .story_feed a, .name a, .Story_pic a, .time a {    color: #3B5998;    cursor: pointer;    text-decoration: none;  }#profile_pics a:hover, .login a:hover, .membersheader a:hover, .story a:hover, .story_feed a:hover, .name a:hover, .Story_pic a:hover, .time a:hover {        text-decoration: underline;    } .login h1 a, .membersheader h1 a, .story h1 a, .story_feed h1 a, .name h1 a, .Story_pic h1 a, .time h1 a {        text-decoration: none;        color: #3b5998;      }.login h1 a:hover, .membersheader h1 a:hover, .story h1 a:hover, .story_feed h1 a:hover, .name h1 a:hover, .Story_pic h1 a:hover, .time h1 a:hover {        text-decoration: underline;      }.login {    float:left;    height:20px;}.membersheader {    width:100%;    background-color: #F2F2F2;    border-bottom: medium none;    border-top: 1px solid #E2E2E2;    height: 10px;    margin-bottom: 10px;    padding: 4px 5px 10px 0;}.story {    background-color: #FFFFFF;    border-top: 1px solid #EEEEEE;    margin-bottom: 7px;    min-height: 50px;    width:100%;    padding: 7px 0 7px 5px;}.story_feed {    background-color: #FFFFFF;    border-top: 1px solid #EEEEEE;    margin-bottom: 7px;    width:100%;    padding: 7px 0 7px 5px;    position: relative;}.name {    font-weight: bold;    }.Story_pic {    float: left;    padding-right:5px;    }.Story_pic_small {    float: left;    padding: 0px 5px 4px 0px;    }.Story_pic_small img{ height: 32px;    width: 32px;    }.time {    color: #777777;    font-size: 11px;    }.membersheader h3, .membersheader h4 {    color: #333333;    font-size: 11px;    margin-top: 0;    padding-left: 5px;}#FB_HiddenContainer {    height: 0;    position: absolute;    top: -10000px;    width: 0;}.fb-blue, .fb-gray {    border-style: solid;    border-width: 1px;    display: inline-block;    margin: 0;    outline: medium none;    padding: 0;}.fb-blue span, .fb-blue input, .fb-gray span, .fb-gray input {    border-color: -moz-use-text-color;    border-right: medium none;    border-style: solid none none;    border-width: 1px medium medium;    cursor: pointer;    display: block;    font-size: 12px;    font-weight: bold;    line-height: 14px;    margin: 0;    padding: 4px 10px 5px;}.fb-blue input::-moz-focus-inner, .fb-gray input::-moz-focus-inner {    border: 0 none;    padding: 0;}.fb-blue {    border-color: #29447E #29447E #1A356E;}.fb-blue span, .fb-blue input {    background: url("https://s-static.ak.fbcdn.net/images/connect_sprite.png") repeat scroll 0 0 #5F78AB;    border-top-color: #879AC0;    color: #FFFFFF;}.fb-gray {    border-color: #888888;}.fb-gray span, .fb-gray input {    background: url("https://s-static.ak.fbcdn.net/rsrc.php/zq/r/K3tOGSfSE3X.png") repeat scroll 0 0 #EEEEEE;    border-top-color: #EFEFEF;    color: #333333;}.login-button {    background: url("https://s-static.ak.fbcdn.net/images/connect_sprite.png") no-repeat scroll left -188px #29447E;    display: inline-block;    line-height: 14px;    outline: medium none;    padding: 0 0 0 1px;}.login-button span {    background: url("https://s-static.ak.fbcdn.net/images/connect_sprite.png") repeat scroll 0 0 #5F78AB;    border-bottom: 1px solid #1A356E;    border-top: 1px solid #879AC0;    color: #FFFFFF;    cursor: pointer;    display: block;    font-size: 11px;    font-weight: bold;    margin: 1px 1px 0 21px;    padding: 2px 6px 3px;}.run-code {    float: right;    margin-left: 0.5em;}.save-code {    float: right;}.not-found {    margin-top: 15%;    text-align: center;}.help .bd {    margin: 0 auto;    width: 520px;}.help h1 {    font-variant: small-caps;}.help dt {    font-weight: bold;}.help dl strong {    font-family: "Menlo Regular",Monaco,Consolas,monospace;    font-size: 87%;}#interactive {    background-color: #FFFFFF;    float: left;    width: 59%;}#log-container {    float: right;    width: 40%;}#log-container .controls {    background: none repeat scroll 0 0 rgba(82, 82, 82, 0.694);    display: none;    margin: 0;    padding: 0.5em 2.5em;    position: absolute;    right: 0;    text-align: right;    top: 0;}#log-container:hover .controls {    display: block;}#log {    overflow: auto;}.controls {    margin: 0.5em 0 0.25em 0.4em;}#auth-status-label {    padding-left: 1em;}#auth-status-label, span.bar {    color: #777777;}#auth-status {    color: #000000;    padding-left: 0.3em;    text-transform: capitalize;}span.bar {    padding-left: 0.2em;    padding-right: 0.2em;}#jscode {    font-family: "Menlo Regular",Monaco,Consolas,monospace;    font-size: 12px;    height: 390px;    margin: 0.25em;    width: 99%;}.CodeMirror-wrapping {    border: 1px solid #000000;    margin: 6px 0 0 3px;}#jsurl {    width: 80%;}#jsroot {    margin: 1em;}#jsroot h1 {    color: #666666;    font-family: "Arial Rounded",sans-serif;    font-size: 130%;    margin-top: 2em;}#jsroot h1:first-child {    margin-top: auto;}#log .hd {    background: none repeat scroll 0 0 #F2F2F2;    font-weight: bold;    padding: 0.5em 1.5em;}#log .hd .toggle {    color: #5C5C5C;    cursor: pointer;}#log .hd .count {    color: #5C5C5C;    padding-right: 10px;}#log .bd {    background-color: #E6EDFA;    border-top: 1px solid green;    font-family: "Menlo Regular",Monaco,Consolas,monospace;    padding: 0.5em 1em;}#log .indent-0 {    margin-left: 0;}#log .indent-1 {    margin-left: 1em;}#log .indent-2 {    margin-left: 2em;}#log .indent-3 {    margin-left: 3em;}#log .indent-4 {    margin-left: 4em;}#log .indent-5 {    margin-left: 5em;}#log .indent-6 {    margin-left: 6em;}#log .indent-7 {    margin-left: 7em;}#log .indent-8 {    margin-left: 8em;}]]></action>
+			</edit>
+		</open>
+		<open src="includes/constants.php">
+			<edit>
+				<find><![CDATA[define('AVATAR_GALLERY', 3);]]></find>
+				<action type="after-add"><![CDATA[define('AVATAR_REMOTE_FB', 4);]]></action>
+			</edit>
+		</open>
+		<open src="includes/functions_display.php">
+			<edit>
+				<find><![CDATA[			if (!$config['allow_avatar_remote'] && !$ignore_config)]]></find>
+				<action type="after-add"><![CDATA[			{
+				return '';
+			}
+		break;
+    case AVATAR_REMOTE_FB:
+        
+			if (!$config['allow_avatar_remote_fb'] && !$ignore_config)]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	return '<img src="' . (str_replace(' ', '%20', $avatar_img)) . '" width="' . $avatar_width . '" height="' . $avatar_height . '" alt="' . ((!empty($user->lang[$alt])) ? $user->lang[$alt] : $alt) . '" />';]]></find>
+				<action type="replace-with"><![CDATA[	return (($avatar_type == AVATAR_REMOTE_FB) ? $avatar_img : '<img src="' . (str_replace(' ', '%20', $avatar_img)) . '" width="' . $avatar_width . '" height="' . $avatar_height . '" alt="' . ((!empty($user->lang[$alt])) ? $user->lang[$alt] : $alt) . '" />');]]></action>
+			</edit>
+		</open>
+		<open src="includes/functions_user.php">
+			<edit>
+				<find><![CDATA[	return array(AVATAR_REMOTE, $data['remotelink'], $width, $height);]]></find>
+				<action type="after-add"><![CDATA[}
+function avatar_remote_fb($data, &$error)
+{
+	global $config, $db, $user, $phpbb_root_path, $phpEx;
+	$width = $data['width'];
+	$height = $data['height'];
+	return array(AVATAR_REMOTE_FB, $data['remotelinkfb'], $width, $height);]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	global $config, $phpbb_root_path, $user;]]></find>
+				<inline-edit>
+					<inline-find><![CDATA[	global $config, $phpbb_root_path, $user]]></inline-find>
+					<inline-action type="after-add"><![CDATA[, $db]]></inline-action>
+				</inline-edit>
+			</edit>
+			<edit>
+				<find><![CDATA[		case AVATAR_REMOTE :]]></find>
+				<action type="after-add"><![CDATA[			break;
+
+		case AVATAR_REMOTE_FB :
+		    
+    $fbsql = 'SELECT user_fb4phpbb_light_fb_uid
+    FROM ' . USERS_TABLE
+    . " WHERE user_id='{$user->data['user_id']}'";
+
+    // Execute the query.
+    $result = $db->sql_query($fbsql);
+
+    // Retrieve the row data.
+    $fb = $db->sql_fetchrow($result);
+
+    // Free up the result handle from the query.
+    $db->sql_freeresult($result);
+		
+		$avatar = 'https://graph.facebook.com/' . $fb['user_fb4phpbb_light_fb_uid'] . '/picture?redirect=false&amp;type=normal';]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[		'height'		=> request_var('height', 0),]]></find>
+				<action type="after-add"><![CDATA[	);
+
+  $fbsql = 'SELECT user_fb4phpbb_light_fb_uid
+      FROM ' . USERS_TABLE
+      . " WHERE user_id='{$user->data['user_id']}'";
+
+  // Execute the query.
+  $result = $db->sql_query($fbsql);
+
+  // Retrieve the row data.
+  $fbrow = $db->sql_fetchrow($result);
+	$fbdata = array(
+		'remotelinkfb'	=> ((request_var('remotelinkfb', '') == 'yes') ? '<img src="https://graph.facebook.com/' . $fbrow['user_fb4phpbb_light_fb_uid'] . '/picture?type=normal">' : ''),		
+		'width'			=> 50,
+		'height'		=> 50,]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[		list($sql_ary['user_avatar_type'], $sql_ary['user_avatar'], $sql_ary['user_avatar_width'], $sql_ary['user_avatar_height']) = avatar_remote($data, $error);]]></find>
+				<action type="after-add"><![CDATA[	}
+	else if ($fbdata['remotelinkfb'] && $change_avatar && $config['allow_avatar_remote_fb'])
+	{
+		list($sql_ary['user_avatar_type'], $sql_ary['user_avatar'], $sql_ary['user_avatar_width'], $sql_ary['user_avatar_height']) = avatar_remote_fb($fbdata, $error);]]></action>
+			</edit>
+		</open>
+		<open src="includes/acp/acp_board.php">
+			<edit>
+				<find><![CDATA[						'allow_avatar_remote'	=> array('lang' => 'ALLOW_REMOTE',			'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),]]></find>
+				<action type="after-add"><![CDATA[						'allow_avatar_remote_fb'	=> array('lang' => 'ALLOW_REMOTE_FB',			'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),]]></action>
+			</edit>
+		</open>
+		<open src="includes/acp/acp_users.php">
+			<edit>
+				<find><![CDATA[				 (($user_row['user_avatar_type'] == AVATAR_REMOTE) && !$config['allow_avatar_remote']) ||]]></find>
+				<action type="after-add"><![CDATA[				 (($user_row['user_avatar_type'] == AVATAR_REMOTE_FB) && !$config['allow_avatar_remote_fb']) ||]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[					avatar_gallery($category, $avatar_select, 4);
+				}]]></find>
+				<action type="after-add"><![CDATA[        $fbcookie = 'fbs_' . $config['fb4phpbb_light_appid'];]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[					'S_ALLOW_REMOTE'	=> ($config['allow_avatar'] && $config['allow_avatar_remote']) ? true : false,]]></find>
+				<action type="after-add"><![CDATA[					'S_ALLOW_REMOTE_FB'	=> ($config['allow_avatar'] && $_COOKIE[$fbcookie] && $config['allow_avatar_remote_fb']) ? true : false,]]></action>
+			</edit>
+		</open>
+		<open src="includes/ucp/ucp_profile.php">
+			<edit>
+				<find><![CDATA[				 (($user->data['user_avatar_type'] == AVATAR_REMOTE) && !$config['allow_avatar_remote']) ||]]></find>
+				<action type="after-add"><![CDATA[				 (($user->data['user_avatar_type'] == AVATAR_REMOTE_FB) && !$config['allow_avatar_remote_fb']) ||]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[				else if ($config['allow_avatar'])
+				{]]></find>
+				<action type="after-add"><![CDATA[                    $fbpicuser = ($config['allow_avatar_remote_fb'] && $user->data['user_fb4phpbb_light_fb_uid'] && !$user->data['user_avatar']) ? true : false;]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[						'AVATAR_HEIGHT'	=> request_var('height', $user->data['user_avatar_height']),]]></find>
+				<action type="after-add"><![CDATA[                        'AVATAR_FB'     => 'https://graph.facebook.com/' . $user->data['user_fb4phpbb_light_fb_uid'] . '/picture?type=normal',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[						'S_UPLOAD_AVATAR_URL'	=> ($can_upload && $config['allow_avatar_remote_upload']) ? true : false,]]></find>
+				<action type="after-add"><![CDATA[						'S_LINK_AVATAR_FB'    => ($auth->acl_get('u_chgavatar') && $fbpicuser) ? true : false,]]></action>
+			</edit>
+		</open>
+		<open src="includes/ucp/info/ucp_profile.php">
+			<edit>
+				<find><![CDATA[				'avatar'		=> array('title' => 'UCP_PROFILE_AVATAR', 'auth' => 'cfg_allow_avatar && (cfg_allow_avatar_local || cfg_allow_avatar_remote || cfg_allow_avatar_upload || cfg_allow_avatar_remote_upload)', 'cat' => array('UCP_PROFILE')),]]></find>
+				<inline-edit>
+					<inline-find><![CDATA[				'avatar'		=> array('title' => 'UCP_PROFILE_AVATAR', 'auth' => 'cfg_allow_avatar && (cfg_allow_avatar_local || cfg_allow_avatar_remote || ]]></inline-find>
+					<inline-action type="after-add"><![CDATA[cfg_allow_avatar_remote_fb || ]]></inline-action>
+				</inline-edit>
+			</edit>
+		</open>
+		<open src="language/en/common.php">
+			<edit>
+				<find><![CDATA[	'AIM'							=> 'AIM',]]></find>
+				<action type="after-add"><![CDATA[	'ALLOW_REMOTE_FB'     => 'Enable Facebook Profile Picture As Avatar',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	'EXTENSION_DISABLED_AFTER_POSTING'	=> 'The extension <strong>%s</strong> has been deactivated and can no longer be displayed.',]]></find>
+				<action type="after-add"><![CDATA[  'FACEBOOK_LOGIN'      => 'Login With Facebook',
+
+  'FACEBOOK_REGISTER'     => 'Connect With Facebook',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	'UPLOAD_IN_PROGRESS'	=> 'The upload is currently in progress.',]]></find>
+				<action type="after-add"><![CDATA[  'USE_FACEBOOK_AVATAR'     =>    'Use Facebook image',
+  'USE_FACEBOOK_AVATAR_EXPLAIN'     =>    'Check to use your Facebook profile image as your avatar.',]]></action>
+			</edit>
+		</open>
+		<open src="language/en/ucp.php">
+			<edit>
+				<find><![CDATA[	'LINK_REMOTE_AVATAR_EXPLAIN'=> 'Enter the URL of the location containing the avatar image you wish to link to.',]]></find>
+				<action type="after-add"><![CDATA[	'LINK_REMOTE_AVATAR_FB'		=> 'Link your facebook profile pic',
+	'LINK_REMOTE_AVATAR_EXPLAIN_FB'=> 'You can choose to use your current facebook profile picture as your forum avatar',]]></action>
+			</edit>
+		</open>
+		<open src="styles/prosilver/template/index_body.html">
+			<edit>
+				<find><![CDATA[<!-- IF not S_USER_LOGGED_IN and not S_IS_BOT -->]]></find>
+				<action type="after-add"><![CDATA[<div id="fbinnerorig">]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	</form>
+<!-- ENDIF -->]]></find>
+				<action type="after-add"><![CDATA[<!-- IF S_FB4PHPBB_MOD_ENABLED and not S_USER_LOGGED_IN and not S_IS_BOT -->							<br />	
+							<span>
+								<div id="fblogin">
+									<a class="fb_button fb_button_medium"><span class="fb_button_text">{L_FACEBOOK_LOGIN}</span></a>
+								</div>
+							</span></div>
+							<span>	
+								<div id="dialog-confirm" title="Link Facebook" style="display:none;">
+									<p>
+										<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;">
+										</span>
+										Do you want to link your facebook account to this forum?
+									</p>
+								</div>
+								<script>
+								jQuery('#fblogin').click(function() 
+								{
+                                    jQuery( "#fbinnerorig" ).fadeOut('fast');    
+                                    jQuery( "#fbinnerorig" ).show('slide').html('<span style="text-align:center;"><img src="images/loading.gif"></span>');
+									FB.login(function(data) 
+									{
+										if (data.authResponse) 
+										{
+											FB.api('/me', function(response) 
+											{
+												var regod = jQuery.ajax(
+												{
+													url:"{FB4PHPBB_LIGHT_CONNECT}", 
+													type: "POST", 
+													data: 
+													{
+														check: 'yes', 
+														id: response.id, 
+														email: response.email, 
+													}, 
+													dataType: 'html', 
+													success: function(regod)
+													{
+                                                        jQuery( "#fbinnerorig" ).hide('blind').remove();
+														var optionsResponse = jQuery(regod).length;
+														if(optionsResponse < 1) 
+														{
+                                                             
+															jQuery( "#dialog-confirm" ).dialog( "destroy" );
+															jQuery( "#dialog-confirm" ).dialog(
+															{ 
+																dialogClass: 'no-close', 
+																closeOnEscape: false, 
+																resizable: false, 
+																minHeight: 90, 
+																show: 'blind', 
+																hide: 'highlight', 
+																modal: true, 
+																buttons:[
+																{ 
+																	text: "Yes", 
+																	click: function() 
+																	{
+                                                                        jQuery('.ui-dialog-buttonpane').animate({height: "0px"}, 300, function(){jQuery(this).remove() });   
+                                                                        jQuery( "#dialog-confirm" ).hide('slide');    
+                                                                        jQuery( "#dialog-confirm" ).slideDown('fast').html('<span style="text-align:center;"><img src="images/loading.gif"></span>');
+																		jQuery.post("{FB4PHPBB_LIGHT_CONNECT}", 
+																		{ 
+																			ajax: "yes", 
+																			id: response.id, 
+																			email: response.email, 
+																			link: 'yes' 
+																		}, 
+																		function(data) 
+																		{
+																			jQuery('#dialog-confirm').fadeIn(function()
+																			{
+																			//console.log(jQuery(data+":contains('isregod')"));																			
+																				if(data.indexOf('isregod') > -1)
+																				{
+																					jQuery('#dialog-confirm').html(data); 
+																				}
+																				else
+																				{
+
+																					jQuery('#dialog-confirm').html(data); 
+																					jQuery('fieldset.submit-buttons').append('<input type="hidden" name="ajax" value="yes">');
+																					jQuery('.ui-dialog').animate({ height: "600px", width: "800px", top: "100px"}); 
+																					jQuery('#dialog-confirm').animate({ height: "500px", width: "750px"});
+                                                                                    jQuery('fieldset.submit-buttons').append('<input type="hidden" name="agreed" value="I agree to these terms">');
+                                                                                    jQuery('fieldset.submit-buttons').append('<input type="hidden" name="dialog" value="yes">');                            
+                                                                                    jQuery('fieldset.submit-buttons').append('<input type="hidden" name="fb_id" value="'+response.id+'">');
+                                                                                    jQuery('fieldset.submit-buttons').append('<input type="hidden" name="fb_email" value="'+response.email+'">');
+                                                                                    jQuery('fieldset.submit-buttons').append('<input type="hidden" name="fb_username" value="'+response.username+'">'); 
+																					jQuery(this).dialog(
+																					{
+																						buttons:[
+																						{
+																							text: "I agree to these terms",
+																							click: function() 
+																							{
+                                                                                                jQuery('.ui-dialog-buttonpane').animate({height: "0px"}, 300, function(){jQuery(this).remove() });
+                                                                                                jQuery( "#fbinner" ).hide('fold');    
+                                                                                                jQuery( "#fbinner" ).show('fold').html('<span style="text-align:center;"><img src="images/loading.gif"></span>');
+																								var newform = jQuery('#agreement'),     
+																								url = newform.attr('action');
+																								var values = newform.serialize();
+																								jQuery.post(url, 
+																								values,
+																								function(data) 
+																								{
+                                                                                                    jQuery('#dialog-confirm').fadeOut('fast');
+																									jQuery('#dialog-confirm').fadeIn(function()
+																									{   
+																										jQuery('.ui-dialog').animate({ height: "600px", width: "800px", top: "100px"}); 
+																										jQuery('#dialog-confirm').animate({height: "500px", width: "750px"}); 
+																										jQuery('#dialog-confirm').html(data); 
+																										jQuery('fieldset.submit-buttons').append('<input type="hidden" name="ajax" value="yes">');
+																										jQuery('fieldset.submit-buttons').append('<input type="hidden" name="submit" value="true">');
+																										jQuery(this).dialog(
+																										{
+																											buttons:[
+																											{
+																												text: "Submit",
+																												click: function() 
+																												{
+                                                                                                                    jQuery('.ui-dialog-buttonpane').animate({height: "0px"}, 300, function(){jQuery(this).remove() });
+                                                                                                                    jQuery( "#fbinner" ).hide('slide');    
+                                                                                                                    jQuery( "#fbinner" ).show('slide').html('<span style="text-align:center;"><img src="images/loading.gif"></span>');																												                                          
+																													var regoform = jQuery('#register');     
+																													var regourl = regoform.attr('action');
+																													var regovalues = regoform.serialize();
+																													console.log(regovalues);
+																													jQuery.post(regourl, 
+																													regovalues,
+																													function(regodata) 
+																													{   
+																														jQuery('#dialog-confirm').fadeOut('fast');
+																														jQuery('#dialog-confirm').fadeIn(function()
+																														{
+																															jQuery('.ui-dialog').animate({ height: "200px", width: "400px", top: "100px"}); 
+																															jQuery('#dialog-confirm').animate({height: "200px", width: "380px"});
+																															jQuery('#dialog-confirm').html(regodata); 
+																														}); 
+																													});
+																												}
+																											},
+																											{
+                                                                                                                text: "Cancel",
+																												click: function() 
+																												{
+																													jQuery('#dialog-confirm').dialog("close");
+                                                                                                                    jQuery( "#dialog-confirm" ).dialog( "destroy" );
+                                                                                                                    setTimeout(function() { window.location.href = "./index.php";}, 0005);
+																												}
+																											}]
+																										});
+																									}); 
+																								});
+																							}
+																						},
+																						{
+																							text: "I do not agree to these terms",
+																							click: function() 
+																							{
+																								jQuery('#dialog-confirm').dialog("close");
+                                                                                                jQuery( "#dialog-confirm" ).dialog( "destroy" );
+                                                                                                setTimeout(function() { window.location.href = "./index.php";}, 0005);																								
+																							}
+																						}]
+																					});
+																				}
+																			}); 
+																		});            
+																	}
+																},
+																{
+																	text: "No",
+																	click: function() 
+																	{
+                                                                        jQuery('#dialog-confirm').dialog("close");
+                                                                        jQuery( "#dialog-confirm" ).dialog( "destroy" );
+                                                                        setTimeout(function() { window.location.href = "./index.php";}, 0005);
+																	}
+																}]
+															}, 
+															function() 
+															{
+                                                                jQuery('.no-close .ui-dialog-titlebar-close').css('display', 'none'); 
+																jQuery('#dialog-confirm').animate(
+																{
+																	height: "100px"
+																});
+															});          
+														}
+														else
+														{
+															//console.log(regod);
+															jQuery('#page-body').hide('fast', function()
+															{ 
+																jQuery('#page-body').html('');
+																jQuery('#page-body').html(regod); 
+															});
+															jQuery('#page-body').show('bounce'); 
+														}
+													},
+												});        
+											});
+										}
+										else 
+										{
+											console.log('User cancelled login or did not fully authorize.');
+										}
+									}, 
+									{
+										scope: 'email'
+									});
+								});
+								</script>
+							</span>
+
+							
+		<!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+		<open src="styles/prosilver/template/login_body.html">
+			<edit>
+				<find><![CDATA[	</div>]]></find>
+				<action type="after-add"><![CDATA[<!-- IF S_FB4PHPBB_MOD_ENABLED and not S_USER_LOGGED_IN and not S_IS_BOT --><br />	
+							<span>
+								<div id="fblogin">
+									<a class="fb_button fb_button_medium"><span class="fb_button_text">{L_FACEBOOK_LOGIN}</span></a>
+								</div>
+							</span></div>
+							<span>	
+								<div id="dialog-confirm" title="Link Facebook" style="display:none;">
+									<p>
+										<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;">
+										</span>
+										Do you want to link your facebook account to this forum?
+									</p>
+								</div>
+								<script>
+								jQuery('#fblogin').click(function() 
+								{
+                                    jQuery( "#fbinnerorig" ).fadeOut('fast');    
+                                    jQuery( "#fbinnerorig" ).show('slide').html('<span style="text-align:center;"><img src="images/loading.gif"></span>');
+									FB.login(function(data) 
+									{
+										if (data.authResponse) 
+										{
+											FB.api('/me', function(response) 
+											{
+												var regod = jQuery.ajax(
+												{
+													url:"{FB4PHPBB_LIGHT_CONNECT}", 
+													type: "POST", 
+													data: 
+													{
+														check: 'yes', 
+														id: response.id, 
+														email: response.email, 
+													}, 
+													dataType: 'html', 
+													success: function(regod)
+													{
+                                                        jQuery( "#fbinnerorig" ).hide('blind').remove();
+														var optionsResponse = jQuery(regod).length;
+														if(optionsResponse < 1) 
+														{
+                                                             
+															jQuery( "#dialog-confirm" ).dialog( "destroy" );
+															jQuery( "#dialog-confirm" ).dialog(
+															{ 
+																dialogClass: 'no-close', 
+																closeOnEscape: false, 
+																resizable: false, 
+																minHeight: 90, 
+																show: 'blind', 
+																hide: 'highlight', 
+																modal: true, 
+																buttons:[
+																{ 
+																	text: "Yes", 
+																	click: function() 
+																	{
+                                                                        jQuery('.ui-dialog-buttonpane').animate({height: "0px"}, 300, function(){jQuery(this).remove() });   
+                                                                        jQuery( "#dialog-confirm" ).hide('slide');    
+                                                                        jQuery( "#dialog-confirm" ).slideDown('fast').html('<span style="text-align:center;"><img src="images/loading.gif"></span>');
+																		jQuery.post("{FB4PHPBB_LIGHT_CONNECT}", 
+																		{ 
+																			ajax: "yes", 
+																			id: response.id, 
+																			email: response.email, 
+																			link: 'yes' 
+																		}, 
+																		function(data) 
+																		{
+																			jQuery('#dialog-confirm').fadeIn(function()
+																			{
+																			//console.log(jQuery(data+":contains('isregod')"));																			
+																				if(data.indexOf('isregod') > -1)
+																				{
+																					jQuery('#dialog-confirm').html(data); 
+																				}
+																				else
+																				{
+
+																					jQuery('#dialog-confirm').html(data); 
+																					jQuery('fieldset.submit-buttons').append('<input type="hidden" name="ajax" value="yes">');
+																					jQuery('.ui-dialog').animate({ height: "600px", width: "800px", top: "100px"}); 
+																					jQuery('#dialog-confirm').animate({ height: "500px", width: "750px"});
+                                                                                    jQuery('fieldset.submit-buttons').append('<input type="hidden" name="agreed" value="I agree to these terms">');
+                                                                                    jQuery('fieldset.submit-buttons').append('<input type="hidden" name="dialog" value="yes">');                            
+                                                                                    jQuery('fieldset.submit-buttons').append('<input type="hidden" name="fb_id" value="'+response.id+'">');
+                                                                                    jQuery('fieldset.submit-buttons').append('<input type="hidden" name="fb_email" value="'+response.email+'">');
+                                                                                    jQuery('fieldset.submit-buttons').append('<input type="hidden" name="fb_username" value="'+response.username+'">'); 
+																					jQuery(this).dialog(
+																					{
+																						buttons:[
+																						{
+																							text: "I agree to these terms",
+																							click: function() 
+																							{
+                                                                                                jQuery('.ui-dialog-buttonpane').animate({height: "0px"}, 300, function(){jQuery(this).remove() });
+                                                                                                jQuery( "#fbinner" ).hide('fold');    
+                                                                                                jQuery( "#fbinner" ).show('fold').html('<span style="text-align:center;"><img src="images/loading.gif"></span>');
+																								var newform = jQuery('#agreement'),     
+																								url = newform.attr('action');
+																								var values = newform.serialize();
+																								jQuery.post(url, 
+																								values,
+																								function(data) 
+																								{
+                                                                                                    jQuery('#dialog-confirm').fadeOut('fast');
+																									jQuery('#dialog-confirm').fadeIn(function()
+																									{   
+																										jQuery('.ui-dialog').animate({ height: "600px", width: "800px", top: "100px"}); 
+																										jQuery('#dialog-confirm').animate({height: "500px", width: "750px"}); 
+																										jQuery('#dialog-confirm').html(data); 
+																										jQuery('fieldset.submit-buttons').append('<input type="hidden" name="ajax" value="yes">');
+																										jQuery('fieldset.submit-buttons').append('<input type="hidden" name="submit" value="true">');
+																										jQuery(this).dialog(
+																										{
+																											buttons:[
+																											{
+																												text: "Submit",
+																												click: function() 
+																												{
+                                                                                                                    jQuery('.ui-dialog-buttonpane').animate({height: "0px"}, 300, function(){jQuery(this).remove() });
+                                                                                                                    jQuery( "#fbinner" ).hide('slide');    
+                                                                                                                    jQuery( "#fbinner" ).show('slide').html('<span style="text-align:center;"><img src="images/loading.gif"></span>');																												                                          
+																													var regoform = jQuery('#register');     
+																													var regourl = regoform.attr('action');
+																													var regovalues = regoform.serialize();
+																													console.log(regovalues);
+																													jQuery.post(regourl, 
+																													regovalues,
+																													function(regodata) 
+																													{   
+																														jQuery('#dialog-confirm').fadeOut('fast');
+																														jQuery('#dialog-confirm').fadeIn(function()
+																														{
+																															jQuery('.ui-dialog').animate({ height: "200px", width: "400px", top: "100px"}); 
+																															jQuery('#dialog-confirm').animate({height: "200px", width: "380px"});
+																															jQuery('#dialog-confirm').html(regodata); 
+																														}); 
+																													});
+																												}
+																											},
+																											{
+                                                                                                                text: "Cancel",
+																												click: function() 
+																												{
+																													jQuery('#dialog-confirm').dialog("close");
+                                                                                                                    jQuery( "#dialog-confirm" ).dialog( "destroy" );
+                                                                                                                    setTimeout(function() { window.location.href = "./index.php";}, 0005);
+																												}
+																											}]
+																										});
+																									}); 
+																								});
+																							}
+																						},
+																						{
+																							text: "I do not agree to these terms",
+																							click: function() 
+																							{
+																								jQuery('#dialog-confirm').dialog("close");
+                                                                                                jQuery( "#dialog-confirm" ).dialog( "destroy" );
+                                                                                                setTimeout(function() { window.location.href = "./index.php";}, 0005);																								
+																							}
+																						}]
+																					});
+																				}
+																			}); 
+																		});            
+																	}
+																},
+																{
+																	text: "No",
+																	click: function() 
+																	{
+                                                                        jQuery('#dialog-confirm').dialog("close");
+                                                                        jQuery( "#dialog-confirm" ).dialog( "destroy" );
+                                                                        setTimeout(function() { window.location.href = "./index.php";}, 0005);
+																	}
+																}]
+															}, 
+															function() 
+															{
+                                                                jQuery('.no-close .ui-dialog-titlebar-close').css('display', 'none'); 
+																jQuery('#dialog-confirm').animate(
+																{
+																	height: "100px"
+																});
+															});          
+														}
+														else
+														{
+															//console.log(regod);
+															jQuery('#page-body').hide('fast', function()
+															{ 
+																jQuery('#page-body').html('');
+																jQuery('#page-body').html(regod); 
+															});
+															jQuery('#page-body').show('bounce'); 
+														}
+													},
+												});        
+											});
+										}
+										else 
+										{
+											console.log('User cancelled login or did not fully authorize.');
+										}
+									}, 
+									{
+										scope: 'email'
+									});
+								});
+								</script>
+							</span>
+
+
+							
+		<!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+		<open src="styles/prosilver/template/login_forum.html">
+			<edit>
+				<find><![CDATA[	</fieldset>]]></find>
+				<action type="after-add"><![CDATA[<!-- IF S_FB4PHPBB_MOD_ENABLED and not S_USER_LOGGED_IN and not S_IS_BOT --><br />							<span>
+								<div id="fblogin">
+									<a class="fb_button fb_button_medium"><span class="fb_button_text">{L_FACEBOOK_LOGIN}</span></a>
+								</div>
+							</span></div>
+							<span>	
+								<div id="dialog-confirm" title="Link Facebook" style="display:none;">
+									<p>
+										<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;">
+										</span>
+										Do you want to link your facebook account to this forum?
+									</p>
+								</div>
+								<script>
+								jQuery('#fblogin').click(function() 
+								{
+                                    jQuery( "#fbinnerorig" ).fadeOut('fast');    
+                                    jQuery( "#fbinnerorig" ).show('slide').html('<span style="text-align:center;"><img src="images/loading.gif"></span>');
+									FB.login(function(data) 
+									{
+										if (data.authResponse) 
+										{
+											FB.api('/me', function(response) 
+											{
+												var regod = jQuery.ajax(
+												{
+													url:"{FB4PHPBB_LIGHT_CONNECT}", 
+													type: "POST", 
+													data: 
+													{
+														check: 'yes', 
+														id: response.id, 
+														email: response.email, 
+													}, 
+													dataType: 'html', 
+													success: function(regod)
+													{
+                                                        jQuery( "#fbinnerorig" ).hide('blind').remove();
+														var optionsResponse = jQuery(regod).length;
+														if(optionsResponse < 1) 
+														{
+                                                             
+															jQuery( "#dialog-confirm" ).dialog( "destroy" );
+															jQuery( "#dialog-confirm" ).dialog(
+															{ 
+																dialogClass: 'no-close', 
+																closeOnEscape: false, 
+																resizable: false, 
+																minHeight: 90, 
+																show: 'blind', 
+																hide: 'highlight', 
+																modal: true, 
+																buttons:[
+																{ 
+																	text: "Yes", 
+																	click: function() 
+																	{
+                                                                        jQuery('.ui-dialog-buttonpane').animate({height: "0px"}, 300, function(){jQuery(this).remove() });   
+                                                                        jQuery( "#dialog-confirm" ).hide('slide');    
+                                                                        jQuery( "#dialog-confirm" ).slideDown('fast').html('<span style="text-align:center;"><img src="images/loading.gif"></span>');
+																		jQuery.post("{FB4PHPBB_LIGHT_CONNECT}", 
+																		{ 
+																			ajax: "yes", 
+																			id: response.id, 
+																			email: response.email, 
+																			link: 'yes' 
+																		}, 
+																		function(data) 
+																		{
+																			jQuery('#dialog-confirm').fadeIn(function()
+																			{
+																			//console.log(jQuery(data+":contains('isregod')"));																			
+																				if(data.indexOf('isregod') > -1)
+																				{
+																					jQuery('#dialog-confirm').html(data); 
+																				}
+																				else
+																				{
+
+																					jQuery('#dialog-confirm').html(data); 
+																					jQuery('fieldset.submit-buttons').append('<input type="hidden" name="ajax" value="yes">');
+																					jQuery('.ui-dialog').animate({ height: "600px", width: "800px", top: "100px"}); 
+																					jQuery('#dialog-confirm').animate({ height: "500px", width: "750px"});
+                                                                                    jQuery('fieldset.submit-buttons').append('<input type="hidden" name="agreed" value="I agree to these terms">');
+                                                                                    jQuery('fieldset.submit-buttons').append('<input type="hidden" name="dialog" value="yes">');                            
+                                                                                    jQuery('fieldset.submit-buttons').append('<input type="hidden" name="fb_id" value="'+response.id+'">');
+                                                                                    jQuery('fieldset.submit-buttons').append('<input type="hidden" name="fb_email" value="'+response.email+'">');
+                                                                                    jQuery('fieldset.submit-buttons').append('<input type="hidden" name="fb_username" value="'+response.username+'">'); 
+																					jQuery(this).dialog(
+																					{
+																						buttons:[
+																						{
+																							text: "I agree to these terms",
+																							click: function() 
+																							{
+                                                                                                jQuery('.ui-dialog-buttonpane').animate({height: "0px"}, 300, function(){jQuery(this).remove() });
+                                                                                                jQuery( "#fbinner" ).hide('fold');    
+                                                                                                jQuery( "#fbinner" ).show('fold').html('<span style="text-align:center;"><img src="images/loading.gif"></span>');
+																								var newform = jQuery('#agreement'),     
+																								url = newform.attr('action');
+																								var values = newform.serialize();
+																								jQuery.post(url, 
+																								values,
+																								function(data) 
+																								{
+                                                                                                    jQuery('#dialog-confirm').fadeOut('fast');
+																									jQuery('#dialog-confirm').fadeIn(function()
+																									{   
+																										jQuery('.ui-dialog').animate({ height: "600px", width: "800px", top: "100px"}); 
+																										jQuery('#dialog-confirm').animate({height: "500px", width: "750px"}); 
+																										jQuery('#dialog-confirm').html(data); 
+																										jQuery('fieldset.submit-buttons').append('<input type="hidden" name="ajax" value="yes">');
+																										jQuery('fieldset.submit-buttons').append('<input type="hidden" name="submit" value="true">');
+																										jQuery(this).dialog(
+																										{
+																											buttons:[
+																											{
+																												text: "Submit",
+																												click: function() 
+																												{
+                                                                                                                    jQuery('.ui-dialog-buttonpane').animate({height: "0px"}, 300, function(){jQuery(this).remove() });
+                                                                                                                    jQuery( "#fbinner" ).hide('slide');    
+                                                                                                                    jQuery( "#fbinner" ).show('slide').html('<span style="text-align:center;"><img src="images/loading.gif"></span>');																												                                          
+																													var regoform = jQuery('#register');     
+																													var regourl = regoform.attr('action');
+																													var regovalues = regoform.serialize();
+																													console.log(regovalues);
+																													jQuery.post(regourl, 
+																													regovalues,
+																													function(regodata) 
+																													{   
+																														jQuery('#dialog-confirm').fadeOut('fast');
+																														jQuery('#dialog-confirm').fadeIn(function()
+																														{
+																															jQuery('.ui-dialog').animate({ height: "200px", width: "400px", top: "100px"}); 
+																															jQuery('#dialog-confirm').animate({height: "200px", width: "380px"});
+																															jQuery('#dialog-confirm').html(regodata); 
+																														}); 
+																													});
+																												}
+																											},
+																											{
+                                                                                                                text: "Cancel",
+																												click: function() 
+																												{
+																													jQuery('#dialog-confirm').dialog("close");
+                                                                                                                    jQuery( "#dialog-confirm" ).dialog( "destroy" );
+                                                                                                                    setTimeout(function() { window.location.href = "./index.php";}, 0005);
+																												}
+																											}]
+																										});
+																									}); 
+																								});
+																							}
+																						},
+																						{
+																							text: "I do not agree to these terms",
+																							click: function() 
+																							{
+																								jQuery('#dialog-confirm').dialog("close");
+                                                                                                jQuery( "#dialog-confirm" ).dialog( "destroy" );
+                                                                                                setTimeout(function() { window.location.href = "./index.php";}, 0005);																								
+																							}
+																						}]
+																					});
+																				}
+																			}); 
+																		});            
+																	}
+																},
+																{
+																	text: "No",
+																	click: function() 
+																	{
+                                                                        jQuery('#dialog-confirm').dialog("close");
+                                                                        jQuery( "#dialog-confirm" ).dialog( "destroy" );
+                                                                        setTimeout(function() { window.location.href = "./index.php";}, 0005);
+																	}
+																}]
+															}, 
+															function() 
+															{
+                                                                jQuery('.no-close .ui-dialog-titlebar-close').css('display', 'none'); 
+																jQuery('#dialog-confirm').animate(
+																{
+																	height: "100px"
+																});
+															});          
+														}
+														else
+														{
+															//console.log(regod);
+															jQuery('#page-body').hide('fast', function()
+															{ 
+																jQuery('#page-body').html('');
+																jQuery('#page-body').html(regod); 
+															});
+															jQuery('#page-body').show('bounce'); 
+														}
+													},
+												});        
+											});
+										}
+										else 
+										{
+											console.log('User cancelled login or did not fully authorize.');
+										}
+									}, 
+									{
+										scope: 'email'
+									});
+								});
+								</script>
+							</span>
+
+							
+		<!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+		<open src="styles/prosilver/template/overall_footer.html">
+			<edit>
+				<find><![CDATA[	<div class="copyright">{CREDIT_LINE}]]></find>
+				<action type="after-add"><![CDATA[<br />Facebook For PhpBB Light<a href="http://www.damienkeitel.com" target="_blank"> Damien Keitel</a>]]></action>
+			</edit>
+		</open>
+		<open src="styles/prosilver/template/overall_header.html">
+			<edit>
+				<find><![CDATA[<html xmlns="http://www.w3.org/1999/xhtml" dir="{S_CONTENT_DIRECTION}" lang="{S_USER_LANG}" xml:lang="{S_USER_LANG}">]]></find>
+				<inline-edit>
+					<inline-find><![CDATA[<html xmlns="http://www.w3.org/1999/xhtml"]]></inline-find>
+					<inline-action type="after-add"><![CDATA[ {FB4PHPBB_LIGHT_XMLNS}]]></inline-action>
+				</inline-edit>
+			</edit>
+			<edit>
+				<find><![CDATA[	<link href="{T_THEME_PATH}/bidi.css" rel="stylesheet" type="text/css" media="screen, projection" />
+<!-- ENDIF -->]]></find>
+				<action type="after-add"><![CDATA[<link type="text/css" href="{T_THEME_PATH}/jquery-ui.css" rel="stylesheet" />
+
+<!-- INCLUDE fb4phpbbjfuncs.html -->]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[<body id="phpbb" class="section-{SCRIPT_NAME} {S_CONTENT_DIRECTION}">]]></find>
+				<action type="after-add"><![CDATA[{FB4PHPBB_LIGHT_INIT}]]></action>
+			</edit>
+		</open>
+		<open src="styles/prosilver/template/ucp_avatar_options.html">
+			<edit>
+				<find><![CDATA[	<!-- IF not S_AVATARS_ENABLED -->]]></find>
+				<inline-edit>
+					<inline-find><![CDATA[	<!-- IF not S_AVATARS_ENABLED ]]></inline-find>
+					<inline-action type="after-add"><![CDATA[or not S_LINK_AVATAR_FB ]]></inline-action>
+				</inline-edit>
+			</edit>
+			<edit>
+				<find><![CDATA[			<dd><input type="text" name="uploadurl" id="uploadurl" value="{AVATAR_URL}" class="inputbox" /></dd>
+		</dl>
+	<!-- ENDIF -->]]></find>
+				<action type="after-add"><![CDATA[	  <!-- IF S_LINK_AVATAR_FB -->
+       <dl>
+         <dt><label for="remotelinkfb">{L_LINK_REMOTE_AVATAR_FB}:</label><br /><span>{L_LINK_REMOTE_AVATAR_EXPLAIN_FB}</span></dt>
+         <dd><input type="checkbox" name="remotelinkfb" id="remotelinkfb" value="yes" />&nbsp;{L_LINK_REMOTE_AVATAR_FB}
+         <span id="hiddenxy"></span>
+         <script>
+         var img = new Image();
+        img.onload = function() {
+          document.getElementById('hiddenxy').innerHTML='<input type="hidden" name="width" value="' + this.width + '"><input type="hidden" name="height" value="' + this.height + '">';
+        }
+        img.src = '{AVATAR_FB}';
+        jQuery('#remotelinkfb').change(function(){
+           if (jQuery(this).attr("checked")) {
+                jQuery('#remotelinkfb').attr('checked', 'checked');
+                jQuery('#img_src').fadeOut(function() {jQuery('#img_src').html('<img src="{AVATAR_FB}">');});
+                jQuery('#img_src').fadeIn();
+
+            return;
+            }
+
+                jQuery('#remotelinkfb').removeAttr('checked');            
+                jQuery('#img_src').fadeOut(function() {jQuery('#img_src').html('<img src="{T_THEME_PATH}/images/no_avatar.gif" alt="" />');});                
+                jQuery('#img_src').fadeIn();
+            });
+
+         </script>
+         </dd>
+		</dl>
+    <!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+		<open src="styles/prosilver/template/ucp_register.html">
+			<edit>
+				<find><![CDATA[<form method="post" action="{S_UCP_ACTION}" id="register">]]></find>
+				<action type="after-add"><![CDATA[	<div class="panel">
+		<div class="inner"><span class="corners-top"><span></span></span>
+		<h2>{SITENAME} - {L_REGISTRATION}</h2>
+<!-- IF S_FB4PHPBB_MOD_ENABLED and not S_USER_LOGGED_IN and not S_IS_BOT -->
+	<span class="corners-bottom"><span></span></span></div>
+</div>	   			
+<div class="panel">
+	<div class="inner"><span class="corners-top"><span></span></span>    				
+				<dl>
+			<dt>{L_FB4PHPBB_LIGHT_REGISTRATION}</dt>   					
+			<dd><br />	
+							<span>
+								<div id="fblogin">
+									<a class="fb_button fb_button_medium"><span class="fb_button_text">{L_FACEBOOK_LOGIN}</span></a>
+								</div>
+							</span></div>
+							<span>	
+								<div id="dialog-confirm" title="Link Facebook" style="display:none;">
+									<p>
+										<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;">
+										</span>
+										Do you want to link your facebook account to this forum?
+									</p>
+								</div>
+								<script>
+								jQuery('#fblogin').click(function() 
+								{
+                                    jQuery( "#fbinnerorig" ).fadeOut('fast');    
+                                    jQuery( "#fbinnerorig" ).show('slide').html('<span style="text-align:center;"><img src="images/loading.gif"></span>');
+									FB.login(function(data) 
+									{
+										if (data.authResponse) 
+										{
+											FB.api('/me', function(response) 
+											{
+												var regod = jQuery.ajax(
+												{
+													url:"{FB4PHPBB_LIGHT_CONNECT}", 
+													type: "POST", 
+													data: 
+													{
+														check: 'yes', 
+														id: response.id, 
+														email: response.email, 
+													}, 
+													dataType: 'html', 
+													success: function(regod)
+													{
+                                                        jQuery( "#fbinnerorig" ).hide('blind').remove();
+														var optionsResponse = jQuery(regod).length;
+														if(optionsResponse < 1) 
+														{
+                                                             
+															jQuery( "#dialog-confirm" ).dialog( "destroy" );
+															jQuery( "#dialog-confirm" ).dialog(
+															{ 
+																dialogClass: 'no-close', 
+																closeOnEscape: false, 
+																resizable: false, 
+																minHeight: 90, 
+																show: 'blind', 
+																hide: 'highlight', 
+																modal: true, 
+																buttons:[
+																{ 
+																	text: "Yes", 
+																	click: function() 
+																	{
+                                                                        jQuery('.ui-dialog-buttonpane').animate({height: "0px"}, 300, function(){jQuery(this).remove() });   
+                                                                        jQuery( "#dialog-confirm" ).hide('slide');    
+                                                                        jQuery( "#dialog-confirm" ).slideDown('fast').html('<span style="text-align:center;"><img src="images/loading.gif"></span>');
+																		jQuery.post("{FB4PHPBB_LIGHT_CONNECT}", 
+																		{ 
+																			ajax: "yes", 
+																			id: response.id, 
+																			email: response.email, 
+																			link: 'yes' 
+																		}, 
+																		function(data) 
+																		{
+																			jQuery('#dialog-confirm').fadeIn(function()
+																			{
+																			//console.log(jQuery(data+":contains('isregod')"));																			
+																				if(data.indexOf('isregod') > -1)
+																				{
+																					jQuery('#dialog-confirm').html(data); 
+																				}
+																				else
+																				{
+
+																					jQuery('#dialog-confirm').html(data); 
+																					jQuery('fieldset.submit-buttons').append('<input type="hidden" name="ajax" value="yes">');
+																					jQuery('.ui-dialog').animate({ height: "600px", width: "800px", top: "100px"}); 
+																					jQuery('#dialog-confirm').animate({ height: "500px", width: "750px"});
+                                                                                    jQuery('fieldset.submit-buttons').append('<input type="hidden" name="agreed" value="I agree to these terms">');
+                                                                                    jQuery('fieldset.submit-buttons').append('<input type="hidden" name="dialog" value="yes">');                            
+                                                                                    jQuery('fieldset.submit-buttons').append('<input type="hidden" name="fb_id" value="'+response.id+'">');
+                                                                                    jQuery('fieldset.submit-buttons').append('<input type="hidden" name="fb_email" value="'+response.email+'">');
+                                                                                    jQuery('fieldset.submit-buttons').append('<input type="hidden" name="fb_username" value="'+response.username+'">'); 
+																					jQuery(this).dialog(
+																					{
+																						buttons:[
+																						{
+																							text: "I agree to these terms",
+																							click: function() 
+																							{
+                                                                                                jQuery('.ui-dialog-buttonpane').animate({height: "0px"}, 300, function(){jQuery(this).remove() });
+                                                                                                jQuery( "#fbinner" ).hide('fold');    
+                                                                                                jQuery( "#fbinner" ).show('fold').html('<span style="text-align:center;"><img src="images/loading.gif"></span>');
+																								var newform = jQuery('#agreement'),     
+																								url = newform.attr('action');
+																								var values = newform.serialize();
+																								jQuery.post(url, 
+																								values,
+																								function(data) 
+																								{
+                                                                                                    jQuery('#dialog-confirm').fadeOut('fast');
+																									jQuery('#dialog-confirm').fadeIn(function()
+																									{   
+																										jQuery('.ui-dialog').animate({ height: "600px", width: "800px", top: "100px"}); 
+																										jQuery('#dialog-confirm').animate({height: "500px", width: "750px"}); 
+																										jQuery('#dialog-confirm').html(data); 
+																										jQuery('fieldset.submit-buttons').append('<input type="hidden" name="ajax" value="yes">');
+																										jQuery('fieldset.submit-buttons').append('<input type="hidden" name="submit" value="true">');
+																										jQuery(this).dialog(
+																										{
+																											buttons:[
+																											{
+																												text: "Submit",
+																												click: function() 
+																												{
+                                                                                                                    jQuery('.ui-dialog-buttonpane').animate({height: "0px"}, 300, function(){jQuery(this).remove() });
+                                                                                                                    jQuery( "#fbinner" ).hide('slide');    
+                                                                                                                    jQuery( "#fbinner" ).show('slide').html('<span style="text-align:center;"><img src="images/loading.gif"></span>');																												                                          
+																													var regoform = jQuery('#register');     
+																													var regourl = regoform.attr('action');
+																													var regovalues = regoform.serialize();
+																													console.log(regovalues);
+																													jQuery.post(regourl, 
+																													regovalues,
+																													function(regodata) 
+																													{   
+																														jQuery('#dialog-confirm').fadeOut('fast');
+																														jQuery('#dialog-confirm').fadeIn(function()
+																														{
+																															jQuery('.ui-dialog').animate({ height: "200px", width: "400px", top: "100px"}); 
+																															jQuery('#dialog-confirm').animate({height: "200px", width: "380px"});
+																															jQuery('#dialog-confirm').html(regodata); 
+																														}); 
+																													});
+																												}
+																											},
+																											{
+                                                                                                                text: "Cancel",
+																												click: function() 
+																												{
+																													jQuery('#dialog-confirm').dialog("close");
+                                                                                                                    jQuery( "#dialog-confirm" ).dialog( "destroy" );
+                                                                                                                    setTimeout(function() { window.location.href = "./index.php";}, 0005);
+																												}
+																											}]
+																										});
+																									}); 
+																								});
+																							}
+																						},
+																						{
+																							text: "I do not agree to these terms",
+																							click: function() 
+																							{
+																								jQuery('#dialog-confirm').dialog("close");
+                                                                                                jQuery( "#dialog-confirm" ).dialog( "destroy" );
+                                                                                                setTimeout(function() { window.location.href = "./index.php";}, 0005);																								
+																							}
+																						}]
+																					});
+																				}
+																			}); 
+																		});            
+																	}
+																},
+																{
+																	text: "No",
+																	click: function() 
+																	{
+                                                                        jQuery('#dialog-confirm').dialog("close");
+                                                                        jQuery( "#dialog-confirm" ).dialog( "destroy" );
+                                                                        setTimeout(function() { window.location.href = "./index.php";}, 0005);
+																	}
+																}]
+															}, 
+															function() 
+															{
+                                                                jQuery('.no-close .ui-dialog-titlebar-close').css('display', 'none'); 
+																jQuery('#dialog-confirm').animate(
+																{
+																	height: "100px"
+																});
+															});          
+														}
+														else
+														{
+															//console.log(regod);
+															jQuery('#page-body').hide('fast', function()
+															{ 
+																jQuery('#page-body').html('');
+																jQuery('#page-body').html(regod); 
+															});
+															jQuery('#page-body').show('bounce'); 
+														}
+													},
+												});        
+											});
+										}
+										else 
+										{
+											console.log('User cancelled login or did not fully authorize.');
+										}
+									}, 
+									{
+										scope: 'email'
+									});
+								});
+								</script>
+							</span>
+</dd>
+        </dl> 
+	<span class="corners-bottom"><span></span></span></div>
+</div><!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+		<open src="styles/prosilver/theme/common.css">
+			<edit>
+				<find><![CDATA[	background: transparent;
+}]]></find>
+				<action type="after-add"><![CDATA[.no-close .ui-dialog-titlebar-close {display: none }]]></action>
+			</edit>
+		</open>
+	</action-group>
+</mod>

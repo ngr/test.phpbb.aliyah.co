@@ -1,0 +1,7 @@
+Oxygen Instructions
+
+How to get options?
+
+To get the options working, please open: template/oxygen_config.html
+
+There you will see some options, change to your likings!

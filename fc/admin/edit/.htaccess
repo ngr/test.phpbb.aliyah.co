@@ -1,0 +1,4 @@
+# AuthType Basic
+# AuthName "Some Name"
+# AuthUserFile /home/u19121/phpbb.aliyah.co/www/fc/admin/edit/.htpasswd
+# require valid-user 

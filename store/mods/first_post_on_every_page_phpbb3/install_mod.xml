@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
+<!--NOTICE: Please open this file in your web browser. If presented with a security warning, you may safely tell it to allow the blocked content.-->
+<!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD.\nAlthough MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD.\nNo support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.5.xsd">
+	<header>
+		<meta name="generator" content="MODX file generated with PP MODX Creator by tumba25 (online version)"/>
+		<meta name="generator" content="Phpbb.ModTeam.Tools (c#)"/>
+		<license><![CDATA[http://opensource.org/licenses/gpl-license.php GNU General Public License v2]]></license>
+		<title lang="en"><![CDATA[First post on every page]]></title>
+		<description lang="en"><![CDATA[This mod allows to show first post of topic on top of it's every page in phpBB3.]]></description>
+		<author-group>
+			<author>
+				<username><![CDATA[rxu]]></username>
+				<homepage><![CDATA[http://phpbbguru.net]]></homepage>
+				<email><![CDATA[rxu@mail.ru]]></email>
+			</author>
+		</author-group>
+		<mod-version>1.2.3</mod-version>
+		<installation>
+			<level>easy</level>
+			<time>480</time>
+			<target-version>3.0.8</target-version>
+		</installation>
+		<history>
+			<entry>
+				<date>2007-06-06T00:00:00+08:00</date>
+				<rev-version>1.0.0.</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[Initial release]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2007-06-09T00:00:00+08:00</date>
+				<rev-version>1.0.1.</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[Show first post only in second half of a topic bug fixed]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2007-06-13T00:00:00+08:00</date>
+				<rev-version>1.0.2.</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[Show first post setting switching off after reply bug fixed]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2007-09-21T00:00:00+08:00</date>
+				<rev-version>1.1.0.</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[Show first post setting when posting new topic feature added. General code changes.]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2007-10-13T00:00:00+08:00</date>
+				<rev-version>1.1.1.</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[License information added]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2007-10-28T00:00:00+08:00</date>
+				<rev-version>1.2.0.</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[Repacked for MODX policy compliance]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2007-12-24T00:00:00+07:00</date>
+				<rev-version>1.2.1.</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[Minor bugs fixes]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2007-12-27T00:00:00+07:00</date>
+				<rev-version>1.2.2.</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[Unmark checkbox error fixed]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2011-01-29</date>
+				<rev-version>1.2.3.</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[Installation instruction adjustment for phpBB 3.0.8. Fix bug with post edit message author.]]></change>
+				</changelog>
+			</entry>
+		</history>
+		<link-group>
+			<link type="template" href="./templates/prosilver.xml" lang="en">prosilver</link>
+			<link type="template" href="./templates/subsilver2.xml" lang="en">subsilver2</link>
+		</link-group>
+	</header>
+	<action-group>
+		<sql><![CDATA[ALTER TABLE phpbb_topics ADD topic_first_post_show TINYINT(1) UNSIGNED DEFAULT '0' NOT NULL;]]></sql>
+		<open src="posting.php">
+			<edit>
+				<find><![CDATA[$post_data['poll_options']		= array();]]></find>
+				<action type="after-add"><![CDATA[$post_data['topic_first_post_show'] = (isset($post_data['topic_first_post_show'])) ? $post_data['topic_first_post_show'] : 0;]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	$poll_delete		= (isset($_POST['poll_delete'])) ? true : false;]]></find>
+				<action type="after-add"><![CDATA[	$topic_first_post_show = (isset($_POST['topic_first_post_show'])) ? true : false;]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[			// Check the permissions for post approval. Moderators are not affected.]]></find>
+				<action type="before-add"><![CDATA[			// Show/Unshow first post on every page
+			if(($mode == 'edit' && $post_id == $post_data['topic_first_post_id']) || $mode == 'post')
+			{
+				if($mode == 'post')
+				{
+					$topic_id = $data['topic_id'];
+				}
+
+				$perm_show_unshow = ($auth->acl_get('m_lock', $forum_id) || ($auth->acl_get('f_user_lock', $forum_id) && $user->data['is_registered'] && !empty($post_data['topic_poster']) && $user->data['user_id'] == $post_data['topic_poster'])) ? true : false;
+
+				if($post_data['topic_first_post_show'] != $topic_first_post_show && $perm_show_unshow)
+				{
+					$sql = 'UPDATE ' . TOPICS_TABLE . '
+						SET topic_first_post_show = ' . (($topic_first_post_show) ? 1 : 0) . " 
+						WHERE topic_id = $topic_id";
+					$db->sql_query($sql);
+
+				}
+			}
+]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[$s_topic_icons = false;]]></find>
+				<action type="before-add"><![CDATA[// Do show show first post on every page checkbox only in first post
+$first_post_show_allowed = false;
+if(($mode == 'edit' && $post_id == $post_data['topic_first_post_id']) || $mode == 'post')
+{
+	$first_post_show_allowed = true;
+}
+]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[$lock_post_checked	= (isset($post_lock)) ? $post_lock : $post_data['post_edit_locked'];]]></find>
+				<action type="after-add"><![CDATA[$first_post_show_checked = (isset($post_data['topic_first_post_show'])) ? $post_data['topic_first_post_show'] : 0;]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	'S_FORM_ENCTYPE'			=> $form_enctype,]]></find>
+				<action type="after-add"><![CDATA[	'S_FIRST_POST_SHOW_ALLOWED'		=> ($first_post_show_allowed  && ($auth->acl_get('m_lock', $forum_id) || ($auth->acl_get('f_user_lock', $forum_id) && $user->data['is_registered'] && !empty($post_data['topic_poster']) && $user->data['user_id'] == $post_data['topic_poster']))) ? true : false,
+	'S_FIRST_POST_SHOW_CHECKED'		=> ($first_post_show_checked) ? ' checked="checked"' : '',]]></action>
+			</edit>
+		</open>
+		<open src="viewtopic.php">
+			<edit>
+				<find><![CDATA[$i = ($store_reverse) ? $sql_limit - 1 : 0;]]></find>
+				<action type="after-add"><![CDATA[// First post on every page
+// Show first post on every page if needed
+// For the case the user is trying to reach the first half of the topic
+if ($topic_data['topic_first_post_show'] && ($start != 0))
+{
+	if (!$store_reverse)
+	{
+		$post_list[$i] = (int) $topic_data['topic_first_post_id'];
+	}
+	$i++;
+}]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	($store_reverse) ? $i-- : $i++;
+}
+$db->sql_freeresult($result);]]></find>
+				<action type="after-add"><![CDATA[// First post on every page
+// Show first post on every page if needed
+// For the case the user is trying to reach the second half of the topic
+if ($topic_data['topic_first_post_show'] && ($start != 0) && $store_reverse)
+{
+	$post_list[$i] = (int) $topic_data['topic_first_post_id'];
+}]]></action>
+			</edit>
+		</open>
+		<open src="language/en/common.php">
+			<edit>
+				<find><![CDATA[	'FIND_USERNAME'			=> 'Find a member',]]></find>
+				<action type="after-add"><![CDATA[	'FIRST_POST_SHOW'		=> 'Show on top of every page',]]></action>
+			</edit>
+		</open>
+		<open src="styles/prosilver/template/posting_editor.html">
+			<edit>
+				<find><![CDATA[			<!-- IF S_LOCK_POST_ALLOWED -->
+				<div><label for="lock_post"><input type="checkbox" name="lock_post" id="lock_post"{S_LOCK_POST_CHECKED} /> {L_LOCK_POST} [{L_LOCK_POST_EXPLAIN}]</label></div>
+			<!-- ENDIF -->]]></find>
+				<action type="after-add"><![CDATA[			<!-- IF S_FIRST_POST_SHOW_ALLOWED -->
+				<div><label for="topic_first_post_show"><input type="checkbox" name="topic_first_post_show" id="topic_first_post_show"{S_FIRST_POST_SHOW_CHECKED} /> {L_FIRST_POST_SHOW} </label></div>
+			<!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+	</action-group>
+</mod>

@@ -1,0 +1,177 @@
+﻿#content {
+	padding:0px;
+	
+	width:100%;
+}
+
+.question_div {
+	position:relative;
+	left:25%;
+	height:45px;
+	text-align:center;
+	font-size:xx-large;	
+	width:50%;
+}
+
+.status_div {
+	text-align:left;
+	font-style:italic;
+	font-size:large;
+	color:gray;
+
+	background-color: #F0F0F0;
+	padding-top:25px;
+	padding-bottom:25px;
+	padding-left:45px;
+	padding-right:45px;
+	
+}
+.status_good {
+	text-align:left;
+	font-style:italic;
+	font-size:large;
+	color:green;	
+
+	background-color: #F0F0F0;
+	padding-top:25px;
+	padding-bottom:25px;
+	padding-left:45px;
+	padding-right:45px;
+
+}
+.status_bad {
+	text-align:left;
+	font-style:italic;
+	font-size:large;
+	color:red;	
+
+	background-color: #F0F0F0;
+	padding-top:25px;
+	padding-bottom:25px;
+	padding-left:45px;
+	padding-right:45px;
+}
+
+.answer_form_div {
+	height:auto;
+	text-align:center;
+	font-size:xx-large;	
+}
+
+
+.answer_original_question
+{
+	height:40px;
+	text-align:left;
+	font-style:normal;
+	font-size:xx-large;
+	color:black;
+	background-color: #F0F0F0;
+	padding-top:0px;
+	padding-bottom:5px;
+	padding-left:45px;
+	padding-right:45px;
+}
+
+.answer_primary
+{
+	height:35px;
+	text-align:left;
+	font-style:italic;
+	font-size:large;
+	color:#333333;
+	background-color: #F0F0F0;
+	padding-top:0px;
+	padding-bottom:0px;
+	padding-left:45px;
+	padding-right:45px;
+}
+
+.answer_secondary
+{
+	height:25px;
+	text-align:left;
+	font-style:italic;
+	font-size:medium;
+	color:#333333;	
+	background-color: #F0F0F0;
+	padding-top:0px;
+	padding-bottom:0px;
+	padding-left:45px;
+	padding-right:45px;
+}
+
+
+.next_left {
+	width:25%;
+
+	padding-left:5%;
+}
+.next_right {
+	width:25%;
+}
+.next_center {
+	width:50%;
+}
+
+.mistakes {
+	width:100%;
+	border:0px;
+	background-color:#F0F0F0;
+}
+.mistakes_question {
+	font-size: xx-large;
+	text-align:left;
+	padding-left:35px;
+	padding-top:7px;
+	padding-bottom:7px;
+	width:1px;
+}
+
+.mistakes_answer {
+	font-size: large;
+	font-style:italic;
+	text-align:left;
+	padding-left:15px;
+
+}
+.form_fieldset {
+	padding:10px;
+	width:40%;
+
+}
+.div_test_contents {
+	float:right;
+	width:60%;
+}
+.answer_tr_light {
+	background-color:#F0F0F0;
+}
+.answer_tr_dark {
+	background-color:#AAAAAA;
+}
+
+.test_contents_td{
+	padding-top:5px;
+	padding-bottom:5px;
+	padding-left:7px;
+	padding-right:7px;
+	font-style:italic;
+	font-weight:lighter;
+	font-size:medium;
+	font-family:Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.test_contents_th{
+	padding-top:5px;
+	padding-bottom:5px;
+	padding-left:7px;
+	padding-right:7px;
+	
+	text-align:right;
+	font-size:large;
+	font-weight:normal;
+	font-family:Verdana, Geneva, Tahoma, sans-serif;
+}
+
+

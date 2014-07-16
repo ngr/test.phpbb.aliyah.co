@@ -1,0 +1,66 @@
+/* Blocks */
+
+.block-main {
+	border: solid 1px #dddddd;
+	background-color: #f8f8f8;
+	margin: 5px 0;
+}
+
+.block-main-nb {
+	border: solid 1px #eeeeee;
+	background-color: #f8f8f8;
+}
+
+.tbl {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.tbl-title {
+	margin-top: 5px;
+	overflow: hidden;
+	font-weight: bold;
+	font-size: 1.1em;
+}
+
+.tbl-h-c {
+	background: url('./images/blocks/tbl_h_c.gif') bottom left repeat-x;
+	height: 29px;
+	font-weight: bold;
+	/*font-size: 1.3em;*/
+	text-align: center;
+	vertical-align: middle;
+	margin: 0;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.tbl-h-l {
+	background: url('./images/blocks/tbl_h_l.gif') bottom left no-repeat;
+	padding-left: 27px;
+}
+
+.tbl-h-r {
+	background: url('./images/blocks/tbl_h_r.gif') bottom right no-repeat;
+	padding-right: 27px;
+}
+
+.tbl-f-c {
+	background: url('./images/blocks/tbl_f_c.gif') bottom left repeat-x;
+	height: 3px;
+	font-size: 0.1em;
+	margin: 0;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.tbl-f-l {
+	background: url('./images/blocks/tbl_f_l.gif') bottom left no-repeat;
+	padding-left: 4px;
+}
+
+.tbl-f-r {
+	background: url('./images/blocks/tbl_f_r.gif') bottom right no-repeat;
+	padding-right: 4px;
+}
+
