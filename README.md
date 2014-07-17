@@ -9,8 +9,8 @@ There are the following modules implemented now:
 
 This repository is the production master of the project and should clone only stable versions of test.phpbb.aliyah.co.git
 
-Flashcards (fc/ directory) copyright is not protected for this time but belongs to Nikolay Grishchenko aka ngr web@grischenko.ru
-(C) ngr 2014
+Flashcards (fc/ directory) copyright is not protected for this time but belongs to Nikolay Grishchenko web@grischenko.ru
+(c) ngr 2014
 
 ====================
 
