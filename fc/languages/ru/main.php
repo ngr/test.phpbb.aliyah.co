@@ -43,10 +43,10 @@ $lang = array(
 	'RESULT_SKIPPED'			=> 'Вопрос пропущен',
 
 	'RESET_CURRENT_TEST'		=> 'Сбросить тест.',
-	'UNIFINISHED_TEST_EXISTS'		=> 'У Вас есть незаконченный тест.',
-	'START_TEST'		=> 'Продолжить тест',
-	'RESUME_TEST'		=> 'Начать тест',
-	'SHOW_QUESTIONS'		=> 'Показать вопросы',
+	'UNIFINISHED_TEST_EXISTS'	=> 'У Вас есть незаконченный тест.',
+	'START_TEST'				=> 'Начать тест',
+	'RESUME_TEST'				=> 'Продолжить тест',
+	'SHOW_QUESTIONS'			=> 'Показать вопросы',
 
 );
 
