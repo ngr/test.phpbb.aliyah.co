@@ -1,5 +1,8 @@
 # Temporary joe files
 *~
 
+# Cache and backups
+cache/
+
 # MySQL backups
 backup_*
