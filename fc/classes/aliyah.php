@@ -993,9 +993,6 @@ class aliyah {
 # I know a lot of wrong this below, but this is really not my job. So please simply do not mind while it works.
 # Once again, I NEED a front-ender!
 	
-# DEBUG	$_SESSION['fc']['questions'] = false;
-# DEBUG	$_SESSION['fc']['session_id'] = false;
-
 		global $lang, $config_fc, $template, $fc_db, $fc_db_struct;
 		
 		$template->set_filenames(array(
@@ -1007,6 +1004,12 @@ class aliyah {
 			'U_LAUNCHER_FORM_POST' => '?mode=next',
 			)
 		);
+		
+# Check if there is unfinished (hanging) test. If so we simply set S_UNIFINISHED_TEST_EXISTS=true. The rest is resolved in templates.
+		if ( $_SESSION['fc']['session_id'] )
+		{
+			$template->assign_var( 'S_UNFINISHED_TEST_EXISTS', true );
+		}
 		
 
 # Assign test types of not empty tests.

@@ -175,3 +175,8 @@
 }
 
 
+.warning_message {
+	font-size: large;
+	text-align:left;
+	color:orange;
+}

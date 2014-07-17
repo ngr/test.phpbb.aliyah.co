@@ -42,6 +42,11 @@ $lang = array(
 	'RESULT_INACCURATE'			=> 'Неточно. Попробуйте ещё раз.',
 	'RESULT_SKIPPED'			=> 'Вопрос пропущен',
 
+	'RESET_CURRENT_TEST'		=> 'Сбросить тест.',
+	'UNIFINISHED_TEST_EXISTS'		=> 'У Вас есть незаконченный тест.',
+	'START_TEST'		=> 'Продолжить тест',
+	'RESUME_TEST'		=> 'Начать тест',
+
 );
 
 ?>
