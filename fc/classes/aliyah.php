@@ -1013,6 +1013,7 @@ class aliyah {
 			$template->assign_vars(array(
 				'S_UNFINISHED_TEST_EXISTS'	=> true,
 				'L_RESET_CURRENT_TEST' 			=> $lang['RESET_CURRENT_TEST'] ,
+				'L_RESUME_TEST' 			=> $lang['RESUME_TEST'] ,
 				'L_UNIFINISHED_TEST_EXISTS'		=> $lang['UNIFINISHED_TEST_EXISTS'],
 				)
 			);
