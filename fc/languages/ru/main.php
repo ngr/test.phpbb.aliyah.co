@@ -46,6 +46,7 @@ $lang = array(
 	'UNIFINISHED_TEST_EXISTS'		=> 'У Вас есть незаконченный тест.',
 	'START_TEST'		=> 'Продолжить тест',
 	'RESUME_TEST'		=> 'Начать тест',
+	'SHOW_QUESTIONS'		=> 'Показать вопросы',
 
 );
 

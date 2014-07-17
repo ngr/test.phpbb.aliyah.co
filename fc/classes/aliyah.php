@@ -1001,14 +1001,21 @@ class aliyah {
 		);
 
 		$template->assign_vars(array(
-			'U_LAUNCHER_FORM_POST' => '?mode=next',
+			'U_LAUNCHER_FORM_POST'	=> '?mode=next',
+			'L_START_TEST' 			=> $lang['START_TEST'] ,
+			'L_SHOW_QUESTIONS'		=> $lang['SHOW_QUESTIONS'],
 			)
 		);
 		
 # Check if there is unfinished (hanging) test. If so we simply set S_UNIFINISHED_TEST_EXISTS=true. The rest is resolved in templates.
 		if ( $_SESSION['fc']['session_id'] )
 		{
-			$template->assign_var( 'S_UNFINISHED_TEST_EXISTS', true );
+			$template->assign_vars(array(
+				'S_UNFINISHED_TEST_EXISTS'	=> true,
+				'L_RESET_CURRENT_TEST' 			=> $lang['RESET_CURRENT_TEST'] ,
+				'L_UNIFINISHED_TEST_EXISTS'		=> $lang['UNIFINISHED_TEST_EXISTS'],
+				)
+			);
 		}
 		
 
