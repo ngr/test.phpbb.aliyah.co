@@ -4625,6 +4625,12 @@ function page_header($page_title = '', $display_online_list = true, $item_id = 0
 		}
 	}
 
+// These are additional params for customised forum. May be broken during phpBB updates.
+	$template->assign_vars(array(
+		'U_FC'					=> append_sid("{$phpbb_root_path}fc"),
+		)
+	);
+
 	// The following assigns all _common_ variables that may be used at any point in a template.
 	$template->assign_vars(array(
 		'SITENAME'						=> $config['sitename'],
