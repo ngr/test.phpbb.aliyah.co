@@ -1,6 +1,11 @@
 # Temporary joe files
 *~
 
+# Temporary MS Expression Web files and dirs
+_vti_cnf/
+_vti_pvt/
+desktop.ini
+
 # Cache and backups
 cache/
 
