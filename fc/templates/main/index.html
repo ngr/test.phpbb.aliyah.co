@@ -30,6 +30,19 @@
 			</table>
 		</div>
 		<!-- ENDIF -->
+		
+		<!-- IF S_PAGE_INDEX -->
+		<div class="p_index_mainbox" style="float:right; width: 60%;"><h3>{L_WELCOME_MESSAGE}</h3>
+			<table>
+			<!-- BEGIN test_contents -->
+				<tr class="{test_contents.TR_CLASS}">
+				<th class="test_contents_th">{test_contents.HEBREW}</th><td class="test_contents_td">{test_contents.TRANSLATION}</td>
+				</tr>
+			<!-- END test_contents -->
+			</table>
+		</div>
+		<!-- ENDIF -->
+		
 
 
         <form action="{U_LAUNCHER_FORM_POST}" method="post">
