@@ -1,6 +1,6 @@
 ﻿<!-- INCLUDE overall_header.html -->
 <link href="{U_STYLESHEET}" rel="stylesheet" type="text/css" />
-<div id="middlepart">
+<div id="middlepart"> new-2
 	<!-- IF S_UNFINISHED_TEST_EXISTS -->
 	  <div style="font-style:italic;font-size:x-small;width:100%;text-align:right;"><a href="?mode=reset">{L_RESET_CURRENT_TEST}</a></div>
 	<!-- ENDIF -->
@@ -34,11 +34,15 @@
 		<!-- IF S_PAGE_INDEX -->
 		<div class="p_index_mainbox" style="float:right; width: 60%;"><h3>{L_WELCOME_MESSAGE}</h3>
 			<table>
-			<!-- BEGIN test_contents -->
-				<tr class="{test_contents.TR_CLASS}">
-				<th class="test_contents_th">{test_contents.HEBREW}</th><td class="test_contents_td">{test_contents.TRANSLATION}</td>
+				<!-- BEGIN index_mainbox_tr -->
+				<tr class="{index_mainbox_tr.TR_CLASS}">
+
+					<!-- BEGIN index_mainbox_tr.index_mainbox_td -->
+					<td class="{index_mainbox_tr.index_mainbox_td.TD_CLASS}">{index_mainbox_tr.index_mainbox_td.TD_CONTENT}</td>
+					<!-- END index_mainbox_tr.index_mainbox_td -->
+					
 				</tr>
-			<!-- END test_contents -->
+				<!-- END index_mainbox_tr -->
 			</table>
 		</div>
 		<!-- ENDIF -->
