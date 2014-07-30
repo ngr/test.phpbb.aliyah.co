@@ -987,6 +987,24 @@ class aliyah {
     	endswitch;
 	}
 	
+	function build_index_mainbox()
+	{
+		global $lang, $template;
+		
+		$template->assign_vars(
+			'S_PAGE_INDEX'	=> true,
+		);
+		
+		$tempate->assign_block_vars(array( 'index_mainbox_tr', array(
+					'index_mainbox_td', array(
+						'TD_CONTENT' => 'Mytext',
+					)
+				)
+			)
+		);
+		
+	}
+	
 	function index()
 	{
 # Here will be a lot of BAD BAD BAD interface params. Unfortunately there is no front-end developer in the team yet.
@@ -1006,6 +1024,9 @@ class aliyah {
 			'L_SHOW_QUESTIONS'		=> $lang['SHOW_QUESTIONS'],
 			)
 		);
+		
+# Construct welcome mainbox
+		$this->build_index_mainbox();
 		
 # Check if there is unfinished (hanging) test. If so we simply set S_UNIFINISHED_TEST_EXISTS=true. The rest is resolved in templates.
 		if ( $_SESSION['fc']['session_id'] )
