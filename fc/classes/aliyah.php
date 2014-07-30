@@ -996,10 +996,9 @@ class aliyah {
 			)
 		);
 		
-		$template->assign_block_vars('index_mainbox_tr', array(
-				'index_mainbox_tr.index_mainbox_td' => array(
+		$template->assign_block_vars('index_mainbox_tr', array() );
+		$template->assign_block_vars('index_mainbox_tr.index_mainbox_td', array(
 					'TD_CONTENT' => 'My Sample Text',
-				)
 			)
 		);
 		
