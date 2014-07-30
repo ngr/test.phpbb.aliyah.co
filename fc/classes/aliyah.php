@@ -991,8 +991,9 @@ class aliyah {
 	{
 		global $lang, $template;
 		
-		$template->assign_vars(
-			'S_PAGE_INDEX'	=> true,
+		$template->assign_vars(array(
+				'S_PAGE_INDEX'	=> true,
+			)
 		);
 		
 		$tempate->assign_block_vars(array( 'index_mainbox_tr', array(
