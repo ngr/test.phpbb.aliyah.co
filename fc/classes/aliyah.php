@@ -996,9 +996,9 @@ class aliyah {
 			)
 		);
 		
-		$tempate->assign_block_vars(array( 'index_mainbox_tr', array(
-					'index_mainbox_td', array(
-						'TD_CONTENT' => 'Mytext',
+		$template->assign_block_vars(array( 'index_mainbox_tr', array(
+					'index_mainbox_tr.index_mainbox_td', array(
+						'TD_CONTENT' => 'My Sample Text',
 					)
 				)
 			)
