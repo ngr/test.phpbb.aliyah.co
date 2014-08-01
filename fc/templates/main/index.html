@@ -1,6 +1,6 @@
 ﻿<!-- INCLUDE overall_header.html -->
 <link href="{U_STYLESHEET}" rel="stylesheet" type="text/css" />
-<div id="middlepart"> new-2
+<div id="middlepart">
 	<!-- IF S_UNFINISHED_TEST_EXISTS -->
 	  <div style="font-style:italic;font-size:x-small;width:100%;text-align:right;"><a href="?mode=reset">{L_RESET_CURRENT_TEST}</a></div>
 	<!-- ENDIF -->
@@ -17,8 +17,7 @@
     <table width="100%" cellpadding="0" cellspacing="0">
       <tr>
         <td class="content-box" valign="top" align="left" style="padding-right: 0;">
-        <div class="content-text">
-        
+      
 		<!-- IF .test_contents -->
 		<div style="float:right; width: 60%;"><h3>{CURRENT_TEST_CONTENTS}</h3>
 			<table>
@@ -31,12 +30,13 @@
 		</div>
 		<!-- ENDIF -->
 		
+		<div class="p_index_mainbox">
 		<!-- IF S_PAGE_INDEX -->
-			<div class="p_index_mainbox"><h3>{L_WELCOME_MESSAGE}</h3></div>
+			<h3>{L_WELCOME_MESSAGE}</h3>
 		<!-- ENDIF -->
 
 		<!-- IF .index_mainbox_tr -->
-			<div class="p_index_mainbox"><table>
+			<table>
 			<!-- BEGIN index_mainbox_tr -->
 				<tr>
 					<!-- BEGIN index_mainbox_td -->
@@ -46,21 +46,21 @@
 					<!-- END index_mainbox_td -->
 				</tr>
 			<!-- END index_mainbox_tr -->
-			</table></div>
+			</table>
 		<!-- ENDIF -->
-		
+		</div>
 
-
+		<div class="left_menu_box">
         <form action="{U_LAUNCHER_FORM_POST}" method="post">
         <div  class="form_fieldset">
-        <fieldset name="GroupLessons">
-				<legend>Уроки</legend>
-				<select multiple="multiple" name="lesson[]" style="width: 250px; height: 150px">
-				<!-- BEGIN lesson -->
-					<option value="{lesson.VALUE}" <!-- IF lesson.SELECTED --> selected="{lesson.SELECTED}"<!-- ENDIF -->>{lesson.DESCRIPTION}</option>
-				<!-- END lesson -->				
-				</select>
-		</fieldset>
+	        <fieldset name="GroupLessons">
+					<legend>Уроки</legend>
+					<select multiple="multiple" name="lesson[]" style="width: 250px; height: 150px">
+					<!-- BEGIN lesson -->
+						<option value="{lesson.VALUE}" <!-- IF lesson.SELECTED --> selected="{lesson.SELECTED}"<!-- ENDIF -->>{lesson.DESCRIPTION}</option>
+					<!-- END lesson -->				
+					</select>
+			</fieldset>
 		</div>
 			
         <!-- BEGIN input -->
@@ -107,17 +107,22 @@
 			<!-- ELSE -->
 		        <input type="submit" name="start_test" value="{L_START_TEST}" style="border-radius: 10px; position: relative; left: 15px; top: 15px; width: 145px; font-family: Verdana; height: 35px; color: #1e8fc7;"> &nbsp; 
 			<!-- ENDIF -->    
-				<input type="submit" name="show_lesson_contents" value="{L_SHOW_QUESTIONS}" style="border-radius: 10px; position: relative; left: 15px; top: 15px; width: 145px; font-family: Verdana; height: 35px; color: #1e8fc7;">        </div>
+				<input type="submit" name="show_lesson_contents" value="{L_SHOW_QUESTIONS}" style="border-radius: 10px; position: relative; left: 15px; top: 15px; width: 145px; font-family: Verdana; height: 35px; color: #1e8fc7;">
+		</div>
 
         </form>
-        
         </div>
         </td>
       </tr>
     </table>
-<div style="font-style:italic;font-size:large;text-align:left; padding-top:50px;">Рекомендуем ознакомиться: <a href="http://phpbb.aliyah.co/viewtopic.php?f=6&amp;t=16http://phpbb.aliyah.co/viewtopic.php?f=6&amp;t=16">Инструкция и замечания! </a></div>
+    
+	<div style="font-style:italic;font-size:large;text-align:left; padding-top:50px;">
+		Рекомендуем ознакомиться: <a href="http://phpbb.aliyah.co/viewtopic.php?f=6&amp;t=16http://phpbb.aliyah.co/viewtopic.php?f=6&amp;t=16">Инструкция и замечания! </a>
+	</div>
     <!-- IF L_DB_QUERIES -->
-    <div style="font-style:italic;font-size:x-small;text-align:left;">DB queries: {L_DB_QUERIES} <br> DB query time: {L_DB_QUERY_TIME}</div>
+    <div style="font-style:italic;font-size:x-small;text-align:left;">
+    	DB queries: {L_DB_QUERIES} <br> DB query time: {L_DB_QUERY_TIME}
+    </div>
     <!-- ENDIF -->
   </div>
 

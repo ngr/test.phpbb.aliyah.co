@@ -185,3 +185,8 @@
 	float: right;
 	width:60%;
 }
+
+.left_menu_box {
+	float: left;
+	width:300px;
+}
