@@ -35,22 +35,24 @@
 			<h3>{L_WELCOME_MESSAGE}</h3>
 		<!-- ENDIF -->
 
-		<!-- IF .index_mainbox_tr -->
-			<table>
-			<!-- BEGIN index_mainbox_tr -->
-				<tr>
-					<!-- BEGIN index_mainbox_td -->
-					<td>
-						{index_mainbox_tr.index_mainbox_td.TD_CONTENT}
-					</td>
-					<!-- END index_mainbox_td -->
-				</tr>
-			<!-- END index_mainbox_tr -->
-			</table>
+		<!-- IF .index_mainbox -->
+			<!-- BEGIN index_mainbox -->
+				<table>
+				<!-- BEGIN index_mainbox_tr -->
+					<tr>
+						<!-- BEGIN index_mainbox_td -->
+						<td>
+							{index_mainbox.index_mainbox_tr.index_mainbox_td.TD_CONTENT}
+						</td>
+						<!-- END index_mainbox_td -->
+					</tr>
+				<!-- END index_mainbox_tr -->
+				</table>
+			<!-- END index_mainbox -->
 		<!-- ENDIF -->
 		</div>
 
-		<div class="left_menu_box">
+		<div class="left_menubox">
         <form action="{U_LAUNCHER_FORM_POST}" method="post">
         <div  class="form_fieldset">
 	        <fieldset name="GroupLessons">
