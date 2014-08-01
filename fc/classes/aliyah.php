@@ -1011,7 +1011,7 @@ class aliyah {
 	
 # This functions gets $cont array and params to distribute values from it and push to $parent template block_var.
 # This whole workflow is not nice so feel the rewrite it anytime.
-	function build_index_table( $parent, $cont, $cols = 1, $hrows = 1, )
+	function build_index_table( $parent, $cont, $cols = 1, $hrows = 1 )
 	{
 		global $lang, $template;
 		
