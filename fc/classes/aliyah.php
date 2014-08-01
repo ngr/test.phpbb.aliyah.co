@@ -996,13 +996,49 @@ class aliyah {
 			)
 		);
 		
-		$template->assign_block_vars('index_mainbox', array() );
-		$template->assign_block_vars('index_mainbox.index_mainbox_tr', array() );
+ 		$template->assign_block_vars('index_mainbox', array() );
+/*		$template->assign_block_vars('index_mainbox.index_mainbox_tr', array() );
 		$template->assign_block_vars('index_mainbox.index_mainbox_tr.index_mainbox_td', array(
 					'TD_CONTENT' => 'My Sample Text',
 			)
-		);
+		); // */
 		
+		$sample = array('C1R1', 'C2R1', 'C3R1', 'C1R2', 'C2R2', 'C3R2', 'C1R3', 'C2R3', 'C3R3' );
+		$this->build_index_table( 'index_mainbox',  $sample, 3, 0);
+		
+		
+	}
+	
+# This functions gets $cont array and params to distribute values from it and push to $parent template block_var.
+# This whole workflow is not nice so feel the rewrite it anytime.
+	function build_index_table( $parent, $cont, $cols = 1, $hrows = 1, )
+	{
+		global $lang, $template;
+		
+		if ( !isset( $cont ) || !is_array( $cont ) )
+		{
+			$this->record_debug( 'build_index_table() recieved incorrect content: ' . view($cont) );
+			return NULL;
+		}
+		
+		$c = 0;
+		$template->assign_block_vars( $parent . '.index_mainbox_tr', array() );
+		foreach ( $cont as $key => $val )
+		{		
+			if ( $c == $cols )
+			{
+				$template->assign_block_vars( $parent . '.index_mainbox_tr', array() );
+				$c = 0;
+			}
+			
+			$template->assign_block_vars( $parent . '.index_mainbox_tr.index_mainbox_td', array(
+						'TD_CONTENT' => $cont[$key],
+				)
+			);
+			
+			$c++;
+		}
+		return 1;
 	}
 	
 	function index()
