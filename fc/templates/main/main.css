@@ -180,3 +180,8 @@
 	text-align:left;
 	color:orange;
 }
+
+.p_index_mainbox {
+	float: right;
+	width:60%;
+}
