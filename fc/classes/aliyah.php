@@ -989,7 +989,7 @@ class aliyah {
 	
 	function build_index_mainbox()
 	{
-		global $lang, $template;
+		global $lang, $user, $template;
 		
 		$template->assign_vars(array(
 				'S_PAGE_INDEX'	=> true,
@@ -1028,7 +1028,7 @@ class aliyah {
 	{
 		global $fc_db, $fc_db_struct, $user, $config_fc, $lang;
 	
-//		view($_SESSION);
+		view($_SESSION);
 		
 	}
 
