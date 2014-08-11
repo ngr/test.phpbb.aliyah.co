@@ -997,32 +997,12 @@ class aliyah {
 		);
 		
  		$template->assign_block_vars('index_mainbox', array() );
-/*		$template->assign_block_vars('index_mainbox.index_mainbox_tr', array() );
-		$template->assign_block_vars('index_mainbox.index_mainbox_tr.index_mainbox_td', array(
-					'TD_CONTENT' => 'My Sample Text',
-			)
-		); // */
 		
-		$smpl5 = $this->get_user_common_stats( $user->data['user_id'] );
-//		view($smpl5);
+#Get common statistics for the current user to draw on index page
+		$common_stats = $this->get_user_common_stats( $user->data['user_id'] );
 		
-		$smpl3 = array( 
-			0 => array( 'Name', 'ID', 'Date of Registration', 'Average Result'),
-			1 => array(
-				'Pupkin Vasil',
-				$user->data['user_id'],
-				'15.06.2014',
-				'25%'),
-		);
-			
-				
-		
-		
-		
-		$sample = array($this->make_html_table_to_string( $smpl5 ), 'C2R1', $this->make_html_table_to_string( $smpl3, 4, 1 ), 'C1R2', 'C2R2', 'C3R2', 'C1R3', 'C2R3', 'C3R3' );
+		$sample = array($this->make_html_table_to_string( $common_stats ), '', '' );
 		$this->build_index_table( 'index_mainbox',  $sample, 3, 0);
-		
-		
 	}
 
 	function get_user_common_stats ( $u )
