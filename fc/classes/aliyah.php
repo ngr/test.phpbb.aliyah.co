@@ -1003,7 +1003,7 @@ class aliyah {
 			)
 		); // */
 		
-		$smpl5 = $this->get_user_common_stats( 48 );
+		$smpl5 = $this->get_user_common_stats( $user->data['user_id'] );
 		
 		$smpl3 = array( 
 			0 => array( 'Name', 'ID', 'Date of Registration', 'Average Result'),
@@ -1028,7 +1028,7 @@ class aliyah {
 	{
 		global $fc_db, $fc_db_struct, $user, $config_fc, $lang;
 	
-		if ( $u != $user->data['user_id'] || $user->data['user_type'] != 3 )
+		if ( $u != $user->data['user_id'] && $user->data['user_type'] != 3 )
 		{
 			$this->record_debug( 'get_user_common_stats() was asked for non autorised data for user: ' . $u );
 			return NULL;
