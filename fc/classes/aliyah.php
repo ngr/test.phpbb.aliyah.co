@@ -1048,7 +1048,7 @@ class aliyah {
 		$result[] = array( $lang['REGISTERED_TIME'], $this->say_interval( $user->data['user_regdate'], time() ) );
 
 # Days absent
-		$result[] = array( $lang['SINCE_LAST_VISIT_TIME'], $this->say_interval( $user->data['user_last_visit'], time() ) );
+		$result[] = array( $lang['SINCE_LAST_VISIT_TIME'], $this->say_interval( $user->data['user_lastvisit'], time() ) );
 
 # Return result		
 		return $result;
