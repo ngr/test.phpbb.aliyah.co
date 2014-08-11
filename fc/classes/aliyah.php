@@ -1004,6 +1004,7 @@ class aliyah {
 		); // */
 		
 		$smpl5 = $this->get_user_common_stats( $user->data['user_id'] );
+//		view($smpl5);
 		
 		$smpl3 = array( 
 			0 => array( 'Name', 'ID', 'Date of Registration', 'Average Result'),
@@ -1048,6 +1049,8 @@ class aliyah {
 		if ($interval->d) $r .= $interval->d . " " . $lang['DAYS'];
 		
 		$result[] = array( $lang['REGISTERED_TIME'], $r );
+		
+		return $result;
 		
 	}
 
