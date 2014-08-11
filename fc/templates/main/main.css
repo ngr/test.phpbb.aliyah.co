@@ -197,7 +197,8 @@
 }
 .t_index_mainbox_cell {
 	width: 33%;
-	border: thin;
+	padding:5px;
+	border:medium;
 	border-style:double;
 	border-color:gray;
 }

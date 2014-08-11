@@ -1003,14 +1003,84 @@ class aliyah {
 			)
 		); // */
 		
-		$sample = array('C1R1', 'C2R1', 'C3R1', 'C1R2', 'C2R2', 'C3R2', 'C1R3', 'C2R3', 'C3R3' );
+		$this->get_user_common_stats();
+		
+		$smpl3 = array( 
+			0 => array(
+				'NAME' = 'Name: ',
+				'REGDATE' = 'Date of Registration',
+				'AVG' = 'Average Result',
+				),
+			1 => array(
+				'NAME' = 'Pupkin Vasil: ',
+				'REGDATE' = '15.06.2014',
+				'AVG' = '25%',
+				),
+		);
+			
+				
+		
+		
+		
+		$sample = array($this->make_html_table_to_string( $smpl3 ), 'C2R1', 'C3R1', 'C1R2', 'C2R2', 'C3R2', 'C1R3', 'C2R3', 'C3R3' );
 		$this->build_index_table( 'index_mainbox',  $sample, 3, 0);
 		
 		
 	}
+
+	function get_user_common_stats ( $user = $_SESSION['userid'] )
+	{
+		global $fc_db, $fc_db_struct, $user, $config_fc, $lang;
+	
+		view($_SESSION);
+		
+	}
+
+# This is a hardcoded workaround for table inside table. Used instead of creating multiple dimension template.
+# FIXMELATER Should be fixed by elemination same as all other interface shit.
+	function make_html_table_to_string( $cont, $cols = 2, $hrows = 1 )
+	{
+		if ( !isset( $cont ) || !is_array( $cont ) )
+		{
+			$this->record_debug( 'make_html_table_to_string() recieved incorrect content: ' . view($cont) );
+			return NULL;
+		}
+		
+		$result =	"<table>";
+
+		$h = 0;
+		foreach ($cont as $key => $val )
+		{
+			$result .=	"<tr>";
+			
+			if ( $h < $hrows )
+			{
+				$open_cell = "<th>";
+				$close_cell = "</th>";
+			}
+			else
+			{
+				$open_cell = "<td>";
+				$close_cell = "</td>";
+			}
+			
+			$i = 0;
+			while ( $i < $cols )
+			{
+				$result .=	$open_cell . $val[$i] . $close_cell;
+				$i++;
+			}
+			$result .=	"</tr>";
+			$h++;
+		}
+		$result .=	"</table>";
+		
+		return $result;
+	}
+	
 	
 # This functions gets $cont array and params to distribute values from it and push to $parent template block_var.
-# This whole workflow is not nice so feel the rewrite it anytime.
+# FIXMELATER This whole workflow is not nice so feel the rewrite it anytime.
 	function build_index_table( $parent, $cont, $cols = 1, $hrows = 1 )
 	{
 		global $lang, $template;
