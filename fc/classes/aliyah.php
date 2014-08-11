@@ -1003,18 +1003,20 @@ class aliyah {
 			)
 		); // */
 		
-		$this->get_user_common_stats();
+		$this->get_user_common_stats( $user->data['user_id'] );
 		
 		$smpl3 = array( 
 			0 => array(
 				'NAME' => 'Name: ',
+				'ID'	=> 'ID',
 				'REGDATE' => 'Date of Registration',
 				'AVG' => 'Average Result',
 				),
 			1 => array(
-				'NAME' => 'Pupkin Vasil: ',
-				'REGDATE' => '15.06.2014',
-				'AVG' => '25%',
+				'NAME' 		=> 'Pupkin Vasil',
+				'ID'		=> $user->data['user_id'],
+				'REGDATE'	=> '15.06.2014',
+				'AVG'		=> '25%',
 				),
 		);
 			
@@ -1022,17 +1024,17 @@ class aliyah {
 		
 		
 		
-		$sample = array($this->make_html_table_to_string( $smpl3 ), 'C2R1', 'C3R1', 'C1R2', 'C2R2', 'C3R2', 'C1R3', 'C2R3', 'C3R3' );
+		$sample = array($this->make_html_table_to_string( $smpl3, 4, 1 ), 'C2R1', 'C3R1', 'C1R2', 'C2R2', 'C3R2', 'C1R3', 'C2R3', 'C3R3' );
 		$this->build_index_table( 'index_mainbox',  $sample, 3, 0);
 		
 		
 	}
 
-	function get_user_common_stats ( $user = $_SESSION['userid'] )
+	function get_user_common_stats ( $user )
 	{
 		global $fc_db, $fc_db_struct, $user, $config_fc, $lang;
 	
-		view($_SESSION);
+//		view($_SESSION);
 		
 	}
 
