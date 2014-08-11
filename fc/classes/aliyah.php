@@ -1055,7 +1055,7 @@ class aliyah {
 	}
 
 # This function is optimised for Russian language to correctly count and format interval using different words.
-	fucntion say_interval( $st, $end )
+	function say_interval( $st, $end )
 	{
 		global $lang;
 		
