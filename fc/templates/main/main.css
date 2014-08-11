@@ -199,8 +199,6 @@ table.t_index_mainbox td {
 	width: 33%;
 	padding:5px;
 	border:none;
-	border-style:double;
-	border-color:gray;
 }
 
 table.t_common_stats {

@@ -1024,13 +1024,30 @@ class aliyah {
 		
 	}
 
-	function get_user_common_stats ( $user )
+	function get_user_common_stats ( $u )
 	{
 		global $fc_db, $fc_db_struct, $user, $config_fc, $lang;
 	
+		if ( $u != $user->data['user_id'] || $user->data['user_type'] != 3 )
+		{
+			$this->record_debug( 'get_user_common_stats() was asked for non autorised data for user: ' . $u );
+			return NULL;
+		}
 		
-	
-		view($user->data);
+		$result = array();
+		
+		$result[] = ( $lang['USER_ID'], $u );
+
+# Days registered
+		$regdate = new DateTime( date( 'Y-m-d', $user->data['user_regdate'] ) );
+		$today_date = new DateTime( date( 'Y-m-d' ) );
+		$interval = $regdate->diff( $today_date );
+
+		if ($interval->y) $r = $interval->y . " " . $lang['YEARS'];
+		if ($interval->m) $r .= $interval->m . " " . $lang['MONTHS'];
+		if ($interval->d) $r .= $interval->d . " " . $lang['DAYS'];
+		
+		$result[] = ( $lang['REGISTERED_TIME'], $r );
 		
 	}
 

@@ -47,6 +47,10 @@ $lang = array(
 	'START_TEST'				=> 'Начать тест',
 	'RESUME_TEST'				=> 'Продолжить тест',
 	'SHOW_QUESTIONS'			=> 'Показать вопросы',
+	
+	'USER_ID'					=> 'userid',
+	
+	
 
 );
 
