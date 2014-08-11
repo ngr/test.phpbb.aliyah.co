@@ -1003,7 +1003,7 @@ class aliyah {
 			)
 		); // */
 		
-		$smpl5 = $this->get_user_common_stats( $user->data['user_id'] );
+		$smpl5 = $this->get_user_common_stats( 48 );
 		
 		$smpl3 = array( 
 			0 => array( 'Name', 'ID', 'Date of Registration', 'Average Result'),
