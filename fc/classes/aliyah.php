@@ -1036,7 +1036,7 @@ class aliyah {
 		
 		$result = array();
 		
-		$result[] = ( $lang['USER_ID'], $u );
+		$result[] = array( $lang['USER_ID'], $u );
 
 # Days registered
 		$regdate = new DateTime( date( 'Y-m-d', $user->data['user_regdate'] ) );
@@ -1047,7 +1047,7 @@ class aliyah {
 		if ($interval->m) $r .= $interval->m . " " . $lang['MONTHS'];
 		if ($interval->d) $r .= $interval->d . " " . $lang['DAYS'];
 		
-		$result[] = ( $lang['REGISTERED_TIME'], $r );
+		$result[] = array( $lang['REGISTERED_TIME'], $r );
 		
 	}
 
