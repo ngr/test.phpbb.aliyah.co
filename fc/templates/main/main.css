@@ -182,7 +182,8 @@
 
 .p_index_mainbox {
 	float: right;
-	width:60%;
+	width:100%;
+	left:300px;
 }
 
 .left_menubox {
