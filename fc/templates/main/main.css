@@ -189,3 +189,16 @@
 	float: left;
 	width:300px;
 }
+
+.t_index_mainbox {
+	width: 100%;
+	border: thin;
+	border-style:double;
+	border-color:#333333
+}
+.t_index_mainbox_cell {
+	width: 33%;
+	border: thin;
+	border-style:solid;
+	border-color:gray;
+}
