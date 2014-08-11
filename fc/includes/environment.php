@@ -68,7 +68,7 @@ $config_fc['path'] = my_addslashes($config_fc['path']);
 require 'constants' . $config_fc['var']['phpEx'];
 
 # Load phpBB user class
-define('IN_PHPBB', true);
+//define('IN_PHPBB', true);
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : '../';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);

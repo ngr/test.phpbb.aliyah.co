@@ -1003,7 +1003,7 @@ class aliyah {
 			)
 		); // */
 		
-		$this->get_user_common_stats( $user->data['user_id'] );
+		$smpl5 = $this->get_user_common_stats( $user->data['user_id'] );
 		
 		$smpl3 = array( 
 			0 => array( 'Name', 'ID', 'Date of Registration', 'Average Result'),
@@ -1018,7 +1018,7 @@ class aliyah {
 		
 		
 		
-		$sample = array($this->make_html_table_to_string( $smpl3, 4, 1 ), 'C2R1', 'C3R1', 'C1R2', 'C2R2', 'C3R2', 'C1R3', 'C2R3', 'C3R3' );
+		$sample = array($this->make_html_table_to_string( $smpl5, 4, 1 ), 'C2R1', $this->make_html_table_to_string( $smpl3, 4, 1 ), 'C1R2', 'C2R2', 'C3R2', 'C1R3', 'C2R3', 'C3R3' );
 		$this->build_index_table( 'index_mainbox',  $sample, 3, 0);
 		
 		

@@ -210,6 +210,13 @@ table.t_common_stats {
 	border-color:gray;
 	border-collapse:collapse;
 }
+table.t_common_stats th {
+	font-weight:bolder;
+	border: 2px;
+	border-style:solid;
+	border-color:gray;
+	padding: 3px;
+}
 table.t_common_stats td {
 	border: 2px;
 	border-style:solid;
