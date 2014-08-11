@@ -202,3 +202,19 @@
 	border-style:double;
 	border-color:gray;
 }
+
+.t_common_stats {
+	
+	width:100%;
+	font: 11px/24px Verdana, Arial, Helvetica, sans-serif;
+	border: 2px;
+	border-style:double;
+	border-color:gray;
+	border-collapse:collapse;
+}
+.t_common_stats td {
+	border: 2px;
+	border-style:solid;
+	border-color:gray;
+}
+	
