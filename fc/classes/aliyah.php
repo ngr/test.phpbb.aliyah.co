@@ -1037,43 +1037,52 @@ class aliyah {
 		
 		$result = array();
 		
+#User ID		
 		$result[] = array( $lang['USER_ID'], $u );
 
+# User name
+		$result[] = array( $lang['USER_NAME'], $user->data['username'] );
+
+
 # Days registered
-		$regdate = new DateTime( date( 'Y-m-d', $user->data['user_regdate'] ) );
-		$today_date = new DateTime( date( 'Y-m-d' ) );
-		$interval = $regdate->diff( $today_date );
-		$r = $this->say_date( $interval );
-		$result[] = array( $lang['REGISTERED_TIME'], $r );
+		$result[] = array( $lang['REGISTERED_TIME'], $this->say_interval( $user->data['user_regdate'], time() ) );
+
+# Days absent
+		$result[] = array( $lang['SINCE_LAST_VISIT_TIME'], $this->say_interval( $user->data['user_last_visit'], time() ) );
 
 # Return result		
 		return $result;
 	}
 
-# This function is optimised for Russian language to correctly format date using different words.
-	fucntion say_date( $d )
+# This function is optimised for Russian language to correctly count and format interval using different words.
+	fucntion say_interval( $st, $end )
 	{
 		global $lang;
+		
+		$stt = new DateTime( date( 'Y-m-d', $st ) );
+		$endt = new DateTime( date( 'Y-m-d', $end) );
+		$interval = $stt->diff( $endt );
+
 		
 		$say_one = array(1,21,31,41,51,61,71,81,91);
 		$say_two = array(2,3,4,22,23,24,32,33,34,42,43,44,52,53,54,62,63,64,72,73,74,82,83,84,92,93,94);
 
-		if ($d->y) 
+		if ($interval->y) 
 		{
-			if ( in_array( $d->y, $say_one ) ) $r = $d->y . " " . $lang['YEAR'];
-			else if ( in_array( $d->y, $say_two ) ) $r = $d->y . " " . $lang['2-4-YEARS'];
-			else $r = $d->y . " " . $lang['YEARS'];
+			if ( in_array( $interval->y, $say_one ) ) $r = $interval->y . " " . $lang['YEAR'];
+			else if ( in_array( $interval->y, $say_two ) ) $r = $interval->y . " " . $lang['2-4-YEARS'];
+			else $r = $interval->y . " " . $lang['YEARS'];
 		}
-		if ($d->m) 
+		if ($interval->m) 
 		{
-			if ( in_array( $d->m, $say_one ) ) $r .= " " . $d->m . " " . $lang['MONTH'];
-			else if ( in_array( $d->m, $say_two ) ) $r .= " " . $d->m . " " . $lang['2-4-MONTHS'];
-			else $r .= " " . $d->m . " " . $lang['MONTHS'];
+			if ( in_array( $interval->m, $say_one ) ) $r .= " " . $interval->m . " " . $lang['MONTH'];
+			else if ( in_array( $interval->m, $say_two ) ) $r .= " " . $interval->m . " " . $lang['2-4-MONTHS'];
+			else $r .= " " . $interval->m . " " . $lang['MONTHS'];
 		}
-		if ($d->d) 
+		if ($interval->d) 
 		{
-			if ( in_array( $d->d, $say_one ) ) $r .= " " . $d->d . " " . $lang['DAY'];
-			else if ( in_array( $d->d, $say_two ) ) $r .= " " . $d->d . " " . $lang['2-4-DAYS'];
+			if ( in_array( $interval->d, $say_one ) ) $r .= " " . $interval->d . " " . $lang['DAY'];
+			else if ( in_array( $interval->d, $say_two ) ) $r .= " " . $interval->d . " " . $lang['2-4-DAYS'];
 			else $r .= " " . $interval->d . " " . $lang['DAYS'];
 		}
 		

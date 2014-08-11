@@ -51,6 +51,14 @@ $lang = array(
 	'USER_ID'					=> 'ИД пользователя',
 	'USER_NAME'					=> 'Имя пользователя',
 	'REGISTERED_TIME'			=> 'Времени зарегистрирован',
+	'SINCE_LAST_VISIT_TIME'		=> 'Времени с последнего визита',
+	'SINCE_LAST_TEST_TIME'		=> 'Времени с последнего теста',
+
+	'TOTAL_TESTS'				=> 'Всего начато тестов',
+	'TOTAL_WORDS_TRIED'			=> 'Всего отвечено слов',
+	'TOTAL_WORDS_CORRECT'		=> 'Всего правильных ответов',
+	'TOTAL_AVG_RESULT'			=> 'Средний результат',
+
 	
 	'YEAR'						=> 'год',
 	'2-4-YEARS'					=> 'года',
