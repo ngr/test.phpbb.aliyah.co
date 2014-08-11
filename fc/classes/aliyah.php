@@ -1006,18 +1006,12 @@ class aliyah {
 		$this->get_user_common_stats( $user->data['user_id'] );
 		
 		$smpl3 = array( 
-			0 => array(
-				'NAME' => 'Name: ',
-				'ID'	=> 'ID',
-				'REGDATE' => 'Date of Registration',
-				'AVG' => 'Average Result',
-				),
+			0 => array( 'Name', 'ID', 'Date of Registration', 'Average Result'),
 			1 => array(
-				'NAME' 		=> 'Pupkin Vasil',
-				'ID'		=> $user->data['user_id'],
-				'REGDATE'	=> '15.06.2014',
-				'AVG'		=> '25%',
-				),
+				'Pupkin Vasil',
+				$user->data['user_id'],
+				'15.06.2014',
+				'25%'),
 		);
 			
 				
