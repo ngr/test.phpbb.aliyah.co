@@ -1007,14 +1007,14 @@ class aliyah {
 		
 		$smpl3 = array( 
 			0 => array(
-				'NAME' = 'Name: ',
-				'REGDATE' = 'Date of Registration',
-				'AVG' = 'Average Result',
+				'NAME' => 'Name: ',
+				'REGDATE' => 'Date of Registration',
+				'AVG' => 'Average Result',
 				),
 			1 => array(
-				'NAME' = 'Pupkin Vasil: ',
-				'REGDATE' = '15.06.2014',
-				'AVG' = '25%',
+				'NAME' => 'Pupkin Vasil: ',
+				'REGDATE' => '15.06.2014',
+				'AVG' => '25%',
 				),
 		);
 			
