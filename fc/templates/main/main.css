@@ -182,8 +182,7 @@
 
 .p_index_mainbox {
 	float: right;
-	width:100%;
-	padding-left:350px;
+	width: calc(100% - 320px);
 }
 
 .left_menubox {
