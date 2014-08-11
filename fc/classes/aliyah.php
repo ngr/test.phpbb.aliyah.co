@@ -1028,7 +1028,7 @@ class aliyah {
 	{
 		global $fc_db, $fc_db_struct, $user, $config_fc, $lang;
 	
-		view($_SESSION);
+		view($user->data);
 		
 	}
 
