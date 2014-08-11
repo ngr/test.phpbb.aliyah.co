@@ -1043,33 +1043,41 @@ class aliyah {
 		$regdate = new DateTime( date( 'Y-m-d', $user->data['user_regdate'] ) );
 		$today_date = new DateTime( date( 'Y-m-d' ) );
 		$interval = $regdate->diff( $today_date );
-
-		$say_one = array(1,21,31,41,51,61,71,81,91);
-		$say_two = array(2,3,4,22,23,24,32,33,34,42,43,44,52,53,54,62,63,64,72,73,74,82,83,84,92,93,94);
-
-		if ($interval->y) 
-		{
-			if ( in_array( $interval->y, $say_one ) ) $r = $interval->y . " " . $lang['YEAR'];
-			else if ( in_array( $interval->y, $say_two ) ) $r = $interval->y . " " . $lang['2-4-YEARS'];
-			else $r = $interval->y . " " . $lang['YEARS'];
-		}
-		if ($interval->m) 
-		{
-			if ( in_array( $interval->m, $say_one ) ) $r .= " " . $interval->m . " " . $lang['MONTH'];
-			else if ( in_array( $interval->m, $say_two ) ) $r .= " " . $interval->m . " " . $lang['2-4-MONTHS'];
-			else $r .= " " . $interval->m . " " . $lang['MONTHS'];
-		}
-		if ($interval->d) 
-		{
-			if ( in_array( $interval->d, $say_one ) ) $r .= " " . $interval->d . " " . $lang['DAY'];
-			else if ( in_array( $interval->d, $say_two ) ) $r .= " " . $interval->d . " " . $lang['2-4-DAYS'];
-			else $r .= " " . $interval->d . " " . $lang['DAYS'];
-		}
-		
+		$r = $this->say_date( $interval );
 		$result[] = array( $lang['REGISTERED_TIME'], $r );
 
 # Return result		
 		return $result;
+	}
+
+# This function is optimised for Russian language to correctly format date using different words.
+	fucntion say_date( $d )
+	{
+		global $lang;
+		
+		$say_one = array(1,21,31,41,51,61,71,81,91);
+		$say_two = array(2,3,4,22,23,24,32,33,34,42,43,44,52,53,54,62,63,64,72,73,74,82,83,84,92,93,94);
+
+		if ($d->y) 
+		{
+			if ( in_array( $d->y, $say_one ) ) $r = $d->y . " " . $lang['YEAR'];
+			else if ( in_array( $d->y, $say_two ) ) $r = $d->y . " " . $lang['2-4-YEARS'];
+			else $r = $d->y . " " . $lang['YEARS'];
+		}
+		if ($d->m) 
+		{
+			if ( in_array( $d->m, $say_one ) ) $r .= " " . $d->m . " " . $lang['MONTH'];
+			else if ( in_array( $d->m, $say_two ) ) $r .= " " . $d->m . " " . $lang['2-4-MONTHS'];
+			else $r .= " " . $d->m . " " . $lang['MONTHS'];
+		}
+		if ($d->d) 
+		{
+			if ( in_array( $d->d, $say_one ) ) $r .= " " . $d->d . " " . $lang['DAY'];
+			else if ( in_array( $d->d, $say_two ) ) $r .= " " . $d->d . " " . $lang['2-4-DAYS'];
+			else $r .= " " . $interval->d . " " . $lang['DAYS'];
+		}
+		
+		return $r;
 	}
 
 # This is a hardcoded workaround for table inside table. Used instead of creating multiple dimension template.
