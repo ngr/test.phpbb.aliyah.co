@@ -190,20 +190,20 @@
 	width:300px;
 }
 
-.t_index_mainbox {
+table.t_index_mainbox {
 	width: 100%;
 	border: none;
 	border-color:#333333
 }
-.t_index_mainbox_cell {
+table.t_index_mainbox td {
 	width: 33%;
 	padding:5px;
-	border:medium;
+	border:none;
 	border-style:double;
 	border-color:gray;
 }
 
-.t_common_stats {
+table.t_common_stats {
 	
 	width:100%;
 	font: 11px/24px Verdana, Arial, Helvetica, sans-serif;
@@ -212,9 +212,10 @@
 	border-color:gray;
 	border-collapse:collapse;
 }
-.t_common_stats td {
+table.t_common_stats td {
 	border: 2px;
 	border-style:solid;
 	border-color:gray;
+	padding: 3px;
 }
 	

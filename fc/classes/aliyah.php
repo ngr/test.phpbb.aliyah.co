@@ -1030,13 +1030,13 @@ class aliyah {
 	
 		
 	
-	//	view($user->data);
+		view($user->data);
 		
 	}
 
 # This is a hardcoded workaround for table inside table. Used instead of creating multiple dimension template.
 # FIXMELATER Should be fixed by elemination same as all other interface shit.
-	function make_html_table_to_string( $cont, $cols = 2, $hrows = 1, $style = 't_common_stats' )
+	function make_html_table_to_string( $cont, $cols = 2, $hrows = 0, $style = 't_common_stats' )
 	{
 		if ( !isset( $cont ) || !is_array( $cont ) )
 		{
