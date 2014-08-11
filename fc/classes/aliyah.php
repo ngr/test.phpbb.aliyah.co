@@ -993,6 +993,7 @@ class aliyah {
 		
 		$template->assign_vars(array(
 				'S_PAGE_INDEX'	=> true,
+				'L_WELCOME_MESSAGE' => $lang['WELCOME_MESSAGE'],
 			)
 		);
 		
@@ -1018,7 +1019,7 @@ class aliyah {
 		$result = array();
 		
 #User ID		
-		$result[] = array( $lang['USER_ID'], $u );
+//		$result[] = array( $lang['USER_ID'], $u );
 
 # User name
 		$result[] = array( $lang['USER_NAME'], $user->data['username'] );

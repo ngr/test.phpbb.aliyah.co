@@ -48,6 +48,8 @@ $lang = array(
 	'RESUME_TEST'				=> 'Продолжить тест',
 	'SHOW_QUESTIONS'			=> 'Показать вопросы',
 	
+	'WELCOME_MESSAGE'			=> 'Добро пожаловать!',
+	
 	'USER_ID'					=> 'ИД пользователя',
 	'USER_NAME'					=> 'Имя пользователя',
 	'REGISTERED_TIME'			=> 'Времени зарегистрирован',
