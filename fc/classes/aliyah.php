@@ -1055,15 +1055,15 @@ class aliyah {
 		}
 		if ($interval->m) 
 		{
-			if ( in_array( $interval->m, $say_one ) ) $r .= $interval->m . " " . $lang['MONTH'];
-			else if ( in_array( $interval->m, $say_two ) ) $r .= $interval->m . " " . $lang['2-4-MONTHS'];
-			else $r .= $interval->m . " " . $lang['MONTHS'];
+			if ( in_array( $interval->m, $say_one ) ) $r .= " " . $interval->m . " " . $lang['MONTH'];
+			else if ( in_array( $interval->m, $say_two ) ) $r .= " " . $interval->m . " " . $lang['2-4-MONTHS'];
+			else $r .= " " . $interval->m . " " . $lang['MONTHS'];
 		}
 		if ($interval->d) 
 		{
-			if ( in_array( $interval->d, $say_one ) ) $r .= $interval->d . " " . $lang['DAY'];
-			else if ( in_array( $interval->d, $say_two ) ) $r .= $interval->d . " " . $lang['2-4-DAYS'];
-			else $r .= $interval->d . " " . $lang['DAYS'];
+			if ( in_array( $interval->d, $say_one ) ) $r .= " " . $interval->d . " " . $lang['DAY'];
+			else if ( in_array( $interval->d, $say_two ) ) $r .= " " . $interval->d . " " . $lang['2-4-DAYS'];
+			else $r .= " " . $interval->d . " " . $lang['DAYS'];
 		}
 		
 		$result[] = array( $lang['REGISTERED_TIME'], $r );
