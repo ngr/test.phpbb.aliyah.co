@@ -134,7 +134,7 @@ class results {
 	}
 
 # This function shows the total number of test attempts for the selected user.
-	function get_user_total_attempts( $u, $st_time = NULL, $end_time = NULL )
+	function get_user_test_attempts( $u, $status = NULL, $st_time = NULL, $end_time = NULL )
 	{
 		global $user, $fc_db, $fc_db_struct, $application;
 		
@@ -160,9 +160,29 @@ class results {
 		{
 			$sql .= ' AND d.`' . $fc_db_struct[FC_DATA_TABLE]['time'] . '` < \'' . $end_time . '\'';
 		}
-			
-		$sql .=	';';
-			
+
+		if ( !is_null( $status ) )
+		{
+			switch ( $status )
+			{
+				case RESULT_SKIPPED:
+				case RESULT_BAD:
+				case RESULT_TWICE_INACCURATE:
+				case RESULT_INACCURATE:
+					$sql .= ' AND d.`' . $fc_db_struct[FC_DATA_TABLE]['result'] . '` <= \'' . RESULT_INACCURATE . '\'';				
+					break;
+				case RESULT_GOOD_SYNONYM:
+					$sql .= ' AND d.`' . $fc_db_struct[FC_DATA_TABLE]['result'] . '` >= \'' . RESULT_GOOD_SYNONYM . '\'';				
+					break;
+				case RESULT_GOOD_NOT_DEFAULT:
+					$sql .= ' AND d.`' . $fc_db_struct[FC_DATA_TABLE]['result'] . '` >= \'' . GOOD_NOT_DEFAULT . '\'';				
+					break;
+				case RESULT_GOOD:
+					$sql .= ' AND d.`' . $fc_db_struct[FC_DATA_TABLE]['result'] . '` >= \'' . RESULT_GOOD . '\'';				
+					break;
+			}
+		}
+
 		if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql;
 		if ( $GLOBALS['debug_log'] == true ) $application->record_debug( $sql );
 

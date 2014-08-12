@@ -1023,6 +1023,9 @@ class aliyah {
 			return NULL;
 		}
 		
+		$st_time = 1404172800; // Jul 1, 2014
+		$end_time = time();
+		
 		$result = array();
 		
 #User ID		
@@ -1039,7 +1042,10 @@ class aliyah {
 		$result[] = array( $lang['SINCE_LAST_VISIT_TIME'], $this->say_interval( $user->data['user_lastvisit'], time() ) );
 		
 # Total number of words tried	
-		$result[] = array( $lang['TOTAL_WORDS_TRIED'], $results->get_user_total_attempts( $u ) );
+		$result[] = array( $lang['TOTAL_WORDS_TRIED'], $results->get_user_test_attempts( $u, NULL, $st_time, $end_time ) );
+
+# Average results
+		$result[] = array( $lang['TOTAL_AVG_RESULT'], round( ($results->get_user_test_attempts( $u, RESULT_GOOD_SYNONYM, $st_time, $end_time ) / $results->get_user_test_attempts( $u, NULL, $st_time, $end_time ) * 100), 2  ) . '%' );
 
 # Return result		
 		return $result;
