@@ -133,5 +133,10 @@ class results {
 		return $f_result;
 	}
 
+	function get_user_total_attempts( $u, $st_time = 0, $end_time = 1000 )
+	{
+		global $user, $fc_db, $fc_db_struct, $application;
+	}
+
 
 }

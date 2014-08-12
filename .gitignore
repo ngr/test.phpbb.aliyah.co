@@ -8,7 +8,7 @@ desktop.ini
 Thumbs.db
 
 # Cache and backups
-cache/
+cache/*
 
 # MySQL backups
 backup_*
