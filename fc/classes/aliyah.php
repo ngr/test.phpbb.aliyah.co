@@ -165,6 +165,9 @@ class aliyah {
 			'body' => '../../../fc/templates/main/guest.html'
 			)
 		);
+		
+		view( $template->_tpldata );
+		
 	}
 # DEPRICATED
 /*		function close_session()
@@ -987,6 +990,8 @@ class aliyah {
     	endswitch;
 	}
 	
+# This is the initiator of the index page newsbox.
+# It should summon contents generators, regroup the contents if required and process it for template engine with build_index_table()
 	function build_index_mainbox()
 	{
 		global $lang, $user, $template;
@@ -999,16 +1004,18 @@ class aliyah {
 		
  		$template->assign_block_vars('index_mainbox', array() );
 		
-#Get common statistics for the current user to draw on index page
+# Get common statistics for the current user to draw on index page
 		$common_stats = $this->get_user_common_stats( $user->data['user_id'] );
 		
 		$sample = array($this->make_html_table_to_string( $common_stats ), '', '' );
 		$this->build_index_table( 'index_mainbox',  $sample, 3, 0);
 	}
 
+
+# Get common statistics table for the user
 	function get_user_common_stats ( $u )
 	{
-		global $fc_db, $fc_db_struct, $user, $config_fc, $lang;
+		global $fc_db, $fc_db_struct, $user, $config_fc, $lang, $results;
 	
 		if ( $u != $user->data['user_id'] && $user->data['user_type'] != 3 )
 		{
@@ -1030,6 +1037,9 @@ class aliyah {
 
 # Days absent
 		$result[] = array( $lang['SINCE_LAST_VISIT_TIME'], $this->say_interval( $user->data['user_lastvisit'], time() ) );
+		
+# Total number of words tried	
+		$result[] = array( $lang['TOTAL_WORDS_TRIED'], $results->get_user_total_attempts( $u ) );
 
 # Return result		
 		return $result;
@@ -1148,8 +1158,8 @@ class aliyah {
 	function index()
 	{
 # Here will be a lot of BAD BAD BAD interface params. Unfortunately there is no front-end developer in the team yet.
-# I know a lot of wrong this below, but this is really not my job. So please simply do not mind while it works.
-# Once again, I NEED a front-ender!
+# I know a lot of wrong things below, but this is really not my job. So please simply do not mind while it works.
+# Once again, I NEED a front-ender! ... Yep and an algorythm guru... And a programmist to rewrite all this shit...
 	
 		global $lang, $config_fc, $template, $fc_db, $fc_db_struct;
 		
@@ -1217,7 +1227,7 @@ class aliyah {
 				'value' => '3',
 				), // */
 		);
-		
+/*		
 		foreach ( $form_inputs as $name => $value )
 		{
 		    $template->assign_block_vars('input', array(
@@ -1232,7 +1242,7 @@ class aliyah {
 					)
 				);
 			}
-		}
+		} // */
 
 # MAGIC with radio and select inputs for the main summon test form.
 # Beware of summoning smth ugly and cruel!
