@@ -1015,7 +1015,7 @@ class aliyah {
 # Get common statistics table for the user
 	function get_user_common_stats ( $u )
 	{
-		global $fc_db, $fc_db_struct, $user, $config_fc, $lang;
+		global $fc_db, $fc_db_struct, $user, $config_fc, $lang, $results;
 	
 		if ( $u != $user->data['user_id'] && $user->data['user_type'] != 3 )
 		{
@@ -1037,6 +1037,9 @@ class aliyah {
 
 # Days absent
 		$result[] = array( $lang['SINCE_LAST_VISIT_TIME'], $this->say_interval( $user->data['user_lastvisit'], time() ) );
+		
+# Total number of words tried	
+		$result[] = array( $lang['TOTAL_WORDS_TRIED'], $results->get_user_total_attempts( $u ) );
 
 # Return result		
 		return $result;
