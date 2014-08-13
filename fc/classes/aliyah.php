@@ -281,6 +281,90 @@ class aliyah {
 		return $result;
 	}
 	
+# This function is used for quick summon of lessons that are already predifined and there is no need to run build_questions() analytics for them.
+	function add_predefined_lesson_words( $lesson_id )
+	{
+		global $user, $fc_db, $fc_db_struct;
+
+		if ( ! isset( $lesson_id ) || ! $lesson_id = intval( $lesson_id ) )
+		{
+			if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'Function add_predefined_lesson_words() received incorrect input lesson_id' );
+			return false;
+		}
+
+		if ( ! $this->check_lesson_acc_rights( $lesson_id ) )
+		{
+			if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'A lesson with no access rights was requested in add_predefined_lesson_words() by user: ' . $user->data['user_id'] . ', lesson: ' . $val );
+			return false;
+		}
+
+		switch ( substr( $_SESSION['fc']['test_type'], 0, 3 ) )
+		{
+			case ( 'heb' ):
+			default:
+				$sql =	'SELECT DISTINCT ( w.`' . $fc_db_struct[FC_WORDS_TABLE]['id'] . '` ) AS qid,'
+					.	' w.`' . $fc_db_struct[FC_WORDS_TABLE]['heb'] . '` AS qname'
+					.	' FROM `' . FC_WORDS_TABLE . '` AS w'
+					.	' LEFT JOIN `' . FC_LESSONS_TABLE . '` AS l ON l.`' . $fc_db_struct[FC_LESSONS_TABLE]['word_id'] . '` = w.`' . $fc_db_struct[FC_WORDS_TABLE]['id'] . '`'
+					.	' WHERE l.`' . $fc_db_struct[FC_LESSONS_TABLE]['id'] . '` = \'' . $lesson_id . '\''
+					.	' ORDER BY RAND()'
+					.	';';
+				break;
+			case ( 'rus' ):
+				$sql =	'SELECT DISTINCT ( w.`' . $fc_db_struct[FC_WORDS_TABLE]['id'] . '` ) AS qid,'
+					.	', r.`' . $fc_db_struct[FC_WORDS_RUS_TABLE]['rus'] . '` as qname'
+					.	' FROM `' . FC_WORDS_TABLE . '` AS w'
+					.	' LEFT JOIN `' . FC_HEB_RUS_TABLE . '` as c ON c.`' . $fc_db_struct[FC_HEB_RUS_TABLE]['heb_id'] . '` = w.id'
+					.	' LEFT JOIN `' . FC_WORDS_RUS_TABLE . '` AS r ON r.`' . $fc_db_struct[FC_WORDS_RUS_TABLE]['id'] . '` = c.`' . $fc_db_struct[FC_HEB_RUS_TABLE]['rus_id'] . '`'
+					.	' WHERE 1'
+					.	' ORDER BY RAND()'
+					. ';';
+				break;
+		}
+
+		if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql;
+		if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'add_predefined_lesson_words() SQL_SELECT: ' . $sql );
+
+		$result = $fc_db->query($sql);
+
+		while ( $row = $fc_db->fetch_assoc($result) )
+		{
+			$this->assign_word_to_session( $row['qid'], $row['qname'] );
+		}
+//		view ( $_SESSION['fc']['questions'] );
+	}
+
+# FIXME	This function should write assignments to DB.
+	function assign_word_to_session( $qid, $qname, $session_id = NULL )
+	{
+		$_SESSION['fc']['questions'][] = array($qid, $qname, 0, -1);
+	}
+
+
+#####################
+# Set language and direction
+	function define_test_language()
+	{
+		global $config_fc;
+
+		$test_language = ( isset( $_POST['test_language'] ) ) ? mysql_escape_string( $_POST['test_language'] ) : $config_fc['test']['default_test_language'];
+		$test_direction = ( isset( $_POST['test_direction'] ) ) ? mysql_escape_string( $_POST['test_direction'] ) : $config_fc['test']['default_test_direction'];
+
+		if ( $test_direction == 'to' )
+		{
+			$_SESSION['fc']['test_type'] = $test_language . '_heb';
+		}
+		elseif ( $test_direction == 'from' )
+		{
+			$_SESSION['fc']['test_type'] = 'heb_' . $test_language;
+		}
+		else
+		{
+			die( 'Can\'t decide the type of test. Some error with _POST values.' );
+		}
+		if ( $GLOBALS['debug_all'] == true ) echo '<br>test_type in _SESSION is set to:' . $_SESSION['fc']['test_type'];
+	}
+
 ###################################################
 # This is one of the most important functions     #
 # It creates random test according to user        #
@@ -298,6 +382,9 @@ class aliyah {
 		$this->control_session('start');
 		
 # Should get much more test parameters from $_POST here
+
+# Now we get common parameters required for any test
+		$this->define_test_language();
 
 #################################
 # Set lesson to choose words from
@@ -319,36 +406,53 @@ class aliyah {
 # Check if the lesson is allowed for this user
 			foreach ( $lesson as $key => $val )
 			{
-				if (  ! $this->check_lesson_acc_rights( $val ) )
+				if ( ! $this->check_lesson_acc_rights( $val ) )
 				{
 					if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'A lesson with no access rights was requested by user: ' . $user->data['user_id'] . ', lesson: ' . $val );
 					unset( $lesson[$key] );
 				}
+				else if ( ! $this->is_lesson_public( $val ) )
+				{
+					$this->add_predefined_lesson_words( $val );
+					unset( $lesson[$key] );
+				}
 			}
-# We check if there are some allowed lessons left or die.			
+# We check if there are some allowed lessons left or finish the job.
 			if ( count( $lesson ) === 0 )
 			{
-				$this->reset();
-				echo '<h1>' . $lang['NO_LESSON_SELECTED'] . '</h1>';
-				die( '<script language=javascript>window.onload = setTimeout(function() {  window.location="?mode=index"; }, 1000);</script>' );
-			}
-				$sql_select_lesson = ' AND (';
-
-				$i = 0;
-				foreach ( $lesson as $val )
+				if ( $_SESSION['fc']['questions'] === false )
 				{
-					if ( $i > 0 ) 
-					{
-						$sql_select_lesson .= ' OR';
-					}
-					$sql_select_lesson .= ' l.`' . $fc_db_struct[FC_LESSONS_TABLE]['id'] . '` = \'' . $val . '\'';
-					$i++;
+					$this->reset();
+# FIXME This shit is growing more and more popular along the code. Should fix this ASAP.
+					echo '<h1>' . $lang['NO_APPROPRIATE_WORDS'] . '</h1>';
+					die( '<script language=javascript>window.onload = setTimeout(function() {  window.location="?mode=index"; }, 1000);</script>' );
 				}
-				$sql_select_lesson .= ' )';
+				else
+				{
+					if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'build_questions() finished with only predifined lessons requested so no actual work was left to do.' );
+					return;
+				}
+			}
+
+			$sql_select_lesson = ' AND (';
+
+			$i = 0;
+			foreach ( $lesson as $val )
+			{
+				if ( $i > 0 ) 
+				{
+					$sql_select_lesson .= ' OR';
+				}
+				$sql_select_lesson .= ' l.`' . $fc_db_struct[FC_LESSONS_TABLE]['id'] . '` = \'' . $val . '\'';
+				$i++;
+			}
+			$sql_select_lesson .= ' )';
 		}
 # At this point we actually always get array now so the following may be deprecated, but shit happens...
 		else 
 		{
+				echo '<h1>' . $lang['NO_LESSON_SELECTED'] . '</h1>';
+				die( '<script language=javascript>window.onload = setTimeout(function() {  window.location="?mode=index"; }, 1000);</script>' );
 /*		
 # Check if the lesson is allowed for this user
 				if ( ! $this->check_lesson_acc_rights( $lesson ) )
@@ -418,25 +522,7 @@ class aliyah {
 			$limit = $config_fc['test']['default_number_of_tests'];
 		}
 
-#####################
-# Set language and direction
-		$test_language = ( isset( $_POST['test_language'] ) ) ? mysql_escape_string( $_POST['test_language'] ) : $config_fc['test']['default_test_language'];
-		$test_direction = ( isset( $_POST['test_direction'] ) ) ? mysql_escape_string( $_POST['test_direction'] ) : $config_fc['test']['default_test_direction'];
-
-		if ( $test_direction == 'to' )
-		{
-			$_SESSION['fc']['test_type'] = $test_language . '_heb';
-		}
-		elseif ( $test_direction == 'from' )
-		{
-			$_SESSION['fc']['test_type'] = 'heb_' . $test_language;
-		}
-		else
-		{
-			die( 'Can\'t decide the type of test. Some error with _POST values.' );
-		}
-		if ( $GLOBALS['debug_all'] == true ) echo '<br>test_type in _SESSION is set to:' . $_SESSION['fc']['test_type'];
-		
+	
 #####################
 # Create temporary table for all possible values for the current test.
 		$sql =	'CREATE TEMPORARY TABLE IF NOT EXISTS tmp_' . $user->data['user_id'] . ' ( `id` INT(11) NOT NULL, `heb` VARCHAR(127) NOT NULL) ENGINE=MyISAM  DEFAULT CHARSET=utf8;';
@@ -593,26 +679,26 @@ class aliyah {
 		if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql;
 		if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'build_questions() SQL_SELECT: ' . $sql );			
 		$result = $fc_db->query($sql);
-		
+
+# FIXME Should use some sort assign() function here to record assignments in DB.
 		while ( $row = $fc_db->fetch_assoc($result) ) 
 		{
 			$_SESSION['fc']['questions'][] = array($row['qid'], $row['qname'], 0, -1);
 		}
 # DEBUG		view ( $_SESSION['fc']['questions'] );
 	}
-	
-# This function checks if the current user has privillege to use the requested lesson
-	function check_lesson_acc_rights( $lesson_id )
+
+# This function checks if the requested lesson is public. This may be important for some workflow.	
+	function is_lesson_public( $lesson_id )
 	{
-		global $user, $fc_db, $fc_db_struct;
-		
+		global $fc_db, $fc_db_struct;
+
 		if ( !isset( $lesson_id) )
 		{
-			$this->record_debug( 'check_lesson_acc_rights( $lesson_id ) received a bad lesson_id: ' . $lesson_id );
+			$this->record_debug( 'is_lesson_public( $lesson_id ) received a bad lesson_id: ' . $lesson_id );
 			return false;
 		}
-		
-# First we check if the lesson is public (user group 0).	
+
 		$sql =	'SELECT 1 FROM `' . FC_LESSONS_ACC_RIGHTS_TABLE . '`'
 			.	' WHERE `' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['lesson_id'] . '` = \'' . $lesson_id . '\''
 			.	' AND `' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['user_group_id'] . '` = \'0\''
@@ -626,7 +712,24 @@ class aliyah {
 		{
 			return true;
 		}
+	}
+	
+# This function checks if the current user has privillege to use the requested lesson
+	function check_lesson_acc_rights( $lesson_id )
+	{
+		global $user, $fc_db, $fc_db_struct;
 		
+		if ( !isset( $lesson_id) )
+		{
+			$this->record_debug( 'check_lesson_acc_rights( $lesson_id ) received a bad lesson_id: ' . $lesson_id );
+			return false;
+		}
+		
+# First we check if the lesson is public
+		if ( $this->is_lesson_public( $lesson_id ) )
+		{
+			return true;
+		}
 # Then we check if the user belongs to the group with granted access rights for the lesson
 		$sql =	'SELECT 1 FROM `' . FC_LESSONS_NAMES_TABLE . '` AS l'
 			.	' LEFT JOIN `' . FC_LESSONS_ACC_RIGHTS_TABLE . '` AS lar ON lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['lesson_id'] . '` = l.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['id'] . '`'
