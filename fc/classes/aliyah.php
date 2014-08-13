@@ -21,11 +21,14 @@ class aliyah {
 		$this->record_debug( 'Called debug()' );
 		
 # This helps inserting to lessons quickly :)
-		for ( $val = 399; $val < 422; $val++ )
+		for ( $val = 9; $val < 39; $val++ )
 		{
 			$sql = 'INSERT INTO `fc_lessons` (id, word_id) VALUES (18, ' . $val . ');';
-//			$this->record_debug( 'Assign to lesson SQL: ' . $sql );
-//			$result = $fc_db->query( $sql );
+
+			$sql = 'INSERT INTO `fc_lessons_acc_rights` (lesson_id, user_group_id) VALUES ( ' . $val . ', 0 );';
+
+			$this->record_debug( 'Assign to lesson SQL: ' . $sql );
+			$result = $fc_db->query( $sql );
 		}
 
 		$this->show_lesson_contents();
@@ -165,9 +168,6 @@ class aliyah {
 			'body' => '../../../fc/templates/main/guest.html'
 			)
 		);
-		
-		view( $template->_tpldata );
-		
 	}
 # DEPRICATED
 /*		function close_session()
@@ -306,7 +306,6 @@ class aliyah {
 		{
 			$lesson = $_POST['lesson'];
 			if ( $GLOBALS['debug_all'] == true ) view( $lesson );
-			
 		}
 		else
 		{
@@ -317,23 +316,52 @@ class aliyah {
 		
 		if ( is_array( $lesson ) )
 		{
-			$sql_select_lesson = ' AND (';
-			
-			$i = 0;
-			foreach ( $lesson as $val )
+# Check if the lesson is allowed for this user
+			foreach ( $lesson as $key => $val )
 			{
-				if ( $i > 0 ) 
+				if (  ! $this->check_lesson_acc_rights( $val ) )
 				{
-					$sql_select_lesson .= ' OR';
+					if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'A lesson with no access rights was requested by user: ' . $user->data['user_id'] . ', lesson: ' . $val );
+					unset( $lesson[$key] );
 				}
-				$sql_select_lesson .= ' l.`' . $fc_db_struct[FC_LESSONS_TABLE]['id'] . '` = \'' . $val . '\'';
-				$i++;
 			}
-			$sql_select_lesson .= ' )';
+# We check if there are some allowed lessons left or die.			
+			if ( count( $lesson ) === 0 )
+			{
+				$this->reset();
+				echo '<h1>' . $lang['NO_LESSON_SELECTED'] . '</h1>';
+				die( '<script language=javascript>window.onload = setTimeout(function() {  window.location="?mode=index"; }, 1000);</script>' );
+			}
+				$sql_select_lesson = ' AND (';
+
+				$i = 0;
+				foreach ( $lesson as $val )
+				{
+					if ( $i > 0 ) 
+					{
+						$sql_select_lesson .= ' OR';
+					}
+					$sql_select_lesson .= ' l.`' . $fc_db_struct[FC_LESSONS_TABLE]['id'] . '` = \'' . $val . '\'';
+					$i++;
+				}
+				$sql_select_lesson .= ' )';
 		}
+# At this point we actually always get array now so the following may be deprecated, but shit happens...
 		else 
 		{
-			$sql_select_lesson = ' AND l.`' . $fc_db_struct[FC_LESSONS_TABLE]['id'] . '` = \'' . $lesson . '\'';
+/*		
+# Check if the lesson is allowed for this user
+				if ( ! $this->check_lesson_acc_rights( $lesson ) )
+				{
+					if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'A lesson with no access rights was requested by user: ' . $user->data['user_id'] . ', lesson: ' . $lesson );
+# FIXMELATER Should add correct exception here
+					echo '<h1>' . $lang['NO_LESSON_SELECTED'] . '</h1>';
+					die( '<script language=javascript>window.onload = setTimeout(function() {  window.location="?mode=index"; }, 1000);</script>' );
+				}
+				else
+				{
+					$sql_select_lesson = ' AND l.`' . $fc_db_struct[FC_LESSONS_TABLE]['id'] . '` = \'' . $lesson . '\'';
+				} // */
 		}
 ###############################
 # Set part of speech if defined
@@ -563,7 +591,7 @@ class aliyah {
 				break;
 		}
 		if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql;
-		if ( $GLOBALS['debug_log'] == true )$this->record_debug( 'build_questions() SQL_SELECT: ' . $sql );			
+		if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'build_questions() SQL_SELECT: ' . $sql );			
 		$result = $fc_db->query($sql);
 		
 		while ( $row = $fc_db->fetch_assoc($result) ) 
@@ -572,6 +600,53 @@ class aliyah {
 		}
 # DEBUG		view ( $_SESSION['fc']['questions'] );
 	}
+	
+# This function checks if the current user has privillege to use the requested lesson
+	function check_lesson_acc_rights( $lesson_id )
+	{
+		global $user, $fc_db, $fc_db_struct;
+		
+		if ( !isset( $lesson_id) )
+		{
+			$this->record_debug( 'check_lesson_acc_rights( $lesson_id ) received a bad lesson_id: ' . $lesson_id );
+			return false;
+		}
+		
+# First we check if the lesson is public (user group 0).	
+		$sql =	'SELECT 1 FROM `' . FC_LESSONS_ACC_RIGHTS_TABLE . '`'
+			.	' WHERE `' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['lesson_id'] . '` = \'' . $lesson_id . '\''
+			.	' AND `' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['user_group_id'] . '` = \'0\''
+			.	';';
+
+		if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql;
+		if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'build_questions() SQL_SELECT: ' . $sql );			
+
+		$result = $fc_db->query($sql);
+		if ( $fc_db->num_rows( $result ) > 0 )
+		{
+			return true;
+		}
+		
+# Then we check if the user belongs to the group with granted access rights for the lesson
+		$sql =	'SELECT 1 FROM `' . FC_LESSONS_NAMES_TABLE . '` AS l'
+			.	' LEFT JOIN `' . FC_LESSONS_ACC_RIGHTS_TABLE . '` AS lar ON lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['lesson_id'] . '` = l.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['id'] . '`'
+			.	' LEFT JOIN `' . FC_USER_GROUPS_TABLE . '` AS ug ON ug.`' . $fc_db_struct[FC_USER_GROUPS_TABLE]['id'] . '` = lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['user_group_id'] . '`'	
+			.	' WHERE l.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['id'] . '` = \'' . $lesson_id . '\'' 
+			.	' AND ug.`' . $fc_db_struct[FC_USER_GROUPS_TABLE]['user_id'] . '` = \'' . $user->data['user_id'] . '\''
+			.	';';
+
+		if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql;
+		if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'build_questions() SQL_SELECT: ' . $sql );			
+
+		$result = $fc_db->query($sql);
+		if ( $fc_db->num_rows( $result ) > 0 )
+		{
+			return true;
+		}
+
+		return false;
+	}
+	
 	
 	function check_answer()
 	{
@@ -1022,7 +1097,9 @@ class aliyah {
 			$this->record_debug( 'get_user_common_stats() was asked for non autorised data for user: ' . $u );
 			return NULL;
 		}
-		
+
+// FIXME
+// DEBUG
 		$st_time = 1404172800; // Jul 1, 2014
 		$end_time = time();
 		
