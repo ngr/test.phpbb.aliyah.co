@@ -1244,7 +1244,7 @@ class aliyah {
 # I know a lot of wrong things below, but this is really not my job. So please simply do not mind while it works.
 # Once again, I NEED a front-ender! ... Yep and an algorythm guru... And a programmist to rewrite all this shit...
 	
-		global $lang, $config_fc, $template, $fc_db, $fc_db_struct;
+		global $lang, $user, $config_fc, $template, $fc_db, $fc_db_struct;
 		
 		$template->set_filenames(array(
 			'body' => '../../../fc/templates/main/index.html'
@@ -1274,13 +1274,20 @@ class aliyah {
 		}
 		
 
-# Assign test types of not empty tests.
+# Make <options> for the 'lessons' <select> box.
 		$sql =	'SELECT l.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['id'] . '` AS id'
 			.	', CONCAT( ln.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['rus_name'] . '`, \' \ \ (\', COUNT(*), \')\' ) as name'
-			.	''
 			.	' FROM `' . FC_LESSONS_TABLE . '` AS l'
 			.	' LEFT JOIN `' . FC_LESSONS_NAMES_TABLE . '` AS ln ON l.`id` = ln.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['id'] . '`'
 			.	' WHERE 1'
+# Show only lessons with public access rights. Private lessons are commented below. Show be used in another form.
+			.	' AND ln.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['id'] . '` IN ('
+				.	' SELECT `' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['lesson_id'] . '`'
+				.	' FROM `' . FC_LESSONS_ACC_RIGHTS_TABLE . '` AS lar '
+				.	' LEFT JOIN `' . FC_USER_GROUPS_TABLE . '` AS ug ON ug.`' . $fc_db_struct[FC_USER_GROUPS_TABLE]['id'] . '` = lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['user_group_id'] . '`'
+//				.	' WHERE ug.`' . $fc_db_struct[FC_USER_GROUPS_TABLE]['user_id'] . '` = \'' . $user->data['user_id'] . '\' OR lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['user_group_id'] . '` = 0'
+				.	' WHERE lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['user_group_id'] . '` = 0'
+			.	')'
 			.	' GROUP BY l.id'
 			.	' ORDER BY `' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['order'] . '` DESC ;';
 
