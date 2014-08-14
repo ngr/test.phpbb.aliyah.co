@@ -1358,6 +1358,9 @@ class aliyah {
 			'U_LAUNCHER_FORM_POST'	=> '?mode=next',
 			'L_START_TEST' 			=> $lang['START_TEST'] ,
 			'L_SHOW_QUESTIONS'		=> $lang['SHOW_QUESTIONS'],
+			'L_PUBLIC' 			=> $lang['PUBLIC'] ,
+			'L_PRIVATE'		=> $lang['PRIVATE'],
+			'L_LESSONS'		=> $lang['LESSONS'],
 			)
 		);
 		
@@ -1499,16 +1502,19 @@ class aliyah {
 			),
 			'Режим' => array(
 				'Интеллектуальный'	=> array(
+					'id' => 'intel_mode_1',
 					'type' => 'radio',
 					'name' => 'intel_mode',
 					'value' => 'intellectual',
 				),
 				'Случайный'	=> array(
+					'id' => 'intel_mode_2',
 					'type' => 'radio',
 					'name' => 'intel_mode',
 					'value' => 'random',
 				),
 				'Работа над ошибками'	=> array(
+					'id' => 'intel_mode_3',
 					'type' => 'radio',
 					'name' => 'intel_mode',
 					'value' => 'mistakes',
@@ -1516,31 +1522,37 @@ class aliyah {
 			),
 			'Части речи' => array(
 				'Глаголы'	=> array(
+					'id' => 'part_of_speech_1',
 					'type' => 'checkbox',
 					'name' => 'part_of_speech[]',
 					'value' => 'verb',
 				),
 				'Существительные'	=> array(
+					'id' => 'part_of_speech_2',
 					'type' => 'checkbox',
 					'name' => 'part_of_speech[]',
 					'value' => 'noun',
 				),
 				'Прилагательные'	=> array(
+					'id' => 'part_of_speech_3',
 					'type' => 'checkbox',
 					'name' => 'part_of_speech[]',
 					'value' => 'adjective',
 				),
 				'Наречия'	=> array(
+					'id' => 'part_of_speech_4',
 					'type' => 'checkbox',
 					'name' => 'part_of_speech[]',
 					'value' => 'adverb',
 				),
 				'Смехуты и словосочетания'	=> array(
+					'id' => 'part_of_speech_5',
 					'type' => 'checkbox',
 					'name' => 'part_of_speech[]',
 					'value' => 'smehut',
 				),
 				'Прочие'	=> array(
+					'id' => 'part_of_speech_6',
 					'type' => 'checkbox',
 					'name' => 'part_of_speech[]',
 					'value' => 'others',

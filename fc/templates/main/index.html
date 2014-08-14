@@ -51,19 +51,41 @@
 			<!-- END index_mainbox -->
 		<!-- ENDIF -->
 		</div>
-
 		<div class="left_menubox">
-        <form action="{U_LAUNCHER_FORM_POST}" method="post">
-        <div  class="form_fieldset">
-	        <fieldset name="GroupLessons">
-					<legend>Уроки</legend>
-					<select multiple="multiple" name="lesson[]" style="width: 250px; height: 150px">
-					<!-- BEGIN lesson -->
-						<option value="{lesson.VALUE}" <!-- IF lesson.SELECTED --> selected="{lesson.SELECTED}"<!-- ENDIF -->>{lesson.DESCRIPTION}</option>
-					<!-- END lesson -->				
-					</select>
-			</fieldset>
+        <form action="{U_LAUNCHER_FORM_POST}" method="post" onsubmit="clear_inactive()">
+		<div style="padding-bottom:5px;">{L_LESSONS}</div>
+        <div class="tabs">
+		    <ul>
+		        <li><a name="tab" id="tab_1" href="javascript:void(0)" onClick="tabs(1)" class="active">{L_PUBLIC}</a></li>
+		        <li><a name="tab" id="tab_2" href="javascript:void(0)" onClick="tabs(2)">{L_PRIVATE}</a></li>
+		    </ul>
 		</div>
+		
+		<div name="tab_content" id="tab_content_1" class="tab_content active">
+	        <div  class="form_fieldset">
+		        <fieldset name="GroupLessons">
+						<select id="lesson_1" multiple="multiple" name="lesson[]" class="lessons_select">
+						<!-- BEGIN lesson -->
+							<option id="tab1_{lesson.VALUE}" value="{lesson.VALUE}" <!-- IF lesson.SELECTED --> selected="{lesson.SELECTED}"<!-- ENDIF -->>{lesson.DESCRIPTION}</option>
+						<!-- END lesson -->				
+						</select>
+				</fieldset>
+			</div>
+		</div>
+		<div name="tab_content" id="tab_content_2" class="tab_content">
+		    <ul>
+	        <div  class="form_fieldset">
+		        <fieldset name="GroupLessons">
+						<select id="lesson_2" multiple="multiple" name="lesson[]" class="lessons_select">
+						<!-- BEGIN priv_lesson -->
+							<option id="tab2_{priv_lesson.VALUE}" value="{priv_lesson.VALUE}" <!-- IF priv_lesson.SELECTED --> selected="{priv_lesson.SELECTED}"<!-- ENDIF -->>{priv_lesson.DESCRIPTION}</option>
+						<!-- END priv_lesson -->				
+						</select>
+				</fieldset>
+			</div>
+		    </ul>
+		</div>
+        
 			
         <!-- BEGIN input -->
         <div  class="form_fieldset">
@@ -74,7 +96,7 @@
         <!-- END input -->
         
         <!-- BEGIN selects -->
-		<div class="form_fieldset">
+		<div class="form_fieldset" id="{selects.GROUP_NAME}">
 			<fieldset>
 				<legend>{selects.DESCRIPTION}</legend>
 				<select name="{selects.GROUP_NAME}">
@@ -88,7 +110,7 @@
 
 		
 		<!-- BEGIN radios -->
-		<div class="form_fieldset">
+		<div class="form_fieldset" id="{radios.GROUP_NAME}">
 			<fieldset>
 				<legend>{radios.GROUP_NAME}</legend>
 				<!-- BEGIN sub -->
@@ -129,3 +151,57 @@
   </div>
 
 </div>
+
+
+<script type="text/javascript" >
+function tabs(selectedtab) {    
+    // contents
+    var s_tab_content = "tab_content_" + selectedtab;   
+    var contents = document.getElementsByTagName("div");
+    for(var x=0; x<contents.length; x++) {
+        name = contents[x].getAttribute("name");
+        if (name == 'tab_content') {
+            if (contents[x].id == s_tab_content) {
+            contents[x].style.display = "block";                        
+            } else {
+            contents[x].style.display = "none";
+            }
+        }
+    }   
+	
+    // tabs
+    var s_tab = "tab_" + selectedtab;       
+    var tabs = document.getElementsByTagName("a");
+    for(var x=0; x<tabs.length; x++) {
+        name = tabs[x].getAttribute("name");
+        if (name == 'tab') {
+            if (tabs[x].id == s_tab) {
+            tabs[x].className = "active";                       
+            } else {
+            tabs[x].className = "";
+            }
+        }
+    }
+// Disable non valid params
+	if ( document.getElementById("tab_1").className == "" ) {
+		document.getElementById("Части речи").style.display = "none";
+		document.getElementById("Режим").style.display = "none";
+	}
+	else {
+		document.getElementById("Части речи").style.display = "block";
+		document.getElementById("Режим").style.display = "block";
+	}
+}
+
+// This fucntion clears all the selected values from inactive tab before form submit.
+function clear_inactive() {
+	if ( document.getElementById("tab_1").className == "" ) {
+//		alert("tab 2 active");
+		document.getElementById("lesson_1").value = "";
+	}
+	else {
+//		alert("tab 1 active");
+		document.getElementById("lesson_2").value = "";
+	}
+}
+</script>
