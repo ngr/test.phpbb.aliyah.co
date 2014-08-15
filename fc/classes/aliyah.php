@@ -1225,7 +1225,8 @@ class aliyah {
 		$result[] = array( $lang['TOTAL_WORDS_TRIED'], $results->get_user_test_attempts( $u, NULL, $st_time, $end_time ) );
 
 # Average results
-		$result[] = array( $lang['TOTAL_AVG_RESULT'], round( ($results->get_user_test_attempts( $u, RESULT_GOOD_SYNONYM, $st_time, $end_time ) / $results->get_user_test_attempts( $u, NULL, $st_time, $end_time ) * 100), 2  ) . '%' );
+		$test_attempts = ( $results->get_user_test_attempts( $u, NULL, $st_time, $end_time ) == 0 ) ? 1 : $results->get_user_test_attempts( $u, NULL, $st_time, $end_time );
+		$result[] = array( $lang['TOTAL_AVG_RESULT'], round( ($results->get_user_test_attempts( $u, RESULT_GOOD_SYNONYM, $st_time, $end_time ) / $test_attempts * 100), 2  ) . '%' );
 
 # Return result		
 		return $result;
@@ -1340,6 +1341,66 @@ class aliyah {
 		}
 		return 1;
 	}
+
+# This function generates an array of lessons available to the $user_id today()
+	function get_available_lessons( $user_id, $public = false )
+	{
+		global $user, $fc_db, $fc_db_struct;
+
+		if ( ! isset( $user_id ) || ! intval( $user_id ) )
+		{
+			$this->record_debug( 'get_private_lessons() recieved incorrect user_id: ' . $user_id );
+			return NULL;
+		}
+		if ( $user_id != $user->data['user_id'] && $user->data['user_type'] < 2 )
+		{
+			$this->record_debug( 'get_private_lessons() is not authorised to give lessons info of user_id: ' . $user_id . ' to: ' . $user->data['user_id'] );
+			return NULL;
+		}
+
+		$lessons = array();
+
+		$sql =	'SELECT l.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['id'] . '` AS id'
+			.	', CONCAT( ln.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['rus_name'] . '`, \' \ \ (\', COUNT(*), \')\' ) as name'
+			.	' FROM `' . FC_LESSONS_TABLE . '` AS l'
+			.	' LEFT JOIN `' . FC_LESSONS_NAMES_TABLE . '` AS ln ON l.`id` = ln.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['id'] . '`'
+			.	' WHERE 1'
+			.	' AND ln.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['id'] . '` IN ('
+				.	' SELECT `' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['lesson_id'] . '`'
+				.	' FROM `' . FC_LESSONS_ACC_RIGHTS_TABLE . '` AS lar '
+				.	' LEFT JOIN `' . FC_USER_GROUPS_TABLE . '` AS ug ON ug.`' . $fc_db_struct[FC_USER_GROUPS_TABLE]['id'] . '` = lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['user_group_id'] . '`'
+				.	' WHERE 1';
+			if ( $public )
+			{
+				$sql .=	' AND lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['user_group_id'] . '` = 0';
+			}
+			else
+			{
+				$sql .=	' AND ug.`' . $fc_db_struct[FC_USER_GROUPS_TABLE]['user_id'] . '` = \'' . $user_id . '\'';
+			}
+		$sql .=	')'
+			.	' AND ln.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['date_valid'] . '` > \'' . time() . '\''
+			.	' GROUP BY l.id'
+			.	' ORDER BY `' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['order'] . '` DESC '
+			.	' , `' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['date_init'] . '` DESC '
+			.	';';
+
+		if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql;
+		$result = $fc_db->query( $sql );
+
+		if ( $fc_db->num_rows( $result ) > 0 )
+		{
+			while ( $row = $fc_db->fetch_array( $result ) )
+			{
+				$lessons[] = array( $row[0], $row[1] );
+			}
+		}
+		else
+		{
+			$this->record_debug( 'get_private_lessons() got now private lessons available for: ' . $user_id );
+		}
+		return $lessons;
+	}
 	
 	function index()
 	{
@@ -1378,42 +1439,31 @@ class aliyah {
 				)
 			);
 		}
-		
 
 # Make <options> for the 'lessons' <select> box.
-		$sql =	'SELECT l.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['id'] . '` AS id'
-			.	', CONCAT( ln.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['rus_name'] . '`, \' \ \ (\', COUNT(*), \')\' ) as name'
-			.	' FROM `' . FC_LESSONS_TABLE . '` AS l'
-			.	' LEFT JOIN `' . FC_LESSONS_NAMES_TABLE . '` AS ln ON l.`id` = ln.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['id'] . '`'
-			.	' WHERE 1'
-# Show only lessons with public access rights. Private lessons are commented below. Show be used in another form.
-			.	' AND ln.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['id'] . '` IN ('
-				.	' SELECT `' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['lesson_id'] . '`'
-				.	' FROM `' . FC_LESSONS_ACC_RIGHTS_TABLE . '` AS lar '
-				.	' LEFT JOIN `' . FC_USER_GROUPS_TABLE . '` AS ug ON ug.`' . $fc_db_struct[FC_USER_GROUPS_TABLE]['id'] . '` = lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['user_group_id'] . '`'
-//				.	' WHERE ug.`' . $fc_db_struct[FC_USER_GROUPS_TABLE]['user_id'] . '` = \'' . $user->data['user_id'] . '\' OR lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['user_group_id'] . '` = 0'
-				.	' WHERE lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['user_group_id'] . '` = 0'
-			.	')'
-			.	' GROUP BY l.id'
-			.	' ORDER BY `' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['order'] . '` DESC ;';
-
-		if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql;
-		$result = $fc_db->query( $sql );
-		
-		if ( $fc_db->num_rows( $result ) > 0 )
+# Get available public lessons
+		$lessons = $this->get_available_lessons( $user->data['user_id'], true );
+		foreach ( $lessons as $val )
 		{
-			while ( $row = $fc_db->fetch_array( $result ) )
-			{
-				$template->assign_block_vars('lesson', array(
-					'VALUE'	=> $row[0],
-					'DESCRIPTION'	=> $row[1],
-					'SELECTED' => ( isset( $_SESSION['fc']['last_lesson'] ) && is_array( $_SESSION['fc']['last_lesson'] ) ) ? in_array( $row[0], $_SESSION['fc']['last_lesson'] ) : false,
-					)
-				);
-			}
+			$template->assign_block_vars('lesson', array(
+					'VALUE'	=> $val[0],
+					'DESCRIPTION'	=> $val[1],
+					'SELECTED' => ( isset( $_SESSION['fc']['last_lesson'] ) && is_array( $_SESSION['fc']['last_lesson'] ) ) ? in_array( $val[0], $_SESSION['fc']['last_lesson'] ) : false,
+				)
+			);
 		}
 
-		
+# Get available private lessons
+		$lessons = $this->get_available_lessons( $user->data['user_id'] );
+		foreach ( $lessons as $val )
+		{
+			$template->assign_block_vars('priv_lesson', array(
+					'VALUE'	=> $val[0],
+					'DESCRIPTION'	=> $val[1],
+					'SELECTED' => ( isset( $_SESSION['fc']['last_lesson'] ) && is_array( $_SESSION['fc']['last_lesson'] ) ) ? in_array( $val[0], $_SESSION['fc']['last_lesson'] ) : false,
+				)
+			);
+		}
 		
 # Old magic with form inputs.
 		$form_inputs = array(

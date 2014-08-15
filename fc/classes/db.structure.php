@@ -69,7 +69,7 @@ $fc_db_struct = array(
 		'rus_name' => 'rus_name',
 		'author' => 'author',
 		'date_init' => 'date_init',
-		'date_vaid' => 'date_valid',
+		'date_valid' => 'date_valid',
 		'order' => 'order'
 	),
 	FC_SESSIONS_TABLE => array(
