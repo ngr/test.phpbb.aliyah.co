@@ -1,4 +1,9 @@
-﻿.lessons_select {
+﻿.ff_legend {
+	font-weight:bold;
+	color:#1e8fc7;
+	padding-bottom:5px;
+}
+.lessons_select {
 	
 	border:1px;
 	border-style:solid;
