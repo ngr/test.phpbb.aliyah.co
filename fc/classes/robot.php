@@ -18,7 +18,7 @@ class robot{
 	function robot()
 	{
 # FIXME	
-		require_once '/usr/share/nginx/phpbb.aliyah.local/www/fc/includes/environment.php';
+		require_once 'includes/environment.php';
 	
 		global $user;
 		
