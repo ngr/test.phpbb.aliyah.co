@@ -1183,9 +1183,14 @@ class aliyah {
  		$template->assign_block_vars('index_mainbox', array() );
 		
 # Get common statistics for the current user to draw on index page
-		$common_stats = $this->get_user_common_stats( $user->data['user_id'] );
+//		$common_stats = $this->get_user_common_stats( $user->data['user_id'] );
+//		$common_stats = $this->get_service_info( $user->data['user_id'] );
 		
-		$sample = array($this->make_html_table_to_string( $common_stats ), '', '' );
+		$sample = array(
+			$this->make_html_table_to_string( $this->get_user_common_stats( $user->data['user_id'] ) ),
+			$this->make_html_table_to_string( $this->get_service_info( $user->data['user_id'] ) ),
+			'' 
+		);
 		$this->build_index_table( 'index_mainbox',  $sample, 3, 0);
 	}
 
@@ -1228,6 +1233,39 @@ class aliyah {
 		$test_attempts = ( $results->get_user_test_attempts( $u, NULL, $st_time, $end_time ) == 0 ) ? 1 : $results->get_user_test_attempts( $u, NULL, $st_time, $end_time );
 		$result[] = array( $lang['TOTAL_AVG_RESULT'], round( ($results->get_user_test_attempts( $u, RESULT_GOOD_SYNONYM, $st_time, $end_time ) / $test_attempts * 100), 2  ) . '%' );
 
+# Return result		
+		return $result;
+	}
+
+# This is to show service information about current user, access rights, etc.
+	function get_service_info ( $u )
+	{
+		global $fc_db, $fc_db_struct, $user, $config_fc, $lang, $results;
+	
+		if ( $u != $user->data['user_id'] && $user->data['user_type'] != 3 )
+		{
+			$this->record_debug( 'get_service_info() was asked for non autorised data for user: ' . $u );
+			return NULL;
+		}
+
+// FIXME
+// DEBUG
+		$st_time = 1404172800; // Jul 1, 2014
+		$end_time = time();
+		
+		$result = array();
+//		$robot = new robot();
+#User ID		
+//		$result[] = array( $lang['USER_ID'], $u );
+
+# User name
+		$result[] = array( $lang['USER_NAME'], $user->data['username'] );
+
+# Days absent
+		$result[] = array( $lang['SINCE_LAST_VISIT_TIME'], $this->say_interval( $user->data['user_lastvisit'], time() ) );
+		
+# Debug info
+//		$result[] = array( $lang['ARE_YOU_ROBOT_ADMIN'], intval($robot->is_admin()) );
 # Return result		
 		return $result;
 	}
@@ -1427,6 +1465,12 @@ class aliyah {
 		
 # Construct welcome mainbox
 		$this->build_index_mainbox();
+
+# Initiate robot for private lessons generation
+		$robot = new robot();
+
+# Run "worst words" initiator. It will check and update if enything required.
+		$robot->ww_init();
 		
 # Check if there is unfinished (hanging) test. If so we simply set S_UNIFINISHED_TEST_EXISTS=true. The rest is resolved in templates.
 		if ( $_SESSION['fc']['session_id'] )
