@@ -114,7 +114,7 @@ class robot{
 
 
 		$sql =	'SELECT  d.word_id, COUNT(*) AS cnt'
-			.	', (SELECT  COUNT(*) AS err'
+			.	', (SELECT  COUNT(*)'
 			.	' FROM `' . FC_DATA_TABLE . '` AS d1'
 			.	' LEFT JOIN `' . FC_SESSIONS_TABLE . '` AS s ON s.`' . $fc_db_struct[FC_SESSIONS_TABLE]['id'] . '` = d1.`' . $fc_db_struct[FC_DATA_TABLE]['session_id'] . '`'
 			.	' WHERE 1'
@@ -122,6 +122,16 @@ class robot{
 			.	' AND d1.result < 14'
 			.	' AND d1.word_id = d.word_id'
 			.	' ) AS err'
+// Average
+			.	', ( 100 - (SELECT  COUNT(*)'
+			.	' FROM `' . FC_DATA_TABLE . '` AS d1'
+			.	' LEFT JOIN `' . FC_SESSIONS_TABLE . '` AS s ON s.`' . $fc_db_struct[FC_SESSIONS_TABLE]['id'] . '` = d1.`' . $fc_db_struct[FC_DATA_TABLE]['session_id'] . '`'
+			.	' WHERE 1'
+			.	' AND s.`' . $fc_db_struct[FC_SESSIONS_TABLE]['user_id'] . '` = \'48\'' 
+			.	' AND d1.result < 14'
+			.	' AND d1.word_id = d.word_id'
+			.	' ) / COUNT(*) * 100 ) as av_res'
+///			
 			.	' FROM `' . FC_DATA_TABLE . '` AS d'
 			.	' LEFT JOIN `' . FC_SESSIONS_TABLE . '` AS s ON s.`' . $fc_db_struct[FC_SESSIONS_TABLE]['id'] . '` = d.`' . $fc_db_struct[FC_DATA_TABLE]['session_id'] . '`'
 			.	' WHERE 1'
@@ -129,7 +139,8 @@ class robot{
 			.	' GROUP BY d.word_id'
 			.	' HAVING cnt > 3'
 			.	' AND err > 0'
-			.	' ORDER BY cnt DESC'
+			.	' ORDER BY av_res'
+			.	', cnt'
 			.	';';
 //		echo "<br>" . $sql . "<br>";
 				

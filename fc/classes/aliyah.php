@@ -302,8 +302,8 @@ class aliyah {
 		{
 			case ( 'heb' ):
 			default:
-				$sql =	'SELECT DISTINCT ( w.`' . $fc_db_struct[FC_WORDS_TABLE]['id'] . '` ) AS qid,'
-					.	' w.`' . $fc_db_struct[FC_WORDS_TABLE]['heb'] . '` AS qname'
+				$sql =	'SELECT DISTINCT ( w.`' . $fc_db_struct[FC_WORDS_TABLE]['id'] . '` ) AS qid'
+					.	', w.`' . $fc_db_struct[FC_WORDS_TABLE]['heb'] . '` AS qname'
 					.	' FROM `' . FC_WORDS_TABLE . '` AS w'
 					.	' LEFT JOIN `' . FC_LESSONS_TABLE . '` AS l ON l.`' . $fc_db_struct[FC_LESSONS_TABLE]['word_id'] . '` = w.`' . $fc_db_struct[FC_WORDS_TABLE]['id'] . '`'
 					.	' WHERE l.`' . $fc_db_struct[FC_LESSONS_TABLE]['id'] . '` = \'' . $lesson_id . '\''
@@ -311,12 +311,13 @@ class aliyah {
 					.	';';
 				break;
 			case ( 'rus' ):
-				$sql =	'SELECT DISTINCT ( w.`' . $fc_db_struct[FC_WORDS_TABLE]['id'] . '` ) AS qid,'
+				$sql =	'SELECT DISTINCT ( w.`' . $fc_db_struct[FC_WORDS_TABLE]['id'] . '` ) AS qid'
 					.	', r.`' . $fc_db_struct[FC_WORDS_RUS_TABLE]['rus'] . '` as qname'
 					.	' FROM `' . FC_WORDS_TABLE . '` AS w'
+					.	' LEFT JOIN `' . FC_LESSONS_TABLE . '` AS l ON l.`' . $fc_db_struct[FC_LESSONS_TABLE]['word_id'] . '` = w.`' . $fc_db_struct[FC_WORDS_TABLE]['id'] . '`'
 					.	' LEFT JOIN `' . FC_HEB_RUS_TABLE . '` as c ON c.`' . $fc_db_struct[FC_HEB_RUS_TABLE]['heb_id'] . '` = w.id'
 					.	' LEFT JOIN `' . FC_WORDS_RUS_TABLE . '` AS r ON r.`' . $fc_db_struct[FC_WORDS_RUS_TABLE]['id'] . '` = c.`' . $fc_db_struct[FC_HEB_RUS_TABLE]['rus_id'] . '`'
-					.	' WHERE 1'
+					.	' WHERE l.`' . $fc_db_struct[FC_LESSONS_TABLE]['id'] . '` = \'' . $lesson_id . '\''
 					.	' ORDER BY RAND()'
 					. ';';
 				break;
@@ -739,7 +740,7 @@ class aliyah {
 			.	';';
 
 		if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql;
-		if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'build_questions() SQL_SELECT: ' . $sql );			
+		if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'check_lesson_acc_rights() SQL_SELECT: ' . $sql );
 
 		$result = $fc_db->query($sql);
 		if ( $fc_db->num_rows( $result ) > 0 )
@@ -1469,19 +1470,29 @@ class aliyah {
 # Initiate robot for private lessons generation
 		$robot = new robot();
 
-# Run "worst words" initiator. It will check and update if enything required.
+# Run "worst words" initiator. It will check and update if anything is required.
 		$robot->ww_init();
 		
-# Check if there is unfinished (hanging) test. If so we simply set S_UNIFINISHED_TEST_EXISTS=true. The rest is resolved in templates.
+# Check if there exists an unfinished (hanging) test.
 		if ( $_SESSION['fc']['session_id'] )
 		{
-			$template->assign_vars(array(
-				'S_UNFINISHED_TEST_EXISTS'	=> true,
-				'L_RESET_CURRENT_TEST' 			=> $lang['RESET_CURRENT_TEST'] ,
-				'L_RESUME_TEST' 				=> $lang['RESUME_TEST'] ,
-				'L_UNIFINISHED_TEST_EXISTS'		=> $lang['UNIFINISHED_TEST_EXISTS'],
-				)
-			);
+# Exists but the test is empty or no unanswered words left, should close it anyway
+			if ( count( $_SESSION['fc']['questions'] ) == 0 || end( $_SESSION['fc']['questions'] )[3] != -1 )
+			{
+				if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'index(): There was a hanging empty test found. Initiating autoreset.' );
+				$this->reset();
+			}
+# Other way we simply set S_UNIFINISHED_TEST_EXISTS=true. The rest is resolved in templates.
+			else
+			{
+				$template->assign_vars(array(
+					'S_UNFINISHED_TEST_EXISTS'	=> true,
+					'L_RESET_CURRENT_TEST' 			=> $lang['RESET_CURRENT_TEST'] ,
+					'L_RESUME_TEST' 				=> $lang['RESUME_TEST'] ,
+					'L_UNIFINISHED_TEST_EXISTS'		=> $lang['UNIFINISHED_TEST_EXISTS'],
+					)
+				);
+			}
 		}
 
 # Make <options> for the 'lessons' <select> box.
