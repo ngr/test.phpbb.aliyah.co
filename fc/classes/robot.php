@@ -14,6 +14,7 @@ class robot{
 	private $user_id;
 	private $admin = false;
 	private $config;
+//	private record_debug();
 
 	function robot()
 	{
@@ -27,6 +28,8 @@ class robot{
 		$this->admin = ( $user->data['user_type'] == 3 ) ? true : false;
 		
 		$this->config = $GLOBALS['config_fc']['robot'];
+		
+		$GLOBALS['application']->record_debug('robot initiated');
 	}
 	
 	public function is_admin()
@@ -41,17 +44,14 @@ class robot{
 // Check if all required params are OK
 
 // Check if there is a valid ww already
-	if ( $this->exists_valid_ww() )
-	{
-		return true;
-	}
-	else
-	{
-		$this->build_new_ww();
-	}
-
-// Build a new ww
-
+		if ( $this->exists_valid_ww() )
+		{
+			return true;
+		}
+		else
+		{
+			$this->build_new_ww();
+		}
 		return true;
 	}
 	
@@ -69,10 +69,13 @@ class robot{
 			.	' LEFT JOIN `' . FC_LESSONS_ACC_RIGHTS_TABLE . '` AS lar ON lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['lesson_id'] . '` = ln.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['id'] . '`' 
 			.	' LEFT JOIN `' . FC_USER_GROUPS_TABLE . '` AS ug ON ug.`' . $fc_db_struct[FC_USER_GROUPS_TABLE]['id'] . '` = lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['user_group_id'] . '`'
 			.	' WHERE ug.`' . $fc_db_struct[FC_USER_GROUPS_TABLE]['user_id'] . '` = \'' . $this->user_id . '\''
-			.	' AND ln.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['author'] . '` = \'' . $this->config['ww']['author_id'] . '\''
+			.	' AND ln.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['author'] . '` = \'' . $this->config['ww']['robot_uid'] . '\''
 			.	' AND ln.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['date_valid'] . '` > \'' . time() . '\''
 			.	';';
-//		echo "<br>" . $sql . "<br>";
+
+		if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql;
+		if ( $GLOBALS['debug_log'] == true ) $GLOBALS['application']->record_debug( 'robot->exists_valid_ww() SQL: ' . $sql );
+
 		$result = $fc_db->query( $sql );
 		
 		if ( $fc_db->num_rows( $result ) > 0 )
@@ -89,7 +92,7 @@ class robot{
 	{
 //		echo "<br> Building new ww";
 		
-		global $fc_db, $fc_db_struct;
+		global $fc_db, $fc_db_struct, $lessons;
 
 //		$sql =	'SELECT DISTINCT( l.`' . $fc_db_struct[FC_LESSONS_TABLE]['word_id'] . ' ) AS id, *'
 		$sql =	'SELECT  d.word_id, COUNT(*) AS cnt'
@@ -140,13 +143,26 @@ class robot{
 			.	' HAVING cnt > 3'
 			.	' AND err > 0'
 			.	' ORDER BY av_res'
-			.	', cnt'
+			.	', cnt DESC'
 			.	';';
 //		echo "<br>" . $sql . "<br>";
-				
 
+		if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql;
+		if ( $GLOBALS['debug_log'] == true ) $GLOBALS['application']->record_debug( 'robot->build_new_ww() SQL: ' . $sql );
+
+
+//		$lesson = $GLOBALS['lessons']->create( 'Мой тест', $this->config['ww']['robot_uid'], time(), time() + 60 );
+		if ( ! $lesson ) 
+		{
+			if ( $GLOBALS['debug_err'] == true ) $GLOBALS['application']->record_debug( 'Failed! robot->build_new_ww() could not create a new lesson.' );
+			return false;
+		}
+
+		if ( $GLOBALS['debug_log'] == true ) $GLOBALS['application']->record_debug( 'robot->build_new_ww() Created a new lesson: ' . $lesson );
+		
+		
 		
 		return true;
 	}
-
+	
 }

@@ -148,6 +148,13 @@ $GLOBALS['robot'] = false;
 //$robot = &$GLOBALS['robot'];
 //$robot = new robot();
 
+# Lessons class
+require $config_fc['path']['classes'] . 'lessons' . $config_fc['var']['phpEx'];
+$GLOBALS['lessons'] = false;
+$lessons = &$GLOBALS['lessons'];
+$lessons = new lessons();
+
+
 //$lang_code = getlang();
 // Language automatic switch is turned off while no localizations are ready.
 $lang_code = 'ru';
@@ -158,6 +165,7 @@ require $config_fc['path']['languages'] . $lang_code . '/' . 'main' . $config_fc
 
 $GLOBALS['debug_all'] = false;
 $GLOBALS['debug_log'] = true;
+$GLOBALS['debug_err'] = true;
 $GLOBALS['language_test'] = 'rus';
 
 $config_fc['part_of_speech']['others'] = array( 'preposition', 'conjunction', 'interjection', 'pronoun' );
@@ -169,11 +177,14 @@ $config_fc['test']['intel_last_questions_number'] = 3;
 $config_fc['test']['intel_timeout_to_skip_correct'] = 604800; # 1 week
 
 # Worst Words (c) indivudual test generation config
-$config_fc['robot']['ww']['author_id'] = '52'; # Id of the service account for lessons generator.
+$config_fc['robot']['ww']['robot_uid'] = '52'; # Id of the service account for lessons generator.
 $config_fc['robot']['ww']['count'] = 15; # Number of worst words (WW) for lesson
 $config_fc['robot']['ww']['valid_period'] = 86400; # How long the WW lesson should be active
 $config_fc['robot']['ww']['wait_after_learned_period'] = 2592000; # How long shall we not show a word which was "learned" - 30 days
 $config_fc['robot']['ww']['good_attempts_to_consider_learned'] = 4; # How many times you have to correctly answer to consider the word "learned"
 $config_fc['robot']['ww']['last_attempts_to_analyze'] = 9; # How many last attempts for each word should the robot take into account
+
+# Configuration of lessons class
+$config_fc['lessons']['foo'] = true;
 
 ?>
