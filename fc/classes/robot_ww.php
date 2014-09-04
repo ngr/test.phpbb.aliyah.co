@@ -6,6 +6,7 @@ class ww implements Robot
 	private $user_id;
 	private $admin = false;
 	private $config;
+	private $lesson = false;
 
 
 	public function init()
@@ -19,7 +20,7 @@ class ww implements Robot
 		
 		$this->admin = ( $user->data['user_type'] == 3 ) ? true : false;
 		
-		$this->config = $GLOBALS['config_fc']['robot'];
+		$this->config = $GLOBALS['config_fc']['robot']['ww'];
 		
 		$GLOBALS['application']->record_debug('robot initiated');
 	}
@@ -57,8 +58,9 @@ class ww implements Robot
 		$sql =	'SELECT 1 FROM `' . FC_LESSONS_NAMES_TABLE . '` AS ln'
 			.	' LEFT JOIN `' . FC_LESSONS_ACC_RIGHTS_TABLE . '` AS lar ON lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['lesson_id'] . '` = ln.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['id'] . '`' 
 			.	' LEFT JOIN `' . BB_USER_GROUP_TABLE . '` AS bb_ug ON bb_ug.`' . $fc_db_struct[BB_USER_GROUP_TABLE]['group_id'] . '` = lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['group_id'] . '`'
-			.	' WHERE bb_ug.`' . $fc_db_struct[BB_USER_GROUP_TABLE]['user_id'] . '` = \'' . $this->user_id . '\''
-			.	' AND ln.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['author'] . '` = \'' . $this->config['ww']['robot_uid'] . '\''
+			.	' WHERE ( bb_ug.`' . $fc_db_struct[BB_USER_GROUP_TABLE]['user_id'] . '` = \'' . $this->user_id . '\''
+			.	' OR lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['user_id'] . '` = \'' . $this->user_id . '\' )'
+			.	' AND ln.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['author'] . '` = \'' . $this->config['robot_uid'] . '\''
 			.	' AND ln.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['date_valid'] . '` > \'' . time() . '\''
 			.	';';
 
@@ -81,9 +83,9 @@ class ww implements Robot
 	{
 //		echo "<br> Building new ww";
 		
-		global $fc_db, $fc_db_struct, $lessons, $user;
+		global $fc_db, $fc_db_struct, $lessons, $user, $lang;
 
-//		$sql =	'SELECT DISTINCT( l.`' . $fc_db_struct[FC_LESSONS_TABLE]['word_id'] . ' ) AS id, *'
+/*		$sql =	'SELECT DISTINCT( l.`' . $fc_db_struct[FC_LESSONS_TABLE]['word_id'] . ' ) AS id, *'
 		$sql =	'SELECT  d.word_id, COUNT(*) AS cnt'
 			.	', (SELECT  COUNT(*) AS err'
 			.	' FROM `' . FC_DATA_TABLE . '` AS d1'
@@ -102,7 +104,7 @@ class ww implements Robot
 			.	' AND err > 0'
 			.	' ORDER BY cnt DESC'
 			.	';';
-//		echo "<br>" . $sql . "<br>";
+//		echo "<br>" . $sql . "<br>"; */
 
 
 		$sql =	'SELECT  d.word_id, COUNT(*) AS cnt'
@@ -111,7 +113,7 @@ class ww implements Robot
 			.	' LEFT JOIN `' . FC_SESSIONS_TABLE . '` AS s ON s.`' . $fc_db_struct[FC_SESSIONS_TABLE]['id'] . '` = d1.`' . $fc_db_struct[FC_DATA_TABLE]['session_id'] . '`'
 			.	' WHERE 1'
 			.	' AND s.`' . $fc_db_struct[FC_SESSIONS_TABLE]['user_id'] . '` = \'48\'' 
-			.	' AND d1.result < 14'
+			.	' AND d1.result < ' . RESULT_GOOD_NOT_DEFAULT
 			.	' AND d1.word_id = d.word_id'
 			.	' ) AS err'
 // Average
@@ -120,7 +122,7 @@ class ww implements Robot
 			.	' LEFT JOIN `' . FC_SESSIONS_TABLE . '` AS s ON s.`' . $fc_db_struct[FC_SESSIONS_TABLE]['id'] . '` = d1.`' . $fc_db_struct[FC_DATA_TABLE]['session_id'] . '`'
 			.	' WHERE 1'
 			.	' AND s.`' . $fc_db_struct[FC_SESSIONS_TABLE]['user_id'] . '` = \'48\'' 
-			.	' AND d1.result < 14'
+			.	' AND d1.result < ' . RESULT_GOOD_NOT_DEFAULT
 			.	' AND d1.word_id = d.word_id'
 			.	' ) / COUNT(*) * 100 ) as av_res'
 ///			
@@ -133,23 +135,45 @@ class ww implements Robot
 			.	' AND err > 0'
 			.	' ORDER BY av_res'
 			.	', cnt DESC'
+			.	' LIMIT ' . $this->config['count']
 			.	';';
 //		echo "<br>" . $sql . "<br>";
 
-		if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql;
-		if ( $GLOBALS['debug_log'] == true ) $GLOBALS['application']->record_debug( 'robot->build_new_ww() SQL: ' . $sql );
-
-
-//		$lesson = $GLOBALS['lessons']->create( 'Мой тест', $this->config['ww']['robot_uid'], time(), time() + 60 );
-		if ( ! $lesson ) 
+		$result = $fc_db->query( $sql );
+		
+		if ( ! $result || $fc_db->num_rows( $result ) == 0 )
 		{
-			if ( $GLOBALS['debug_err'] == true ) $GLOBALS['application']->record_debug( 'Failed! robot->build_new_ww() could not create a new lesson.' );
-//			return false;
+			if ( $GLOBALS['debug_err'] == true ) $GLOBALS['application']->record_debug( 'Failed! robot->create_lesson() got an empty SQL result.' );
+			return false;
 		}
 
-		if ( $GLOBALS['debug_log'] == true ) $GLOBALS['application']->record_debug( 'robot->build_new_ww() Created a new lesson: ' . $lesson );
+		if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql;
+	//	if ( $GLOBALS['debug_log'] == true ) $GLOBALS['application']->record_debug( 'robot->create_lesson() SQL: ' . $sql );
+
+# Create a new lesson
+//		echo "<br>" . $lang['LESSON_NAME_WW'] . " --- " . $this->config['robot_uid'] . " --- " . time() . " --- " . $this->config['valid_period'];
+		if ( ! $lessons->create( $lang['LESSON_NAME_WW'], $this->config['robot_uid'], time(), time() + $this->config['valid_period'] ) ) 
+		{
+			if ( $GLOBALS['debug_err'] == true ) $GLOBALS['application']->record_debug( 'Failed! robot->create_lesson() could not create a new lesson.' );
+			return false;
+		}
+		if ( $GLOBALS['debug_log'] == true ) $GLOBALS['application']->record_debug( 'robot->create_lesson() Created a new lesson: ' . $lessons->get_id() );
+// */
+# Grant access rights for this lesson
+		if ( ! $lessons->grant_access( $this->user_id ) )
+		{
+			if ( $GLOBALS['debug_err'] == true ) $GLOBALS['application']->record_debug( 'Failed! robot->create_lesson() could not grant access rights for user: ' . $this->user_id . ' to lesson: ' . $lessons->get_id() );
+			return false;
+		}
+		if ( $GLOBALS['debug_log'] == true ) $GLOBALS['application']->record_debug( 'robot->create_lesson() Granted access rights for user: ' . $this->user_id . ' to lesson: ' . $lessons->get_id() );
+
+# Add words to the new lesson
+		while ( $row = $fc_db->fetch_array( $result ) )
+		{
+			$lessons->add_word( $row[0] );
+		}
+
 //		echo '<br>' . $user->fc_say_hw();
-		
 		return true;
 	}
 }
