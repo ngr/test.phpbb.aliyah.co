@@ -14,6 +14,8 @@
 
 class aliyah {
 
+	protected $robot;
+
 	function debug()
 	{
 		global $template, $words, $results, $fc_db, $fc_db_struct;
@@ -25,7 +27,7 @@ class aliyah {
 		{
 			$sql = 'INSERT INTO `fc_lessons` (id, word_id) VALUES (18, ' . $val . ');';
 
-			$sql = 'INSERT INTO `fc_lessons_acc_rights` (lesson_id, user_group_id) VALUES ( ' . $val . ', 0 );';
+			$sql = 'INSERT INTO `fc_lessons_acc_rights` (lesson_id, group_id) VALUES ( ' . $val . ', 2 );';
 
 			$this->record_debug( 'Assign to lesson SQL: ' . $sql );
 			$result = $fc_db->query( $sql );
@@ -702,7 +704,7 @@ class aliyah {
 
 		$sql =	'SELECT 1 FROM `' . FC_LESSONS_ACC_RIGHTS_TABLE . '`'
 			.	' WHERE `' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['lesson_id'] . '` = \'' . $lesson_id . '\''
-			.	' AND `' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['user_group_id'] . '` = \'0\''
+			.	' AND `' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['group_id'] . '` = \'0\''
 			.	';';
 
 		if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql;
@@ -734,9 +736,11 @@ class aliyah {
 # Then we check if the user belongs to the group with granted access rights for the lesson
 		$sql =	'SELECT 1 FROM `' . FC_LESSONS_NAMES_TABLE . '` AS l'
 			.	' LEFT JOIN `' . FC_LESSONS_ACC_RIGHTS_TABLE . '` AS lar ON lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['lesson_id'] . '` = l.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['id'] . '`'
-			.	' LEFT JOIN `' . FC_USER_GROUPS_TABLE . '` AS ug ON ug.`' . $fc_db_struct[FC_USER_GROUPS_TABLE]['id'] . '` = lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['user_group_id'] . '`'	
+			.	' LEFT JOIN `' . BB_USER_GROUP_TABLE . '` AS bb_ug ON bb_ug.`' . $fc_db_struct[BB_USER_GROUP_TABLE]['group_id'] . '` = lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['group_id'] . '`'
+			
 			.	' WHERE l.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['id'] . '` = \'' . $lesson_id . '\'' 
-			.	' AND ug.`' . $fc_db_struct[FC_USER_GROUPS_TABLE]['user_id'] . '` = \'' . $user->data['user_id'] . '\''
+			.	' AND ( bb_ug.`' . $fc_db_struct[BB_USER_GROUP_TABLE]['user_id'] . '` = \'' . $user->data['user_id'] . '\''
+			.	' OR lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['user_id'] . '` = \'' . $user->data['user_id'] . '\' )'
 			.	';';
 
 		if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql;
@@ -1407,16 +1411,20 @@ class aliyah {
 			.	' AND ln.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['id'] . '` IN ('
 				.	' SELECT `' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['lesson_id'] . '`'
 				.	' FROM `' . FC_LESSONS_ACC_RIGHTS_TABLE . '` AS lar '
-				.	' LEFT JOIN `' . FC_USER_GROUPS_TABLE . '` AS ug ON ug.`' . $fc_db_struct[FC_USER_GROUPS_TABLE]['id'] . '` = lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['user_group_id'] . '`'
-				.	' WHERE 1';
-			if ( $public )
-			{
-				$sql .=	' AND lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['user_group_id'] . '` = 0';
-			}
-			else
-			{
-				$sql .=	' AND ug.`' . $fc_db_struct[FC_USER_GROUPS_TABLE]['user_id'] . '` = \'' . $user_id . '\'';
-			}
+				.	' LEFT JOIN `' . BB_USER_GROUP_TABLE . '` AS bb_ug ON bb_ug.`' . $fc_db_struct[BB_USER_GROUP_TABLE]['group_id'] . '` = lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['group_id'] . '`'
+				.	' WHERE 1'
+				.	' AND (';
+				if ( $public )
+				{
+					$sql .=	' lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['group_id'] . '` = 0';
+				}
+				else
+				{
+					$sql .=	' bb_ug.`' . $fc_db_struct[BB_USER_GROUP_TABLE]['user_id'] . '` = \'' . $user_id . '\'';
+				}
+				$sql .=	' OR lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['user_id'] . '` = \'' . $user_id . '\''
+					.	')';
+				
 		$sql .=	')'
 			.	' AND ln.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['date_valid'] . '` > \'' . time() . '\''
 			.	' GROUP BY l.id'
@@ -1425,6 +1433,8 @@ class aliyah {
 			.	';';
 
 		if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql;
+		if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'get_available_lessons() SQL: ' . $sql );
+		
 		$result = $fc_db->query( $sql );
 
 		if ( $fc_db->num_rows( $result ) > 0 )
@@ -1436,11 +1446,16 @@ class aliyah {
 		}
 		else
 		{
-			$this->record_debug( 'get_private_lessons() got now private lessons available for: ' . $user_id );
+			$this->record_debug( 'get_private_lessons() got no private lessons available for: ' . $user_id );
 		}
 		return $lessons;
 	}
-	
+
+	function set_robot( Robot $robot )
+	{
+		$this->robot = $robot;
+	}
+
 	function index()
 	{
 # Here will be a lot of BAD BAD BAD interface params. Unfortunately there is no front-end developer in the team yet.
@@ -1468,11 +1483,11 @@ class aliyah {
 		$this->build_index_mainbox();
 
 # Initiate robot for private lessons generation
-		$robot = new robot();
-
 # Run "worst words" initiator. It will check and update if anything is required.
-		$robot->ww_init();
-		
+		$this->set_robot(new ww);
+		$this->robot->init();
+		$this->robot->go();
+
 # Check if there exists an unfinished (hanging) test.
 		if ( $_SESSION['fc']['session_id'] )
 		{

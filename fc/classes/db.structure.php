@@ -21,12 +21,15 @@ define('FC_WORDS_RUS_TABLE', FC_TABLE_PREFIX . 'words_rus');
 define('FC_LESSONS_TABLE', FC_TABLE_PREFIX . 'lessons');
 define('FC_LESSONS_ACC_RIGHTS_TABLE', FC_TABLE_PREFIX . 'lessons_acc_rights');
 define('FC_LESSONS_NAMES_TABLE', FC_TABLE_PREFIX . 'lessons_names');
-define('FC_LESSONS_TABLE', FC_TABLE_PREFIX . 'user_groups');
+define('FC_LESSONS_TABLE', FC_TABLE_PREFIX . 'lessons');
 define('FC_SESSIONS_TABLE', FC_TABLE_PREFIX . 'sessions');
 define('FC_DATA_TABLE', FC_TABLE_PREFIX . 'data');
 define('FC_HEB_RUS_TABLE', FC_TABLE_PREFIX . 'heb_rus');
 define('FC_RUS_HEB_TABLE', FC_TABLE_PREFIX . 'rus_heb');
 define('FC_USER_GROUPS_TABLE', FC_TABLE_PREFIX . 'user_groups');
+
+# The following core tables of template engine are used for rights and access management.
+define('BB_USER_GROUP_TABLE', 'phpbb_user_group');
 
 $fc_db_struct = array(
 	FC_ASSIGNMENTS_TABLE => array(
@@ -62,7 +65,8 @@ $fc_db_struct = array(
 	),
 	FC_LESSONS_ACC_RIGHTS_TABLE => array(
 		'lesson_id' => 'lesson_id',
-		'user_group_id' => 'user_group_id'
+		'group_id' => 'group_id',
+		'user_id' => 'user_id'
 	),
 	FC_LESSONS_NAMES_TABLE => array(
 		'id' => 'id',
@@ -105,6 +109,14 @@ $fc_db_struct = array(
 		'user_id' => 'user_id',
 		'name' => 'name'
 	)
+);
+
+# The following core tables of template engine are used for rights and access management.
+$fc_db_struct[BB_USER_GROUP_TABLE] = array(
+		'group_id' => 'group_id',
+		'user_id' => 'user_id',
+		'group_leader' => 'group_leader',
+		'user_pending' => 'user_pending'
 );
 
 class fc_db_structure {

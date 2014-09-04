@@ -2470,6 +2470,22 @@ class user extends session
 
 		return $forum_ids;
 	}
+
+	/**
+	* The following extension is required for Flash Cards Aliyah.co application
+	* It should be inserted at the end of phpbb3 user class.
+	*/
+
+	/**
+	* SAMPLE
+	*/
+	function fc_say_hw()
+	{
+		global $db;
+
+		return 'hello world';
+	}
+
 }
 
 ?>

@@ -144,6 +144,9 @@ $results = new results();
 
 # Robot application
 require $config_fc['path']['classes'] . 'robot' . $config_fc['var']['phpEx'];
+require $config_fc['path']['classes'] . 'robot_ww' . $config_fc['var']['phpEx'];
+
+
 $GLOBALS['robot'] = false;
 //$robot = &$GLOBALS['robot'];
 //$robot = new robot();
