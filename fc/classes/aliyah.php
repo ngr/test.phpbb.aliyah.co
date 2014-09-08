@@ -1390,11 +1390,6 @@ class aliyah {
 	{
 		global $user, $fc_db, $fc_db_struct;
 
-		if ( ! isset( $user_id ) || ! intval( $user_id ) )
-		{
-			$this->record_debug( 'get_private_lessons() recieved incorrect user_id: ' . $user_id );
-			return NULL;
-		}
 		if ( $user_id != $user->data['user_id'] && $user->data['user_type'] < 2 )
 		{
 			$this->record_debug( 'get_private_lessons() is not authorised to give lessons info of user_id: ' . $user_id . ' to: ' . $user->data['user_id'] );
@@ -1420,10 +1415,10 @@ class aliyah {
 				}
 				else
 				{
-					$sql .=	' bb_ug.`' . $fc_db_struct[BB_USER_GROUP_TABLE]['user_id'] . '` = \'' . $user_id . '\'';
+					$sql .=	' bb_ug.`' . $fc_db_struct[BB_USER_GROUP_TABLE]['user_id'] . '` = \'' . $user_id . '\''
+						.	' OR lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['user_id'] . '` = \'' . $user_id . '\'';
 				}
-				$sql .=	' OR lar.`' . $fc_db_struct[FC_LESSONS_ACC_RIGHTS_TABLE]['user_id'] . '` = \'' . $user_id . '\''
-					.	')';
+				$sql .=	')';
 				
 		$sql .=	')'
 			.	' AND ln.`' . $fc_db_struct[FC_LESSONS_NAMES_TABLE]['date_valid'] . '` > \'' . time() . '\''
@@ -1768,6 +1763,7 @@ class aliyah {
 		
 	}
 	
+# This shows all the words of the the POSTed lesson. Should change this one day and move to class.lessons.
 	function show_lesson_contents()
 	{
 		global $fc_db, $fc_db_struct, $lang, $template;
