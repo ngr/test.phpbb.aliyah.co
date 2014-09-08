@@ -368,11 +368,13 @@ class aliyah {
 		if ( $GLOBALS['debug_all'] == true ) echo '<br>test_type in _SESSION is set to:' . $_SESSION['fc']['test_type'];
 	}
 
-###################################################
-# This is one of the most important functions     #
-# It creates random test according to user        #
-# request and statistics of user previous answers #
-###################################################
+#####################################################
+# This is one of the most important functions		#
+# It creates random test according to user			#
+# request and statistics of user previous answers	#
+# Should one day make refactoring and split to		#
+# different classes logically.						#
+#####################################################
 	function build_questions()
 	{
 		global $fc_db, $fc_db_struct, $user, $config_fc, $lang;
@@ -400,6 +402,7 @@ class aliyah {
 		else
 		{
 # FIXMELATER Should add correct exception here
+			$this->control_session('close');
 			echo '<h1>' . $lang['NO_LESSON_SELECTED'] . '</h1>';
 			die( '<script language=javascript>window.onload = setTimeout(function() {  window.location="?mode=index"; }, 1000);</script>' );
 		}
@@ -427,6 +430,7 @@ class aliyah {
 				{
 					$this->reset();
 # FIXME This shit is growing more and more popular along the code. Should fix this ASAP.
+					$this->control_session('close');
 					echo '<h1>' . $lang['NO_APPROPRIATE_WORDS'] . '</h1>';
 					die( '<script language=javascript>window.onload = setTimeout(function() {  window.location="?mode=index"; }, 1000);</script>' );
 				}
@@ -454,6 +458,7 @@ class aliyah {
 # At this point we actually always get array now so the following may be deprecated, but shit happens...
 		else 
 		{
+				$this->control_session('close');
 				echo '<h1>' . $lang['NO_LESSON_SELECTED'] . '</h1>';
 				die( '<script language=javascript>window.onload = setTimeout(function() {  window.location="?mode=index"; }, 1000);</script>' );
 /*		
@@ -529,7 +534,7 @@ class aliyah {
 #####################
 # Create temporary table for all possible values for the current test.
 		$sql =	'CREATE TEMPORARY TABLE IF NOT EXISTS tmp_' . $user->data['user_id'] . ' ( `id` INT(11) NOT NULL, `heb` VARCHAR(127) NOT NULL) ENGINE=MyISAM  DEFAULT CHARSET=utf8;';
-		$this->record_debug( 'build_questions() SQL1: ' . $sql );
+		$this->record_debug( 'build_questions() SQL: ' . $sql );
 		$result = $fc_db->query($sql);
 		
 # Now if mode intellectual we add one more chanse for every mistake in the last five tests.
@@ -554,7 +559,7 @@ class aliyah {
 						.	' ORDER BY RAND()'
 						.	';';
 					if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql;
-					if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'build_questions() SQL2: ' . $sql );
+					if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'build_questions() SQL: ' . $sql );
 					$result = $fc_db->query($sql);
 
 # FIXMELATER Think about this method someday. Logic description is in the forum.
@@ -579,7 +584,7 @@ class aliyah {
 						.	$sql_select_part_of_speech
 						.	$sql_complicated_search
 						.	' ;';
-					if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'build_questions() SQL3: ' . $sql );	
+					if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'build_questions() SQL: ' . $sql );	
 					$result = $fc_db->query($sql);
 # Inserting old mistakes
 					$sql =	'INSERT INTO `tmp_' . $user->data['user_id'] . '` (id, heb)'
