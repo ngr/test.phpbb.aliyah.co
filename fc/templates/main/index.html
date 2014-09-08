@@ -27,9 +27,12 @@
 			<!-- BEGIN index_mainbox -->
 				<table class="t_index_mainbox" cellspacing="9">
 				<!-- BEGIN index_mainbox_tr -->
-					<tr>
+					<tr valign="top">
 						<!-- BEGIN index_mainbox_td -->
 						<td>
+							<!-- IF index_mainbox.index_mainbox_tr.index_mainbox_td.TD_TYPE == 'post' -->
+								<!-- INCLUDE ../../../fc/templates/main/post.html -->
+							<!-- ENDIF -->
 							{index_mainbox.index_mainbox_tr.index_mainbox_td.TD_CONTENT}
 						</td>
 						<!-- END index_mainbox_td -->

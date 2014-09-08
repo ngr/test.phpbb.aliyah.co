@@ -16,47 +16,6 @@ class aliyah {
 
 	protected $robot;
 
-	function debug()
-	{
-		global $template, $words, $results, $fc_db, $fc_db_struct;
-		
-		$this->record_debug( 'Called debug()' );
-		
-# This helps inserting to lessons quickly :)
-		for ( $val = 9; $val < 39; $val++ )
-		{
-			$sql = 'INSERT INTO `fc_lessons` (id, word_id) VALUES (18, ' . $val . ');';
-
-			$sql = 'INSERT INTO `fc_lessons_acc_rights` (lesson_id, group_id) VALUES ( ' . $val . ', 2 );';
-
-			$this->record_debug( 'Assign to lesson SQL: ' . $sql );
-			$result = $fc_db->query( $sql );
-		}
-
-		$this->show_lesson_contents();
-/*			$sql =	'SELECT * FROM fc_data AS d'
-				.	' WHERE('
-				.	' SELECT COUNT(*) FROM fc_data AS d1 WHERE d.word_id = d1.word_id AND d1.id < d.id' 
-				.	') < 4 '
-				.	' AND d.result < 14'
-				.	' ORDER BY d.word_id'
-				.	';'; // */
- 
-#			if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql;
-
-#		$this->control_session( 'close', 170 );
-		
-#		$this->build_questions();
-#		$my_res = $results->get_session_mistakes(75);
-#		if ( isset( $_GET['debug_all'] ) ) view( $my_res );
-
-		$template->set_filenames(array(
-			'body' => '../../../fc/templates/main/blank.html'
-			)
-		);
-	
-	}
-	
 	function reset()
 	{
 		global $template;
@@ -1178,6 +1137,71 @@ class aliyah {
     	endswitch;
 	}
 	
+	function get_bbpost( $id )
+	{
+		global $fc_db, $fc_db_struct, $user, $auth, $db, $template;
+
+		$phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : '../';
+		$phpEx = substr(strrchr(__FILE__, '.'), 1);
+		include($phpbb_root_path . 'includes/bbcode.' . $phpEx);
+		include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+
+		$user->setup('viewforum');
+
+# We now include some of the forum and topic IDs that will be used throughout the script.
+	$search_limit = 1;
+
+#    $forum_id = array(1,2,3,5,6,7,8);
+#    $forum_id_where = $this->create_where_clauses($forum_id, 'forum');
+
+    $topic_id = array( $id );
+    $topic_id_where = $this->create_where_clauses($topic_id, 'topic');
+
+	$posts_ary = array(
+        'SELECT'    => 'p.*, t.*',
+        'FROM'      => array(
+            POSTS_TABLE     => 'p',
+        ),
+        'LEFT_JOIN' => array(
+            array(
+                'FROM'  => array(TOPICS_TABLE => 't'),
+                'ON'    => 't.topic_first_post_id = p.post_id'
+            )
+        ),
+        'WHERE'     => str_replace( array('WHERE ', 'topic_id'), array('', 't.topic_id'), $topic_id_where) . '
+                        AND t.topic_status <> ' . ITEM_MOVED . '
+                        AND t.topic_approved = 1',
+        'ORDER_BY'  => 'p.post_id DESC',
+    );
+
+	$posts = $db->sql_build_query('SELECT', $posts_ary);
+
+	$posts_result = $db->sql_query_limit($posts, $search_limit);
+
+      while( $posts_row = $db->sql_fetchrow($posts_result) )
+      {
+         $topic_title       = $posts_row['topic_title'];
+         $topic_author       = get_username_string('full', $posts_row['topic_poster'], $posts_row['topic_first_poster_name'], $posts_row['topic_first_poster_colour']);
+         $topic_date       = $user->format_date($posts_row['topic_time']);
+         $topic_link       = append_sid("{$phpbb_root_path}viewtopic.$phpEx", 'f=' . $posts_row['forum_id'] . '&amp;t=' . $posts_row['topic_id']);
+
+         $post_text = nl2br($posts_row['post_text']);
+
+         $bbcode = new bbcode(base64_encode($bbcode_bitfield));
+         $bbcode->bbcode_second_pass($post_text, $posts_row['bbcode_uid'], $posts_row['bbcode_bitfield']);
+
+         $post_text = smiley_text($post_text);
+
+         $template->assign_block_vars('announcements', array(
+         'TOPIC_TITLE'       => $topic_title,
+         'TOPIC_AUTHOR'       => $topic_author,
+         'TOPIC_DATE'       => $topic_date,
+         'TOPIC_LINK'       => $topic_link,
+         'POST_TEXT'         => $post_text,
+         ));
+      }
+	}
+
 # This is the initiator of the index page newsbox.
 # It should summon contents generators, regroup the contents if required and process it for template engine with build_index_table()
 	function build_index_mainbox()
@@ -1186,22 +1210,24 @@ class aliyah {
 		
 		$template->assign_vars(array(
 				'S_PAGE_INDEX'	=> true,
-				'L_WELCOME_MESSAGE' => $lang['WELCOME_MESSAGE'],
+				'L_WELCOME_MESSAGE' => '',
+//				'L_WELCOME_MESSAGE' => $lang['WELCOME_MESSAGE'],
 			)
 		);
-		
+
  		$template->assign_block_vars('index_mainbox', array() );
-		
+
 # Get common statistics for the current user to draw on index page
 //		$common_stats = $this->get_user_common_stats( $user->data['user_id'] );
 //		$common_stats = $this->get_service_info( $user->data['user_id'] );
-		
+
 		$sample = array(
-			$this->make_html_table_to_string( $this->get_user_common_stats( $user->data['user_id'] ) ),
-			$this->make_html_table_to_string( $this->get_service_info( $user->data['user_id'] ) ),
-			'' 
+			array( 'value' => $this->get_bbpost( 23 ), 'type' => 'post'),
+			array( 'value' => $this->make_html_table_to_string( $this->get_user_common_stats( $user->data['user_id'] ) ), 'type' => 'table'),
+//			array( 'value' => '', 'type' => 'table'),
+//			array( 'value' => $this->make_html_table_to_string( $this->get_service_info( $user->data['user_id'] ) ), 'type' => 'table'),
 		);
-		$this->build_index_table( 'index_mainbox',  $sample, 3, 0);
+		$this->build_index_table( 'index_mainbox',  $sample, 2, 0);
 	}
 
 
@@ -1218,7 +1244,7 @@ class aliyah {
 
 // FIXME
 // DEBUG
-		$st_time = 1404172800; // Jul 1, 2014
+		$st_time = 1388534400; // Jan 1, 2014
 		$end_time = time();
 		
 		$result = array();
@@ -1260,7 +1286,7 @@ class aliyah {
 
 // FIXME
 // DEBUG
-		$st_time = 1404172800; // Jul 1, 2014
+		$st_time = 1388534400; // Jan 1, 2014
 		$end_time = time();
 		
 		$result = array();
@@ -1363,13 +1389,13 @@ class aliyah {
 	function build_index_table( $parent, $cont, $cols = 1, $hrows = 1 )
 	{
 		global $lang, $template;
-		
+
 		if ( !isset( $cont ) || !is_array( $cont ) )
 		{
-			$this->record_debug( 'build_index_table() recieved incorrect content: ' . view($cont) );
+			if ( $GLOBALS['debug_err'] == true ) $this->record_debug( 'build_index_table() recieved incorrect content: ' . view($cont) );
 			return NULL;
 		}
-		
+
 		$c = 0;
 		$template->assign_block_vars( $parent . '.index_mainbox_tr', array() );
 		foreach ( $cont as $key => $val )
@@ -1379,12 +1405,11 @@ class aliyah {
 				$template->assign_block_vars( $parent . '.index_mainbox_tr', array() );
 				$c = 0;
 			}
-			
 			$template->assign_block_vars( $parent . '.index_mainbox_tr.index_mainbox_td', array(
-						'TD_CONTENT' => $cont[$key],
+						'TD_CONTENT' => $val['value'],
+						'TD_TYPE' => $val['type']
 				)
 			);
-			
 			$c++;
 		}
 		return 1;
@@ -1397,7 +1422,7 @@ class aliyah {
 
 		if ( $user_id != $user->data['user_id'] && $user->data['user_type'] < 2 )
 		{
-			$this->record_debug( 'get_private_lessons() is not authorised to give lessons info of user_id: ' . $user_id . ' to: ' . $user->data['user_id'] );
+			if ( $GLOBALS['debug_err'] == true ) $this->record_debug( 'get_private_lessons() is not authorised to give lessons info of user_id: ' . $user_id . ' to: ' . $user->data['user_id'] );
 			return NULL;
 		}
 
@@ -1456,14 +1481,39 @@ class aliyah {
 		$this->robot = $robot;
 	}
 
-	function index()
+# Check if there exists an unfinished (hanging) test.
+	function check_hanging_session()
 	{
+		global $template, $lang;
+		if ( $_SESSION['fc']['session_id'] )
+		{
+# Exists but the test is empty or no unanswered words left, should close it anyway
+			if ( count( $_SESSION['fc']['questions'] ) == 0 || end( $_SESSION['fc']['questions'] )[3] != -1 )
+			{
+				if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'index(): There was a hanging empty test found. Initiating autoreset.' );
+				$this->reset();
+			}
+# Other way we simply set S_UNIFINISHED_TEST_EXISTS=true. The rest is resolved in templates.
+			else
+			{
+				$template->assign_vars(array(
+					'S_UNFINISHED_TEST_EXISTS'	=> true,
+					'L_RESET_CURRENT_TEST' 			=> $lang['RESET_CURRENT_TEST'] ,
+					'L_RESUME_TEST' 				=> $lang['RESUME_TEST'] ,
+					'L_UNIFINISHED_TEST_EXISTS'		=> $lang['UNIFINISHED_TEST_EXISTS'],
+					)
+				);
+			}
+		}
+	}
+
 # Here will be a lot of BAD BAD BAD interface params. Unfortunately there is no front-end developer in the team yet.
 # I know a lot of wrong things below, but this is really not my job. So please simply do not mind while it works.
 # Once again, I NEED a front-ender! ... Yep and an algorythm guru... And a programmist to rewrite all this shit...
-	
+	function index()
+	{
 		global $lang, $user, $config_fc, $template, $fc_db, $fc_db_struct;
-		
+
 		$template->set_filenames(array(
 			'body' => '../../../fc/templates/main/index.html'
 			)
@@ -1489,26 +1539,7 @@ class aliyah {
 		$this->robot->go();
 
 # Check if there exists an unfinished (hanging) test.
-		if ( $_SESSION['fc']['session_id'] )
-		{
-# Exists but the test is empty or no unanswered words left, should close it anyway
-			if ( count( $_SESSION['fc']['questions'] ) == 0 || end( $_SESSION['fc']['questions'] )[3] != -1 )
-			{
-				if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'index(): There was a hanging empty test found. Initiating autoreset.' );
-				$this->reset();
-			}
-# Other way we simply set S_UNIFINISHED_TEST_EXISTS=true. The rest is resolved in templates.
-			else
-			{
-				$template->assign_vars(array(
-					'S_UNFINISHED_TEST_EXISTS'	=> true,
-					'L_RESET_CURRENT_TEST' 			=> $lang['RESET_CURRENT_TEST'] ,
-					'L_RESUME_TEST' 				=> $lang['RESUME_TEST'] ,
-					'L_UNIFINISHED_TEST_EXISTS'		=> $lang['UNIFINISHED_TEST_EXISTS'],
-					)
-				);
-			}
-		}
+		$this->check_hanging_session();
 
 # Make <options> for the 'lessons' <select> box.
 # Get available public lessons
@@ -1881,16 +1912,140 @@ class aliyah {
 			# No words selected.
 		}
 	}
-	
+
+# Temporary logging mechanism.
 	function record_debug( $action )
 	{
 		global $fc_db, $fc_db_struct, $user;
-		
+
 		$sql = 'INSERT INTO `fc_debug` (`user_id`, `record`) VALUES (\'' . $user->data['user_id'] . '\', \'' . mysql_real_escape_string( $action ) . '\');';
-		
 		$fc_db->query( $sql );
 	}
-	
+
+/* create_where_clauses( int[] gen_id, String type )
+* This function outputs an SQL WHERE statement for use when grabbing
+* posts and topics */
+
+function create_where_clauses($gen_id, $type)
+{
+	global $db, $auth, $fc_db;
+
+    $size_gen_id = sizeof($gen_id);
+
+        switch($type)
+        {
+            case 'forum':
+                $type = 'forum_id';
+                break;
+            case 'topic':
+                $type = 'topic_id';
+                break;
+            default:
+                trigger_error('No type defined');
+        }
+
+    // Set $out_where to nothing, this will be used of the gen_id
+    // size is empty, in other words "grab from anywhere" with
+    // no restrictions
+    $out_where = '';
+
+    if( $size_gen_id > 0 )
+    {
+    // Get a list of all forums the user has permissions to read
+    $auth_f_read = array_keys($auth->acl_getf('f_read', true));
+
+        if( $type == 'topic_id' )
+        {
+            $sql     = 'SELECT topic_id FROM ' . TOPICS_TABLE . '
+                        WHERE ' .  $db->sql_in_set('topic_id', $gen_id) . '
+                        AND ' .  $db->sql_in_set('forum_id', $auth_f_read);
+
+            $result     = $db->sql_query($sql);
+//            echo $sql;
+
+                while( $row = $db->sql_fetchrow($result) )
+                {
+                        // Create an array with all acceptable topic ids
+                        $topic_id_list[] = $row['topic_id'];
+                }
+
+            unset($gen_id);
+
+            $gen_id = $topic_id_list;
+            $size_gen_id = sizeof($gen_id);
+        }
+
+    $j = 0;
+
+        for( $i = 0; $i < $size_gen_id; $i++ )
+        {
+        $id_check = (int) $gen_id[$i];
+
+            // If the type is topic, all checks have been made and the query can start to be built
+            if( $type == 'topic_id' )
+            {
+                $out_where .= ($j == 0) ? 'WHERE ' . $type . ' = ' . $id_check . ' ' : 'OR ' . $type . ' = ' . $id_check . ' ';
+            }
+
+            // If the type is forum, do the check to make sure the user has read permissions
+            else if( $type == 'forum_id' && $auth->acl_get('f_read', $id_check) )
+            {
+                $out_where .= ($j == 0) ? 'WHERE ' . $type . ' = ' . $id_check . ' ' : 'OR ' . $type . ' = ' . $id_check . ' ';
+            }
+
+        $j++;
+        }
+    }
+
+    if( $out_where == '' && $size_gen_id > 0 )
+    {
+        trigger_error('A list of topics/forums has not been created');
+    }
+
+    return $out_where;
+}
+
+# This is a service function used only manually.
+# Should move to another file or better be depricated one day.
+	function debug()
+	{
+		global $template, $words, $results, $fc_db, $fc_db_struct;
+
+		$this->record_debug( 'Called debug()' );
+
+# This helps inserting to lessons quickly :)
+		for ( $val = 9; $val < 39; $val++ )
+		{
+			$sql = 'INSERT INTO `fc_lessons` (id, word_id) VALUES (18, ' . $val . ');';
+
+			$sql = 'INSERT INTO `fc_lessons_acc_rights` (lesson_id, group_id) VALUES ( ' . $val . ', 2 );';
+
+			$this->record_debug( 'Assign to lesson SQL: ' . $sql );
+			$result = $fc_db->query( $sql );
+		}
+
+		$this->show_lesson_contents();
+/*			$sql =	'SELECT * FROM fc_data AS d'
+				.	' WHERE('
+				.	' SELECT COUNT(*) FROM fc_data AS d1 WHERE d.word_id = d1.word_id AND d1.id < d.id' 
+				.	') < 4 '
+				.	' AND d.result < 14'
+				.	' ORDER BY d.word_id'
+				.	';'; // */
+ 
+#			if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql;
+
+#		$this->control_session( 'close', 170 );
 		
+#		$this->build_questions();
+#		$my_res = $results->get_session_mistakes(75);
+#		if ( isset( $_GET['debug_all'] ) ) view( $my_res );
+
+		$template->set_filenames(array(
+			'body' => '../../../fc/templates/main/blank.html'
+			)
+		);
+	
+	}
 }
 ?>
