@@ -1488,24 +1488,21 @@ class aliyah {
 		if ( $_SESSION['fc']['session_id'] )
 		{
 # Exists but the test is empty or no unanswered words left, should close it anyway
-			if ( $_SESSION['fc']['questions'] )
+			if ( is_array( $_SESSION['fc']['questions'] ) && ( count( $_SESSION['fc']['questions'] ) == 0 || end( $_SESSION['fc']['questions'] )[3] != -1 ) )
 			{
-				if ( count( $_SESSION['fc']['questions'] ) == 0 || end( $_SESSION['fc']['questions'] )[3] != -1 )
-				{
-					if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'index(): There was a hanging empty test found. Initiating autoreset.' );
-					$this->reset();
-				}
+				if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'index(): There was a hanging empty test found. Initiating autoreset.' );
+				$this->reset();
+			}
 # Other way we simply set S_UNIFINISHED_TEST_EXISTS=true. The rest is resolved in templates.
-				else
-				{
-					$template->assign_vars(array(
-						'S_UNFINISHED_TEST_EXISTS'	=> true,
-						'L_RESET_CURRENT_TEST' 			=> $lang['RESET_CURRENT_TEST'] ,
-						'L_RESUME_TEST' 				=> $lang['RESUME_TEST'] ,
-						'L_UNIFINISHED_TEST_EXISTS'		=> $lang['UNIFINISHED_TEST_EXISTS'],
-						)
-					);
-				}
+			else
+			{
+				$template->assign_vars(array(
+					'S_UNFINISHED_TEST_EXISTS'	=> true,
+					'L_RESET_CURRENT_TEST' 			=> $lang['RESET_CURRENT_TEST'] ,
+					'L_RESUME_TEST' 				=> $lang['RESUME_TEST'] ,
+					'L_UNIFINISHED_TEST_EXISTS'		=> $lang['UNIFINISHED_TEST_EXISTS'],
+					)
+				);
 			}
 		}
 	}
