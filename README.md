@@ -24,4 +24,12 @@ phpBB software is distributed with some bla-bla rights (read the manual on phpbb
 Flashcards is developed to the current state in 2014 by a team of 1 developer.
 
 (c) ngr 2014
-=======
+
+====================
+
+The Git test repository has been made public.
+
+(c) ngr Aug 13, 2014
+
+====================
+

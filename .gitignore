@@ -5,9 +5,10 @@
 _vti_cnf/
 _vti_pvt/
 desktop.ini
+Thumbs.db
 
 # Cache and backups
-cache/
+cache/*
 
 # MySQL backups
 backup_*

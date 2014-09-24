@@ -1,4 +1,130 @@
-﻿#content {
+﻿.ff_legend {
+	font-weight:bold;
+	color:#1e8fc7;
+	padding-bottom:5px;
+}
+.lessons_select {
+	
+	border:1px;
+	border-style:solid;
+	border-color:gray;
+	border-radius:0;
+	width:280px;
+	height:250px;
+
+}
+
+.tab_wrap{
+    border:1px solid #999;
+    max-width:300px;
+    width: 100%;
+}
+
+.tabs {
+    width: 100%;
+    margin: auto;
+    overflow: hidden;   
+    background: #F9F9F9;
+}
+.tabs ul {
+    list-style: none;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;      
+}
+.tabs li a {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+    width:50%;  
+    color: #444444;
+    display: block;
+    float: left;
+    font-weight:bold;   
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    border:none;
+    border-left:1px solid #d9d9d9;
+    border-bottom:1px solid #d9d9d9;    
+}
+.tabs li a:hover {
+    color: #7d7d7d; 
+    background:#FFFFFF;
+}
+.tabs li:first-child a {
+    border-left:none;
+}
+.tabs li a.active {
+    background:#FFFFFF;
+    border:none;
+    border-left:1px solid #d9d9d9;
+    border-bottom:1px solid #FFFFFF;    
+}
+.tabs li:first-child a.active {
+    border:none;
+    border-bottom:1px solid #FFFFFF;    
+}
+.tabs li:last-child a.active {
+    border:none;
+    border-left:1px solid #d9d9d9;  
+    border-bottom:1px solid #FFFFFF;    
+}
+
+
+.tab_content {
+    background:#FFF;
+    padding:0;
+    display:none;   
+}
+.tab_content.active{
+    display:block;  
+}
+.tab_content ul {
+    margin:0px;
+    padding:0px;
+    list-style:none;    
+}
+.tab_content li {
+    display:block;
+    overflow: hidden;   
+    border-bottom:1px solid #d6dde0;    
+}
+.tab_content li:last-child {
+    border-bottom:none;
+}
+.tab_content li a {
+    display:block;
+    list-style:none;
+    overflow: hidden;   
+    padding:10px;           
+    text-decoration:none;
+    color:#444444;
+}
+.tab_content li a:hover {
+    color:#000000;
+    background:#F5F5F5; 
+}
+.tab_content li small {
+    color:#AAAAAA;
+    font-size:11px;
+    font-style:italic;
+}
+.tab_content li a:hover small {
+    color:#AAAAAA;
+}
+
+
+
+
+
+
+
+
+
+
+#content {
 	padding:0px;
 	
 	width:100%;
@@ -137,9 +263,8 @@
 }
 .form_fieldset {
 	padding:10px;
-	width:40%;
-
 }
+
 .div_test_contents {
 	float:right;
 	width:60%;
@@ -180,3 +305,48 @@
 	text-align:left;
 	color:orange;
 }
+
+.p_index_mainbox {
+	float: right;
+	width: calc(100% - 320px);
+}
+
+.left_menubox {
+	float: left;
+	width:300px;
+}
+
+table.t_index_mainbox {
+	width: 100%;
+	border: none;
+	border-color:#333333
+}
+table.t_index_mainbox td {
+	width: 33%;
+	padding:5px;
+	border:none;
+}
+
+table.t_common_stats {
+	
+	width:100%;
+	font: 11px/24px Verdana, Arial, Helvetica, sans-serif;
+	border: 2px;
+	border-style:double;
+	border-color:gray;
+	border-collapse:collapse;
+}
+table.t_common_stats th {
+	font-weight:bolder;
+	border: 2px;
+	border-style:solid;
+	border-color:gray;
+	padding: 3px;
+}
+table.t_common_stats td {
+	border: 2px;
+	border-style:solid;
+	border-color:gray;
+	padding: 3px;
+}
+	

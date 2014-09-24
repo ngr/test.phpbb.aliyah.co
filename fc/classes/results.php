@@ -133,5 +133,73 @@ class results {
 		return $f_result;
 	}
 
+# This function shows the total number of test attempts for the selected user.
+	function get_user_test_attempts( $u, $status = NULL, $st_time = NULL, $end_time = NULL )
+	{
+		global $user, $fc_db, $fc_db_struct, $application;
+		
+# The data is shown only to the user himself or the admin. Maybe should change this.		
+		if ( $u != $user->data['user_id'] && $user->data['user_type'] != 3 )
+		{
+			$application->record_debug( 'get_user_common_stats() was asked for non autorised data for user: ' . $u );
+			return NULL;
+		}
+
+		$sql =	'SELECT COUNT(*) '
+			.	' FROM `' . FC_DATA_TABLE . '` AS d'
+			.	' LEFT JOIN `' . FC_SESSIONS_TABLE .'` AS s'
+			.	' ON s.`' . $fc_db_struct[FC_SESSIONS_TABLE ]['id'] . '` = d.`' . $fc_db_struct[FC_DATA_TABLE]['session_id'] . '`'
+			.	' WHERE s.`' . $fc_db_struct[FC_SESSIONS_TABLE ]['user_id'] . '` = \'' . $u . '\'';
+			
+		if ( !is_null( $st_time ) )
+		{
+			$sql .= ' AND d.`' . $fc_db_struct[FC_DATA_TABLE]['time'] . '` > \'' . $st_time . '\'';
+		}
+
+		if ( !is_null( $end_time ) )
+		{
+			$sql .= ' AND d.`' . $fc_db_struct[FC_DATA_TABLE]['time'] . '` < \'' . $end_time . '\'';
+		}
+
+		if ( !is_null( $status ) )
+		{
+			switch ( $status )
+			{
+				case RESULT_SKIPPED:
+				case RESULT_BAD:
+				case RESULT_TWICE_INACCURATE:
+				case RESULT_INACCURATE:
+					$sql .= ' AND d.`' . $fc_db_struct[FC_DATA_TABLE]['result'] . '` <= \'' . RESULT_INACCURATE . '\'';				
+					break;
+				case RESULT_GOOD_SYNONYM:
+					$sql .= ' AND d.`' . $fc_db_struct[FC_DATA_TABLE]['result'] . '` >= \'' . RESULT_GOOD_SYNONYM . '\'';				
+					break;
+				case RESULT_GOOD_NOT_DEFAULT:
+					$sql .= ' AND d.`' . $fc_db_struct[FC_DATA_TABLE]['result'] . '` >= \'' . GOOD_NOT_DEFAULT . '\'';				
+					break;
+				case RESULT_GOOD:
+					$sql .= ' AND d.`' . $fc_db_struct[FC_DATA_TABLE]['result'] . '` >= \'' . RESULT_GOOD . '\'';				
+					break;
+			}
+		}
+
+		if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql;
+		if ( $GLOBALS['debug_log'] == true ) $application->record_debug( $sql );
+
+		$result = $fc_db->query( $sql );
+		
+		if ( $fc_db->num_rows( $result ) > 0 )
+		{
+			$row = $fc_db->fetch_array( $result );
+			$f_result = $row[0];
+		}
+		else
+		{
+			$f_result = 0;
+		}
+
+		return $f_result;
+	}
+
 
 }

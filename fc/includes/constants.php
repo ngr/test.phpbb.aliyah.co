@@ -30,4 +30,6 @@ define('RESULT_GOOD_SYNONYM', 13);
 define('RESULT_GOOD_NOT_DEFAULT', 14);
 define('RESULT_GOOD', 15);
 
+define('POSTS_TABLE', 'phpbb_posts');
+define('TOPICS_TABLE', 'phpbb_topics');
 ?>

@@ -13,19 +13,31 @@
  ***************************************************************************/
 
 define('FC_TABLE_PREFIX', 'fc_');
+define('FC_ASSIGNMENTS_TABLE', FC_TABLE_PREFIX . 'assignments');
 define('FC_CONFIG_TABLE', FC_TABLE_PREFIX . 'config');
 define('FC_WORDS_TABLE', FC_TABLE_PREFIX . 'words');
 define('FC_WORDS_PARAMS_TABLE', FC_TABLE_PREFIX . 'words_params');
 define('FC_WORDS_RUS_TABLE', FC_TABLE_PREFIX . 'words_rus');
 define('FC_LESSONS_TABLE', FC_TABLE_PREFIX . 'lessons');
+define('FC_LESSONS_ACC_RIGHTS_TABLE', FC_TABLE_PREFIX . 'lessons_acc_rights');
 define('FC_LESSONS_NAMES_TABLE', FC_TABLE_PREFIX . 'lessons_names');
+define('FC_LESSONS_TABLE', FC_TABLE_PREFIX . 'lessons');
 define('FC_SESSIONS_TABLE', FC_TABLE_PREFIX . 'sessions');
 define('FC_DATA_TABLE', FC_TABLE_PREFIX . 'data');
-define('FC_USERS_TABLE', FC_TABLE_PREFIX . 'users');
 define('FC_HEB_RUS_TABLE', FC_TABLE_PREFIX . 'heb_rus');
 define('FC_RUS_HEB_TABLE', FC_TABLE_PREFIX . 'rus_heb');
+define('FC_USER_GROUPS_TABLE', FC_TABLE_PREFIX . 'user_groups');
+
+# The following core tables of template engine are used for rights and access management.
+define('BB_USER_GROUP_TABLE', 'phpbb_user_group');
 
 $fc_db_struct = array(
+	FC_ASSIGNMENTS_TABLE => array(
+		'id' => 'id',
+		'session_id' => 'session_id',
+		'word_id' => 'word_id',
+		'date' => 'date'
+	),	
 	FC_CONFIG_TABLE => array(
 		'var' => 'var',
 		'value' => 'value'
@@ -51,10 +63,17 @@ $fc_db_struct = array(
 		'id' => 'id',
 		'word_id' => 'word_id'
 	),
+	FC_LESSONS_ACC_RIGHTS_TABLE => array(
+		'lesson_id' => 'lesson_id',
+		'group_id' => 'group_id',
+		'user_id' => 'user_id'
+	),
 	FC_LESSONS_NAMES_TABLE => array(
 		'id' => 'id',
 		'rus_name' => 'rus_name',
-		'access_limit' => 'access_limit',
+		'author' => 'author',
+		'date_init' => 'date_init',
+		'date_valid' => 'date_valid',
 		'order' => 'order'
 	),
 	FC_SESSIONS_TABLE => array(
@@ -85,12 +104,19 @@ $fc_db_struct = array(
 		'heb_id' => 'heb_id',
 		'priority' => 'priority'
 	),
-	FC_USERS_TABLE => array(
+	FC_USER_GROUPS_TABLE => array(
 		'id' => 'id',
-		'login' => 'login',
-		'name' => 'name',
-		'level' => 'level'
+		'user_id' => 'user_id',
+		'name' => 'name'
 	)
+);
+
+# The following core tables of template engine are used for rights and access management.
+$fc_db_struct[BB_USER_GROUP_TABLE] = array(
+		'group_id' => 'group_id',
+		'user_id' => 'user_id',
+		'group_leader' => 'group_leader',
+		'user_pending' => 'user_pending'
 );
 
 class fc_db_structure {

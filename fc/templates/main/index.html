@@ -17,10 +17,32 @@
     <table width="100%" cellpadding="0" cellspacing="0">
       <tr>
         <td class="content-box" valign="top" align="left" style="padding-right: 0;">
-        <div class="content-text">
-        
+      
+		<div class="p_index_mainbox">
+		<!-- IF S_PAGE_INDEX -->
+			<h3>{L_WELCOME_MESSAGE}</h3>
+		<!-- ENDIF -->
+
+		<!-- IF .index_mainbox -->
+			<!-- BEGIN index_mainbox -->
+				<table class="t_index_mainbox" cellspacing="9">
+				<!-- BEGIN index_mainbox_tr -->
+					<tr valign="top">
+						<!-- BEGIN index_mainbox_td -->
+						<td>
+							<!-- IF index_mainbox.index_mainbox_tr.index_mainbox_td.TD_TYPE == 'post' -->
+								<!-- INCLUDE ../../../fc/templates/main/post.html -->
+							<!-- ENDIF -->
+							{index_mainbox.index_mainbox_tr.index_mainbox_td.TD_CONTENT}
+						</td>
+						<!-- END index_mainbox_td -->
+					</tr>
+				<!-- END index_mainbox_tr -->
+				</table>
+			<!-- END index_mainbox -->
+		<!-- ENDIF -->
 		<!-- IF .test_contents -->
-		<div style="float:right; width: 60%;"><h3>{CURRENT_TEST_CONTENTS}</h3>
+		<div style=""><h3>{CURRENT_TEST_CONTENTS}</h3>
 			<table>
 			<!-- BEGIN test_contents -->
 				<tr class="{test_contents.TR_CLASS}">
@@ -30,19 +52,44 @@
 			</table>
 		</div>
 		<!-- ENDIF -->
-
-
-        <form action="{U_LAUNCHER_FORM_POST}" method="post">
-        <div  class="form_fieldset">
-        <fieldset name="GroupLessons">
-				<legend>Уроки</legend>
-				<select multiple="multiple" name="lesson[]" style="width: 250px; height: 150px">
-				<!-- BEGIN lesson -->
-					<option value="{lesson.VALUE}" <!-- IF lesson.SELECTED --> selected="{lesson.SELECTED}"<!-- ENDIF -->>{lesson.DESCRIPTION}</option>
-				<!-- END lesson -->				
-				</select>
-		</fieldset>
+		
 		</div>
+		
+		<div class="left_menubox">
+        <form action="{U_LAUNCHER_FORM_POST}" method="post" onsubmit="clear_inactive()">
+		<div style="padding-bottom:5px;" class="ff_legend">{L_LESSONS}</div>
+        <div class="tabs">
+		    <ul>
+		        <li><a name="tab" id="tab_1" href="javascript:void(0)" onClick="tabs(1)" class="active">{L_PUBLIC}</a></li>
+		        <li><a name="tab" id="tab_2" href="javascript:void(0)" onClick="tabs(2)">{L_PRIVATE}</a></li>
+		    </ul>
+		</div>
+		
+		<div name="tab_content" id="tab_content_1" class="tab_content active">
+	        <div  class="form_fieldset">
+		        <fieldset name="GroupLessons">
+						<select id="lesson_1" multiple="multiple" name="lesson[]" class="lessons_select">
+						<!-- BEGIN lesson -->
+							<option id="tab1_{lesson.VALUE}" value="{lesson.VALUE}" <!-- IF lesson.SELECTED --> selected="{lesson.SELECTED}"<!-- ENDIF -->>{lesson.DESCRIPTION}</option>
+						<!-- END lesson -->				
+						</select>
+				</fieldset>
+			</div>
+		</div>
+		<div name="tab_content" id="tab_content_2" class="tab_content">
+		    <ul>
+	        <div class="form_fieldset">
+		        <fieldset name="GroupLessons">
+						<select id="lesson_2" multiple="multiple" name="lesson[]" class="lessons_select">
+						<!-- BEGIN priv_lesson -->
+							<option id="tab2_{priv_lesson.VALUE}" value="{priv_lesson.VALUE}" <!-- IF priv_lesson.SELECTED --> selected="{priv_lesson.SELECTED}"<!-- ENDIF -->>{priv_lesson.DESCRIPTION}</option>
+						<!-- END priv_lesson -->				
+						</select>
+				</fieldset>
+			</div>
+		    </ul>
+		</div>
+        
 			
         <!-- BEGIN input -->
         <div  class="form_fieldset">
@@ -53,9 +100,9 @@
         <!-- END input -->
         
         <!-- BEGIN selects -->
-		<div class="form_fieldset">
+		<div class="form_fieldset" id="{selects.GROUP_NAME}">
 			<fieldset>
-				<legend>{selects.DESCRIPTION}</legend>
+				<legend class="ff_legend">{selects.DESCRIPTION}</legend>
 				<select name="{selects.GROUP_NAME}">
 				<!-- BEGIN sub -->
 					<option <!-- BEGIN el --> {selects.sub.el.NAME}="{selects.sub.el.PARAM}"<!-- END el -->>{selects.sub.DESCRIPTION}</option>
@@ -67,9 +114,9 @@
 
 		
 		<!-- BEGIN radios -->
-		<div class="form_fieldset">
+		<div class="form_fieldset" id="{radios.GROUP_NAME}">
 			<fieldset>
-				<legend>{radios.GROUP_NAME}</legend>
+				<legend class="ff_legend">{radios.GROUP_NAME}</legend>
 				<!-- BEGIN sub -->
 					<input <!-- BEGIN el --> {radios.sub.el.NAME}="{radios.sub.el.PARAM}"<!-- END el -->> {radios.sub.DESCRIPTION}<br>
 				<!-- END sub -->
@@ -88,18 +135,77 @@
 			<!-- ELSE -->
 		        <input type="submit" name="start_test" value="{L_START_TEST}" style="border-radius: 10px; position: relative; left: 15px; top: 15px; width: 145px; font-family: Verdana; height: 35px; color: #1e8fc7;"> &nbsp; 
 			<!-- ENDIF -->    
-				<input type="submit" name="show_lesson_contents" value="{L_SHOW_QUESTIONS}" style="border-radius: 10px; position: relative; left: 15px; top: 15px; width: 145px; font-family: Verdana; height: 35px; color: #1e8fc7;">        </div>
+				<input type="submit" name="show_lesson_contents" value="{L_SHOW_QUESTIONS}" style="border-radius: 10px; position: relative; left: 15px; top: 15px; width: 145px; font-family: Verdana; height: 35px; color: #1e8fc7;">
+		</div>
 
         </form>
-        
         </div>
         </td>
       </tr>
     </table>
-<div style="font-style:italic;font-size:large;text-align:left; padding-top:50px;">Рекомендуем ознакомиться: <a href="http://phpbb.aliyah.co/viewtopic.php?f=6&amp;t=16http://phpbb.aliyah.co/viewtopic.php?f=6&amp;t=16">Инструкция и замечания! </a></div>
+    
+	<div style="font-style:italic;font-size:large;text-align:left; padding-top:50px;">
+		Рекомендуем ознакомиться: <a href="http://phpbb.aliyah.co/viewtopic.php?f=6&amp;t=16http://phpbb.aliyah.co/viewtopic.php?f=6&amp;t=16">Инструкция и замечания! </a>
+	</div>
     <!-- IF L_DB_QUERIES -->
-    <div style="font-style:italic;font-size:x-small;text-align:left;">DB queries: {L_DB_QUERIES} <br> DB query time: {L_DB_QUERY_TIME}</div>
+    <div style="font-style:italic;font-size:x-small;text-align:left;">
+    	DB queries: {L_DB_QUERIES} <br> DB query time: {L_DB_QUERY_TIME}
+    </div>
     <!-- ENDIF -->
   </div>
 
 </div>
+
+
+<script type="text/javascript" >
+function tabs(selectedtab) {    
+    // contents
+    var s_tab_content = "tab_content_" + selectedtab;   
+    var contents = document.getElementsByTagName("div");
+    for(var x=0; x<contents.length; x++) {
+        name = contents[x].getAttribute("name");
+        if (name == 'tab_content') {
+            if (contents[x].id == s_tab_content) {
+            contents[x].style.display = "block";                        
+            } else {
+            contents[x].style.display = "none";
+            }
+        }
+    }   
+	
+    // tabs
+    var s_tab = "tab_" + selectedtab;       
+    var tabs = document.getElementsByTagName("a");
+    for(var x=0; x<tabs.length; x++) {
+        name = tabs[x].getAttribute("name");
+        if (name == 'tab') {
+            if (tabs[x].id == s_tab) {
+            tabs[x].className = "active";                       
+            } else {
+            tabs[x].className = "";
+            }
+        }
+    }
+// Disable non valid params
+	if ( document.getElementById("tab_1").className == "" ) {
+		document.getElementById("Части речи").style.display = "none";
+		document.getElementById("Режим").style.display = "none";
+	}
+	else {
+		document.getElementById("Части речи").style.display = "block";
+		document.getElementById("Режим").style.display = "block";
+	}
+}
+
+// This fucntion clears all the selected values from inactive tab before form submit.
+function clear_inactive() {
+	if ( document.getElementById("tab_1").className == "" ) {
+//		alert("tab 2 active");
+		document.getElementById("lesson_1").value = "";
+	}
+	else {
+//		alert("tab 1 active");
+		document.getElementById("lesson_2").value = "";
+	}
+}
+</script>
