@@ -1221,8 +1221,9 @@ class aliyah {
 //		$common_stats = $this->get_user_common_stats( $user->data['user_id'] );
 //		$common_stats = $this->get_service_info( $user->data['user_id'] );
 
+// The first element is a hardcoded last news. Should FIX this ASAP.
 		$sample = array(
-			array( 'value' => $this->get_bbpost( 23 ), 'type' => 'post'),
+			array( 'value' => $this->get_bbpost( 25 ), 'type' => 'post'), 
 			array( 'value' => $this->make_html_table_to_string( $this->get_user_common_stats( $user->data['user_id'] ) ), 'type' => 'table'),
 //			array( 'value' => '', 'type' => 'table'),
 //			array( 'value' => $this->make_html_table_to_string( $this->get_service_info( $user->data['user_id'] ) ), 'type' => 'table'),
@@ -1488,7 +1489,8 @@ class aliyah {
 		if ( $_SESSION['fc']['session_id'] )
 		{
 # Exists but the test is empty or no unanswered words left, should close it anyway
-			if ( is_array( $_SESSION['fc']['questions'] ) && ( count( $_SESSION['fc']['questions'] ) == 0 || end( $_SESSION['fc']['questions'] )[3] != -1 ) )
+			$last_question = end( $_SESSION['fc']['questions'] );
+			if ( count( $_SESSION['fc']['questions'] ) == 0 || $last_question[3] != -1 )
 			{
 				if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'index(): There was a hanging empty test found. Initiating autoreset.' );
 				$this->reset();
