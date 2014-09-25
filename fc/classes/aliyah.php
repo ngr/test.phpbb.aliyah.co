@@ -279,6 +279,7 @@ class aliyah {
 					.	' LEFT JOIN `' . FC_HEB_RUS_TABLE . '` as c ON c.`' . $fc_db_struct[FC_HEB_RUS_TABLE]['heb_id'] . '` = w.id'
 					.	' LEFT JOIN `' . FC_WORDS_RUS_TABLE . '` AS r ON r.`' . $fc_db_struct[FC_WORDS_RUS_TABLE]['id'] . '` = c.`' . $fc_db_struct[FC_HEB_RUS_TABLE]['rus_id'] . '`'
 					.	' WHERE l.`' . $fc_db_struct[FC_LESSONS_TABLE]['id'] . '` = \'' . $lesson_id . '\''
+					.	' GROUP BY 1'
 					.	' ORDER BY RAND()'
 					. ';';
 				break;
@@ -341,7 +342,7 @@ class aliyah {
 # Clear any FC session from PHP _SESSION
 		$_SESSION['fc']['questions'] = false;
 
-# Check for "hung" FC sessions. If any - close them. And start new.
+# Check for "hung" FC sessions. If any - close them, because at this poinnt they should be already processed. Start new.
 		$this->control_session('close');
 		$this->control_session('start');
 		
@@ -1175,7 +1176,6 @@ class aliyah {
     );
 
 	$posts = $db->sql_build_query('SELECT', $posts_ary);
-
 	$posts_result = $db->sql_query_limit($posts, $search_limit);
 
       while( $posts_row = $db->sql_fetchrow($posts_result) )
