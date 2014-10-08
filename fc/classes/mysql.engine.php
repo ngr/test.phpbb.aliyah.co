@@ -38,20 +38,7 @@ class fc_db extends fc_db_structure {
 	}
 	
 	function connect() {
-	
-/*		$username = 'u10014';
-		$hostname = 'db-1.renatasystems.org';
-		$password = 'w3dnxe7acvgy';
-		$database = 'u10014';
-// */
-
-		$username = 'u19121';
-		$hostname = 'u19121.mysql.masterhost.ru';
-		$password = 'pa5tollant4';
-		$port = '3306';
-		$database = 'u19121_aliyah';
-
-// */		
+		include('/home/u19121/test.phpbb.aliyah.co/passwd/u19121_aliyah.php');
 		
 		$this->username = $username;
 		$this->hostname = $hostname;

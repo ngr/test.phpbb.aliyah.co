@@ -10,10 +10,7 @@ require_once('mte/mte.php');
 $tabledit = new MySQLtabledit();
 
 # database settings:
-$tabledit->database = 'u19121_aliyah';
-$tabledit->host = 'u19121.mysql.masterhost.ru';
-$tabledit->user = 'u19121';
-$tabledit->pass = 'pa5tollant4';
+include('../../../passwd/../passwd/fc_admin_edit_passwd.php');
 
 # table of the database
 $tabledit->table = 'fc_words';
