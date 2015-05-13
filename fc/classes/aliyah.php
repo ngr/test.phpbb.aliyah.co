@@ -26,14 +26,12 @@ class aliyah {
 		unset( $_SESSION['fc']['questions']);
 		unset( $_SESSION['fc']['session_id']);
 		unset( $_SESSION['fc']['test_type']);
-//		unset( $_SESSION['fc']['last_lesson']);
 
 		$template->set_filenames(array(
 			'body' => '../../../fc/templates/main/blank.html'
 			)
 		);
 	}
-
 
 	function fc_page_header()
 	{
@@ -88,251 +86,13 @@ class aliyah {
 				'L_STATUS_TYPE' => 'status_div',
 			)
 		);	
-
-# DEPRICATED
-# FIXME Remove this S_AUTHORIZED from template. Should use S_USER_LOGGED_IN from phpBB
-/*		if (isset($user->profile_fields['pf_full_name']))
-		{
-			$template->assign_vars(array(
-				'L_USER_FULLNAME' => $user->profile_fields['pf_full_name'],
-				'S_AUTHORIZED' => true,
-				)
-			);
-		}
-		else if ( isset($user->data['username']) && $user->data['username'] != 'Аноним' )
-		{
-			$template->assign_vars(array(
-				'L_USER_FULLNAME' => $user->data['username'],
-				'S_AUTHORIZED' => true,
-				)
-			);
-		}
-		else 
-		{
-			$template->assign_vars(array(
-				'L_USER_FULLNAME' => 'Гость',
-				'S_AUTHORIZED' => false, 
-				)
-			);
-		}
-*/
-# DEBUG
-#		view($user->profile_fields);
-#		view($user->data);	
 	}
-	
-	function guest()
-	{
-		global $template;
-
-		$template->set_filenames(array(
-			'body' => '../../../fc/templates/main/guest.html'
-			)
-		);
-	}
-# DEPRICATED
-/*		function close_session()
-	{
-		global $template;
-
-		$template->assign_var( 'L_STATUS_FIELD', $template->_tpldata['.']['0']['L_STATUS_FIELD'] . '<br>Тест окончен' );
-# DEBUG	view($_SESSION['fc']['questions']);
-		$_SESSION['fc']['questions'] = false;
-	} */
-
-
-	function control_session ($action = 'start', $session_id = NULL, $result = NULL)
-	{
-		global $fc_db, $fc_db_struct, $user, $template;
-		
-		switch ( $action ):
-		case 'start':
-		default:
-	
-			$sql = 'INSERT INTO `' . FC_SESSIONS_TABLE . '` ( '
-				. '`' . $fc_db_struct[FC_SESSIONS_TABLE]['user_id'] . '`, '
-				. '`' . $fc_db_struct[FC_SESSIONS_TABLE]['start_time'] . '` '
-				. ' ) VALUES ( '
-				. '\'' . $user->data['user_id'] . '\', '
-				. '\'' . time() . '\' '
-				. ' ); ';
-
-			if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql . '<br>';
-			$result = $fc_db->query($sql);
-	
-			if ( $GLOBALS['debug_all'] == true ) echo '<br> Latest id is: ' . $fc_db->insert_id() . '<br>';
-			$_SESSION['fc']['session_id'] = $fc_db->insert_id();
-			return( $_SESSION['fc']['session_id'] );		
-		break;
-		case 'close':
-		
-# IF no session ID is specified, we check if there are any "hung" sessions of this user and close them
-			if ( !isset( $session_id ) )
-			{
-				if ( $GLOBALS['debug_all'] == true ) echo '<br>Closing hungup session in DB.';
-				$sql = 'SELECT `' . $fc_db_struct[FC_SESSIONS_TABLE]['id'] . '` FROM `' . FC_SESSIONS_TABLE . '`'
-					.	' WHERE `' . $fc_db_struct[FC_SESSIONS_TABLE]['user_id'] . '` = \'' . $user->data['user_id'] . '\''
-					.	' AND `' . $fc_db_struct[FC_SESSIONS_TABLE]['end_time'] . '` IS NULL ';
-				if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql;
-				$result = $fc_db->query( $sql );
-				
-				if ( $fc_db->num_rows( $result ) == 0 )
-				{
-					return 0;
-				}
-				else 
-				{
-					while( $row = $fc_db->fetch_array( $result ) )
-					{
-						$sql_c = 'UPDATE `' . FC_SESSIONS_TABLE . '` SET '
-							. '`' . $fc_db_struct[FC_SESSIONS_TABLE]['end_time'] . '` ='
-							. ' \'' . time() . '\','
-							. ' `' . $fc_db_struct[FC_SESSIONS_TABLE]['result'] . '` = NULL'
-							. ' WHERE '
-							. '`' . $fc_db_struct[FC_SESSIONS_TABLE]['id'] . '`'
-							. ' = ' . $row[0] . ';';
-						if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql_c;
-						$result_c = $fc_db->query($sql_c);
-					}
-					return 1;
-				}
-			}
-
-# If we have session_id from the input parameters, then we check the test result and close the session
-			$result = ( !isset( $result ) ) ? $this->calculate_total_result() : $result;
-
-			$sql = 'UPDATE `' . FC_SESSIONS_TABLE . '` SET '
-				. '`' . $fc_db_struct[FC_SESSIONS_TABLE]['end_time'] . '` ='
-				. ' \'' . time() . '\','
-				. ' `' . $fc_db_struct[FC_SESSIONS_TABLE]['result'] . '` ='
-				. ' \'' . $result . '\''
-				. ' WHERE '
-				. '`' . $fc_db_struct[FC_SESSIONS_TABLE]['id'] . '`'
-				. ' = ' . $session_id . ';';
-		
-			$template->assign_var( 'L_STATUS_FIELD', $template->_tpldata['.']['0']['L_STATUS_FIELD'] . '<br><br>Тест окончен<br> Ваш результат: ' . $result * 100 . '%' );
-# DEBUG		view($_SESSION['fc']['questions']);
-			$_SESSION['fc']['questions'] = false;
-			$_SESSION['fc']['session_id'] = false;
-# DEBUG		echo '<br>' . $sql . '<br>';
-			$result = $fc_db->query($sql);
-			return;
-
-		break;
-		endswitch;
-
-	}
-	
-# Now we simply calculate good vs bad answers, while it is planned to calculate with more complex formulas
-# For example we might take into account the number of good/bad attempts from previous tests and not exact matches from letter mapping.
-	function calculate_total_result() 
-	{
-		global $fc_db, $fc_db_struct;
-		
-		$good = 0;
-		foreach ( $_SESSION['fc']['questions'] as $key => $val )
-		{
-			if ( $val['3'] == RESULT_GOOD || $val['3'] == RESULT_GOOD_NOT_DEFAULT || $val['3'] == RESULT_GOOD_SYNONYM )
-			{
-				$good++;
-			}
-		}
-		$result = $good / count( $_SESSION['fc']['questions'] );
-		
-		return $result;
-	}
-	
-# This function is used for quick summon of lessons that are already predifined and there is no need to run build_questions() analytics for them.
-	function add_predefined_lesson_words( $lesson_id )
-	{
-		global $user, $fc_db, $fc_db_struct;
-
-		if ( ! isset( $lesson_id ) || ! $lesson_id = intval( $lesson_id ) )
-		{
-			if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'Function add_predefined_lesson_words() received incorrect input lesson_id' );
-			return false;
-		}
-
-		if ( ! $this->check_lesson_acc_rights( $lesson_id ) )
-		{
-			if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'A lesson with no access rights was requested in add_predefined_lesson_words() by user: ' . $user->data['user_id'] . ', lesson: ' . $val );
-			return false;
-		}
-
-		switch ( substr( $_SESSION['fc']['test_type'], 0, 3 ) )
-		{
-			case ( 'heb' ):
-			default:
-				$sql =	'SELECT DISTINCT ( w.`' . $fc_db_struct[FC_WORDS_TABLE]['id'] . '` ) AS qid'
-					.	', w.`' . $fc_db_struct[FC_WORDS_TABLE]['heb'] . '` AS qname'
-					.	' FROM `' . FC_WORDS_TABLE . '` AS w'
-					.	' LEFT JOIN `' . FC_LESSONS_TABLE . '` AS l ON l.`' . $fc_db_struct[FC_LESSONS_TABLE]['word_id'] . '` = w.`' . $fc_db_struct[FC_WORDS_TABLE]['id'] . '`'
-					.	' WHERE l.`' . $fc_db_struct[FC_LESSONS_TABLE]['id'] . '` = \'' . $lesson_id . '\''
-					.	' ORDER BY RAND()'
-					.	';';
-				break;
-			case ( 'rus' ):
-				$sql =	'SELECT DISTINCT ( w.`' . $fc_db_struct[FC_WORDS_TABLE]['id'] . '` ) AS qid'
-					.	', r.`' . $fc_db_struct[FC_WORDS_RUS_TABLE]['rus'] . '` as qname'
-					.	' FROM `' . FC_WORDS_TABLE . '` AS w'
-					.	' LEFT JOIN `' . FC_LESSONS_TABLE . '` AS l ON l.`' . $fc_db_struct[FC_LESSONS_TABLE]['word_id'] . '` = w.`' . $fc_db_struct[FC_WORDS_TABLE]['id'] . '`'
-					.	' LEFT JOIN `' . FC_HEB_RUS_TABLE . '` as c ON c.`' . $fc_db_struct[FC_HEB_RUS_TABLE]['heb_id'] . '` = w.id'
-					.	' LEFT JOIN `' . FC_WORDS_RUS_TABLE . '` AS r ON r.`' . $fc_db_struct[FC_WORDS_RUS_TABLE]['id'] . '` = c.`' . $fc_db_struct[FC_HEB_RUS_TABLE]['rus_id'] . '`'
-					.	' WHERE l.`' . $fc_db_struct[FC_LESSONS_TABLE]['id'] . '` = \'' . $lesson_id . '\''
-					.	' ORDER BY RAND()'
-					. ';';
-				break;
-		}
-
-		if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql;
-		if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'add_predefined_lesson_words() SQL_SELECT: ' . $sql );
-
-		$result = $fc_db->query($sql);
-
-		while ( $row = $fc_db->fetch_assoc($result) )
-		{
-			$this->assign_word_to_session( $row['qid'], $row['qname'] );
-		}
-//		view ( $_SESSION['fc']['questions'] );
-	}
-
-# FIXME	This function should write assignments to DB.
-	function assign_word_to_session( $qid, $qname, $session_id = NULL )
-	{
-		$_SESSION['fc']['questions'][] = array($qid, $qname, 0, -1);
-	}
-
-
-#####################
-# Set language and direction
-	function define_test_language()
-	{
-		global $config_fc;
-
-		$test_language = ( isset( $_POST['test_language'] ) ) ? mysql_escape_string( $_POST['test_language'] ) : $config_fc['test']['default_test_language'];
-		$test_direction = ( isset( $_POST['test_direction'] ) ) ? mysql_escape_string( $_POST['test_direction'] ) : $config_fc['test']['default_test_direction'];
-
-		if ( $test_direction == 'to' )
-		{
-			$_SESSION['fc']['test_type'] = $test_language . '_heb';
-		}
-		elseif ( $test_direction == 'from' )
-		{
-			$_SESSION['fc']['test_type'] = 'heb_' . $test_language;
-		}
-		else
-		{
-			die( 'Can\'t decide the type of test. Some error with _POST values.' );
-		}
-		if ( $GLOBALS['debug_all'] == true ) echo '<br>test_type in _SESSION is set to:' . $_SESSION['fc']['test_type'];
-	}
-
 #####################################################
 # This is one of the most important functions		#
-# It creates random test according to user			#
+# It creates random test according to user		#
 # request and statistics of user previous answers	#
 # Should one day make refactoring and split to		#
-# different classes logically.						#
+# different classes logically.				#
 #####################################################
 	function build_questions()
 	{
@@ -420,19 +180,6 @@ class aliyah {
 				$this->control_session('close');
 				echo '<h1>' . $lang['NO_LESSON_SELECTED'] . '</h1>';
 				die( '<script language=javascript>window.onload = setTimeout(function() {  window.location="?mode=index"; }, 1000);</script>' );
-/*		
-# Check if the lesson is allowed for this user
-				if ( ! $this->check_lesson_acc_rights( $lesson ) )
-				{
-					if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'A lesson with no access rights was requested by user: ' . $user->data['user_id'] . ', lesson: ' . $lesson );
-# FIXMELATER Should add correct exception here
-					echo '<h1>' . $lang['NO_LESSON_SELECTED'] . '</h1>';
-					die( '<script language=javascript>window.onload = setTimeout(function() {  window.location="?mode=index"; }, 1000);</script>' );
-				}
-				else
-				{
-					$sql_select_lesson = ' AND l.`' . $fc_db_struct[FC_LESSONS_TABLE]['id'] . '` = \'' . $lesson . '\'';
-				} // */
 		}
 ###############################
 # Set part of speech if defined
@@ -653,6 +400,202 @@ class aliyah {
 			$_SESSION['fc']['questions'][] = array($row['qid'], $row['qname'], 0, -1);
 		}
 # DEBUG		view ( $_SESSION['fc']['questions'] );
+	}
+	
+	function guest()
+	{
+		global $template;
+
+		$template->set_filenames(array(
+			'body' => '../../../fc/templates/main/guest.html'
+			)
+		);
+	}
+
+	function control_session ($action = 'start', $session_id = NULL, $result = NULL)
+	{
+		global $fc_db, $fc_db_struct, $user, $template;
+		
+		switch ( $action ):
+		case 'start':
+		default:
+	
+			$sql = 'INSERT INTO `' . FC_SESSIONS_TABLE . '` ( '
+				. '`' . $fc_db_struct[FC_SESSIONS_TABLE]['user_id'] . '`, '
+				. '`' . $fc_db_struct[FC_SESSIONS_TABLE]['start_time'] . '` '
+				. ' ) VALUES ( '
+				. '\'' . $user->data['user_id'] . '\', '
+				. '\'' . time() . '\' '
+				. ' ); ';
+
+			if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql . '<br>';
+			$result = $fc_db->query($sql);
+	
+			if ( $GLOBALS['debug_all'] == true ) echo '<br> Latest id is: ' . $fc_db->insert_id() . '<br>';
+			$_SESSION['fc']['session_id'] = $fc_db->insert_id();
+			return( $_SESSION['fc']['session_id'] );		
+		break;
+		case 'close':
+		
+# IF no session ID is specified, we check if there are any "hung" sessions of this user and close them
+			if ( !isset( $session_id ) )
+			{
+				if ( $GLOBALS['debug_all'] == true ) echo '<br>Closing hungup session in DB.';
+				$sql = 'SELECT `' . $fc_db_struct[FC_SESSIONS_TABLE]['id'] . '` FROM `' . FC_SESSIONS_TABLE . '`'
+					.	' WHERE `' . $fc_db_struct[FC_SESSIONS_TABLE]['user_id'] . '` = \'' . $user->data['user_id'] . '\''
+					.	' AND `' . $fc_db_struct[FC_SESSIONS_TABLE]['end_time'] . '` IS NULL ';
+				if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql;
+				$result = $fc_db->query( $sql );
+				
+				if ( $fc_db->num_rows( $result ) == 0 )
+				{
+					return 0;
+				}
+				else 
+				{
+					while( $row = $fc_db->fetch_array( $result ) )
+					{
+						$sql_c = 'UPDATE `' . FC_SESSIONS_TABLE . '` SET '
+							. '`' . $fc_db_struct[FC_SESSIONS_TABLE]['end_time'] . '` ='
+							. ' \'' . time() . '\','
+							. ' `' . $fc_db_struct[FC_SESSIONS_TABLE]['result'] . '` = NULL'
+							. ' WHERE '
+							. '`' . $fc_db_struct[FC_SESSIONS_TABLE]['id'] . '`'
+							. ' = ' . $row[0] . ';';
+						if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql_c;
+						$result_c = $fc_db->query($sql_c);
+					}
+					return 1;
+				}
+			}
+
+# If we have session_id from the input parameters, then we check the test result and close the session
+			$result = ( !isset( $result ) ) ? $this->calculate_total_result() : $result;
+
+			$sql = 'UPDATE `' . FC_SESSIONS_TABLE . '` SET '
+				. '`' . $fc_db_struct[FC_SESSIONS_TABLE]['end_time'] . '` ='
+				. ' \'' . time() . '\','
+				. ' `' . $fc_db_struct[FC_SESSIONS_TABLE]['result'] . '` ='
+				. ' \'' . $result . '\''
+				. ' WHERE '
+				. '`' . $fc_db_struct[FC_SESSIONS_TABLE]['id'] . '`'
+				. ' = ' . $session_id . ';';
+		
+			$template->assign_var( 'L_STATUS_FIELD', $template->_tpldata['.']['0']['L_STATUS_FIELD'] . '<br><br>Тест окончен<br> Ваш результат: ' . $result * 100 . '%' );
+# DEBUG		view($_SESSION['fc']['questions']);
+			$_SESSION['fc']['questions'] = false;
+			$_SESSION['fc']['session_id'] = false;
+# DEBUG		echo '<br>' . $sql . '<br>';
+			$result = $fc_db->query($sql);
+			return;
+
+		break;
+		endswitch;
+
+	}
+	
+# Now we simply calculate good vs bad answers, while it is planned to calculate with more complex formulas
+# For example we might take into account the number of good/bad attempts from previous tests and not exact matches from letter mapping.
+	function calculate_total_result() 
+	{
+		global $fc_db, $fc_db_struct;
+		
+		$good = 0;
+		foreach ( $_SESSION['fc']['questions'] as $key => $val )
+		{
+			if ( $val['3'] == RESULT_GOOD || $val['3'] == RESULT_GOOD_NOT_DEFAULT || $val['3'] == RESULT_GOOD_SYNONYM )
+			{
+				$good++;
+			}
+		}
+		$result = $good / count( $_SESSION['fc']['questions'] );
+		
+		return $result;
+	}
+	
+# This function is used for quick summon of lessons that are already predifined and there is no need to run build_questions() analytics for them.
+	function add_predefined_lesson_words( $lesson_id )
+	{
+		global $user, $fc_db, $fc_db_struct;
+
+		if ( ! isset( $lesson_id ) || ! $lesson_id = intval( $lesson_id ) )
+		{
+			if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'Function add_predefined_lesson_words() received incorrect input lesson_id' );
+			return false;
+		}
+
+		if ( ! $this->check_lesson_acc_rights( $lesson_id ) )
+		{
+			if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'A lesson with no access rights was requested in add_predefined_lesson_words() by user: ' . $user->data['user_id'] . ', lesson: ' . $val );
+			return false;
+		}
+
+		switch ( substr( $_SESSION['fc']['test_type'], 0, 3 ) )
+		{
+			case ( 'heb' ):
+			default:
+				$sql =	'SELECT DISTINCT ( w.`' . $fc_db_struct[FC_WORDS_TABLE]['id'] . '` ) AS qid'
+					.	', w.`' . $fc_db_struct[FC_WORDS_TABLE]['heb'] . '` AS qname'
+					.	' FROM `' . FC_WORDS_TABLE . '` AS w'
+					.	' LEFT JOIN `' . FC_LESSONS_TABLE . '` AS l ON l.`' . $fc_db_struct[FC_LESSONS_TABLE]['word_id'] . '` = w.`' . $fc_db_struct[FC_WORDS_TABLE]['id'] . '`'
+					.	' WHERE l.`' . $fc_db_struct[FC_LESSONS_TABLE]['id'] . '` = \'' . $lesson_id . '\''
+					.	' ORDER BY RAND()'
+					.	';';
+				break;
+			case ( 'rus' ):
+				$sql =	'SELECT DISTINCT ( w.`' . $fc_db_struct[FC_WORDS_TABLE]['id'] . '` ) AS qid'
+					.	', r.`' . $fc_db_struct[FC_WORDS_RUS_TABLE]['rus'] . '` as qname'
+					.	' FROM `' . FC_WORDS_TABLE . '` AS w'
+					.	' LEFT JOIN `' . FC_LESSONS_TABLE . '` AS l ON l.`' . $fc_db_struct[FC_LESSONS_TABLE]['word_id'] . '` = w.`' . $fc_db_struct[FC_WORDS_TABLE]['id'] . '`'
+					.	' LEFT JOIN `' . FC_HEB_RUS_TABLE . '` as c ON c.`' . $fc_db_struct[FC_HEB_RUS_TABLE]['heb_id'] . '` = w.id'
+					.	' LEFT JOIN `' . FC_WORDS_RUS_TABLE . '` AS r ON r.`' . $fc_db_struct[FC_WORDS_RUS_TABLE]['id'] . '` = c.`' . $fc_db_struct[FC_HEB_RUS_TABLE]['rus_id'] . '`'
+					.	' WHERE l.`' . $fc_db_struct[FC_LESSONS_TABLE]['id'] . '` = \'' . $lesson_id . '\''
+					.	' ORDER BY RAND()'
+					. ';';
+				break;
+		}
+
+		if ( $GLOBALS['debug_all'] == true ) echo '<br>' . $sql;
+		if ( $GLOBALS['debug_log'] == true ) $this->record_debug( 'add_predefined_lesson_words() SQL_SELECT: ' . $sql );
+
+		$result = $fc_db->query($sql);
+
+		while ( $row = $fc_db->fetch_assoc($result) )
+		{
+			$this->assign_word_to_session( $row['qid'], $row['qname'] );
+		}
+//		view ( $_SESSION['fc']['questions'] );
+	}
+
+# FIXME	This function should write assignments to DB.
+	function assign_word_to_session( $qid, $qname, $session_id = NULL )
+	{
+		$_SESSION['fc']['questions'][] = array($qid, $qname, 0, -1);
+	}
+
+
+#####################
+# Set language and direction
+	function define_test_language()
+	{
+		global $config_fc;
+
+		$test_language = ( isset( $_POST['test_language'] ) ) ? mysql_escape_string( $_POST['test_language'] ) : $config_fc['test']['default_test_language'];
+		$test_direction = ( isset( $_POST['test_direction'] ) ) ? mysql_escape_string( $_POST['test_direction'] ) : $config_fc['test']['default_test_direction'];
+
+		if ( $test_direction == 'to' )
+		{
+			$_SESSION['fc']['test_type'] = $test_language . '_heb';
+		}
+		elseif ( $test_direction == 'from' )
+		{
+			$_SESSION['fc']['test_type'] = 'heb_' . $test_language;
+		}
+		else
+		{
+			die( 'Can\'t decide the type of test. Some error with _POST values.' );
+		}
+		if ( $GLOBALS['debug_all'] == true ) echo '<br>test_type in _SESSION is set to:' . $_SESSION['fc']['test_type'];
 	}
 
 # This function checks if the requested lesson is public. This may be important for some workflow.	
